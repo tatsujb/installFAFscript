@@ -126,7 +126,7 @@ else
     echo steam steam/license note '' | sudo debconf-set-selections
     sudo apt install -y steam
 fi
-steam -login ${STEAMUSERNAME} ${STEAMPASSWORD} &
+steam -login ${STEAMUSERNAME} ${STEAMPASSWORD} -nofriendsui &
 sleep 3m
 if [ $(command -v steamcmd) ]
 then
