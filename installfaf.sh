@@ -144,6 +144,7 @@ else
     cd
     sudo apt install -y lib32gcc1
 fi
+sleep 5m
 cd
 STEAMCMDLOCATION=$(find ~ -name 'steamcmd.sh' 2>/dev/null)
 STEAMCMDLOCATIONWHEREIS=$(whereis steamcmd | awk '{print $2}')
