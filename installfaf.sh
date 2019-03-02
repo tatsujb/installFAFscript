@@ -127,6 +127,7 @@ else
     sudo apt install -y steam
 fi
 steam -login ${STEAMUSERNAME} ${STEAMPASSWORD} &
+sleep 3m
 if [ $(command -v steamcmd) ]
 then
     echo "steam CMD is already installed, proceeding..."
@@ -144,7 +145,6 @@ else
     cd
     sudo apt install -y lib32gcc1
 fi
-sleep 5m
 cd
 STEAMCMDLOCATION=$(find ~ -name 'steamcmd.sh' 2>/dev/null)
 STEAMCMDLOCATIONWHEREIS=$(whereis steamcmd | awk '{print $2}')
