@@ -145,8 +145,15 @@ fi
 cd
 STEAMCMDLOCATION=$(find ~ -name 'steamcmd.sh' 2>/dev/null)
 STEAMCMDLOCATIONWHEREIS=$(whereis steamcmd | awk '{print $2}')
-echo "steam sh  : ${STEAMCMDLOCATION}"
-echo "steam whereis : ${STEAMCMDLOCATIONWHEREIS}"
+echo "steam cmd sh  : ${STEAMCMDLOCATION}"
+echo "steam cmd whereis : ${STEAMCMDLOCATIONWHEREIS}"
+
+####################################################################################################################
+#                                                                                                                  #
+# WIP! have not figured out a way to enable proton for all games via command line, but this would be required !    #
+#                                                                                                                  #
+####################################################################################################################
+
 echo "........................................................................................................................"
 if [ ${STEAMCMDLOCATION} ]
 then
