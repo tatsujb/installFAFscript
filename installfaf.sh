@@ -40,7 +40,7 @@ then
         else
         echo "You have a version of java that is not Java 10"
         echo "This is problematic as this case is not yet handled by this script (though it could easily be!)"
-        echo "Feel free to contribute at : http//"
+        echo "Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
         echo "The easliest sollution for you to use this script as-is, is for you to purge all java versions from your system (be sure to remove references in /etc/environment),"
         echo "then, re-run this script"
         echo "FAF-stack not installed, exiting..."
