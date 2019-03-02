@@ -63,6 +63,7 @@ else
     sudo update-alternatives --set java /usr/lib/jvm/jdk-10.0.2/bin/java
     sudo update-alternatives --set javac /usr/lib/jvm/jdk-10.0.2/bin/javac
     echo export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2 >> ~/.bashrc
+    source ~/.bashrc
 
 fi
 
@@ -125,6 +126,7 @@ else
     echo steam steam/license note '' | sudo debconf-set-selections
     sudo apt install -y steam
 fi
+steam &
 if [ $(command -v steamcmd) ]
 then
     echo "steam CMD is already installed, proceeding..."
