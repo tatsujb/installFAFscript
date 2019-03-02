@@ -103,6 +103,7 @@ wget https://github.com/FAForever/downlords-faf-client/releases/download/v0.9.3-
 tar -xpvzf _dfc_unix_0_9_3-beta.tar.gz
 mv downlords-faf-client-0.9.3-beta/{.,}* .
 rmdir downlords-faf-client-0.9.3-beta
+rm _dfc_unix_0_9_3-beta.tar.gz
 chmod +x downlords-faf-client && chmod +x lib/faf-uid
 cd
 echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss3.so' >> ~/.bashrc
