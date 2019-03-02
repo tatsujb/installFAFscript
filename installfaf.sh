@@ -58,7 +58,6 @@ else
     sudo tar -xvzf ~/openjdk-10.0.2_linux-x64_bin.tar.gz
     cd
     rm openjdk-10.0.2_linux-x64_bin.tar.gz
-    sudo nano /etc/environment
     sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk-10.0.2/bin/java" 0
     sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac" 0
     sudo update-alternatives --set java /usr/lib/jvm/jdk-10.0.2/bin/java
