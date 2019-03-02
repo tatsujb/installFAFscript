@@ -126,7 +126,7 @@ else
     echo steam steam/license note '' | sudo debconf-set-selections
     sudo apt install -y steam
 fi
-steam &
+steam -login ${STEAMUSERNAME} ${STEAMPASSWORD} &
 if [ $(command -v steamcmd) ]
 then
     echo "steam CMD is already installed, proceeding..."
