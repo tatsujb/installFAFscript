@@ -5,6 +5,60 @@ read STEAMUSERNAME
 echo "steam password :"
 read -s STEAMPASSWORD
 sudo echo "now sudo"
+
+echo "installing steam and steam CMD..."
+if [ $(command -v steam) ]
+then
+    echo "steam is already installed, proceeding..."
+else
+    echo steam steam/question select "I AGREE" | sudo debconf-set-selections
+    echo steam steam/license note '' | sudo debconf-set-selections
+    sudo apt install -y steam
+fi
+mkdir -p ~/.steam/compatibilitytools.d
+https://api.github.com/repos/popsUlfr/Proton/releases
+PROTONVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
+REPLACING=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"target_commitish": ' | head -n 1 | cut -f4,4 -d'"' | sed 's/[^_]\+/\L\u&/g')
+PROTONVERSION=${REPLACING/_G/-6_G}
+PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-}
+wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz
+
+tar xfv Proton_3.16-6_Gallium_Nine_Extras_0.3.0.tar.xz -C ~/.steam/compatibilitytools.d
+rm Proton_3.16-6_Gallium_Nine_Extras_0.3.0.tar.xz
+sudo apt install libd3dadapter9-mesa:i386 libd3dadapter9-mesa
+
+gnome-terminal -e "steam -nofriendsui -login ${STEAMUSERNAME} ${STEAMPASSWORD} -remember_password"
+sleep 6m
+if [ $(command -v steamcmd) ]
+then
+    echo "steam CMD is already installed, proceeding..."
+else
+    echo steamcmd steam/question select "I AGREE" | sudo debconf-set-selections
+    echo steamcmd steam/license note '' | sudo debconf-set-selections
+    sudo useradd -m steam
+    cd /home/steam
+    sudo apt install -y steamcmd
+	cd
+fi
+if [ $(command -v lib32gcc1) ]
+then
+    echo "lib32gcc1 is already installed, proceeding..."
+else
+    cd
+    sudo apt install -y lib32gcc1
+fi
+cd
+
+
+#########################################################################################################################
+#                                                                                                                       #
+# WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
+#                                                                                                                       #
+#########################################################################################################################
+
+steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit
+steam -applaunch 9420
+
 if [[ $(command -v java) ]] || [[ $(type -p java) ]] || [[ -n "$JAVA_HOME" ]] || [[ -x "$JAVA_HOME/bin/java" ]]
 then
 	echo "UH-OH, Java is already installed!"
@@ -121,56 +175,7 @@ echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/steamapps/compatdata/9420/pfx
 echo 'export SteamGameId=9420' >> ~/.bashrc
 echo 'export SteamAppId=9420' >> ~/.bashrc
 echo 'export WINEDLLOVERRIDES="d3d11=n;d3d10=n;d3d10core=n;d3d10_1=n;dxgi=n"' >> ~/.bashrc
-
-echo "installing steam and steam CMD..."
-if [ $(command -v steam) ]
-then
-    echo "steam is already installed, proceeding..."
-else
-    echo steam steam/question select "I AGREE" | sudo debconf-set-selections
-    echo steam steam/license note '' | sudo debconf-set-selections
-    sudo apt install -y steam
-fi
-mkdir -p ~/.steam/compatibilitytools.d
-https://api.github.com/repos/popsUlfr/Proton/releases
-PROTONVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
-REPLACING=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"target_commitish": ' | head -n 1 | cut -f4,4 -d'"' | sed 's/[^_]\+/\L\u&/g')
-PROTONVERSION=${REPLACING/_G/-6_G}
-PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-}
-wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz
-
-tar xfv Proton_3.16-6_Gallium_Nine_Extras_0.3.0.tar.xz -C ~/.steam/compatibilitytools.d
-rm Proton_3.16-6_Gallium_Nine_Extras_0.3.0.tar.xz
-sudo apt-get install libd3dadapter9-mesa:i386 libd3dadapter9-mesa
-
-gnome-terminal -e "steam -nofriendsui -login ${STEAMUSERNAME} ${STEAMPASSWORD} -remember_password"
-sleep 6m
-if [ $(command -v steamcmd) ]
-then
-    echo "steam CMD is already installed, proceeding..."
-else
-    echo steamcmd steam/question select "I AGREE" | sudo debconf-set-selections
-    echo steamcmd steam/license note '' | sudo debconf-set-selections
-    sudo useradd -m steam
-    cd /home/steam
-    sudo apt install -y steamcmd
-	cd
-fi
-if [ $(command -v lib32gcc1) ]
-then
-    echo "lib32gcc1 is already installed, proceeding..."
-else
-    cd
-    sudo apt install -y lib32gcc1
-fi
-cd
-
-
-#########################################################################################################################
-#                                                                                                                       #
-# WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
-#                                                                                                                       #
-#########################################################################################################################
+echo "making map & mods symbolic links"
 cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
@@ -180,5 +185,3 @@ mkdir My\ Documents
 cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
 cd
-steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit
-steam -applaunch 9420
