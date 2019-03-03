@@ -1,6 +1,6 @@
 #!/bin/bash
-# version 1.0
-STACKVERSION=1.0
+# version 11
+STACKVERSION=1.1
 echo "new log file, fafSTACK version 1.0" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
 read STEAMUSERNAME
@@ -19,8 +19,20 @@ echo "[$(date --rfc-3339=seconds)] now sudo" >> ~/'fafstack-'$STACKVERSION'.log'
 sudo apt -y dist-upgrade &&
 echo "[$(date --rfc-3339=seconds)] installing dependencies" >> ~/'fafstack-'$STACKVERSION'.log'
 
-sudo apt install libd3dadapter9-mesa:i386 libd3dadapter9-mesa curl &&
-sudo apt autoremove &&
+sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
+
+if [ $(command -v curl) ]
+then
+    echo "[$(date --rfc-3339=seconds)] curl is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo "curl is already installed, proceeding..."
+else
+    cd
+    echo "[$(date --rfc-3339=seconds)] curl was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
+    sudo apt install -y lib32gcc1
+fi
+
+
+sudo apt autoremove -y &&
 sudo apt autoclean &&
 echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' >> ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
 
@@ -207,8 +219,9 @@ echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'f
 eval "steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit"
 echo "starting Forged Alliance..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance..." >> ~/'fafstack-'$STACKVERSION'.log'
-steam -applaunch 9420
-
+steam -applaunch -login $STEAMUSERNAME $STEAMPASSWORD 9420
+STEAMUSERNAME=''
+STEAMPASSWORD=''
 cd
 echo "making map & mods symbolic links"
 echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/'fafstack-'$STACKVERSION'.log'
