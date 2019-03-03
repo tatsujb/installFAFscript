@@ -56,9 +56,7 @@ PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-}
 wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz
 tar xfv $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d
 rm $PROTONNAME.tar.xz
-cd ~/.steam/compatibilitytools.d
-#mv $PROTONNAME Proton
-cd
+
 
 #########################################################################################################################
 #                                                                                                                       #
@@ -66,8 +64,8 @@ cd
 #                                                                                                                       #
 #########################################################################################################################
 
-#BE SURE TO EDIT THIS VALUE ("210") ACCORDING TO YOUR INTERNET SPEED
-gnome-terminal --tab --active -- bash -c 'timeout -k 5 210 steam -nofriendsui -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password'
+#BE SURE TO EDIT THIS VALUE ("180") ACCORDING TO YOUR INTERNET SPEED
+gnome-terminal --tab --active -- bash -c 'timeout -k 5 180 steam -nofriendsui -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password'
 
 if [ $(command -v steamcmd) ]
 then
@@ -112,7 +110,6 @@ then
             if (whiptail --title "Entered : \"Java 10 present but .bashrc not correctly configured use-case\"" --yesno "Attempt .bashrc automated correct? \n\"No\" will close this script \n\"Yes\" will automatically edit bashrc \n(keep in mind this script was written by a donkey...)" 10 100)
 			then
 				echo export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2 >> ~/.bashrc
-				source ~/.bashrc
 				echo "OK! \".bashrc\" edited!"
 				echo "assuming Java is all set, let's move on..."
 				echo "[$(date --rfc-3339=seconds)] corrected JAVA config." >> ~/'fafstack-'$STACKVERSION'.log'
@@ -150,7 +147,6 @@ else
     sudo update-alternatives --set java /usr/lib/jvm/jdk-10.0.2/bin/java
     sudo update-alternatives --set javac /usr/lib/jvm/jdk-10.0.2/bin/javac
     echo export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2 >> ~/.bashrc
-    source ~/.bashrc
 fi
 echo "now moving on to installing Downlord's FAF..."
 echo "[$(date --rfc-3339=seconds)] installing DOWNLORD" >> ~/'fafstack-'$STACKVERSION'.log'
@@ -189,9 +185,11 @@ FAFVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/FAForever/downl
 FAFVERSION=$( echo ${FAFVERSIONNUMBER:1} | tr '.' '_' )
 wget https://github.com/FAForever/downlords-faf-client/releases/download/$FAFVERSIONNUMBER/_dfc_unix_$FAFVERSION.tar.gz
 tar -xpvzf _dfc_unix_$FAFVERSION.tar.gz
+sleep 8
 mv downlords-faf-client-${FAFVERSIONNUMBER:1}/{.,}* .
 rmdir downlords-faf-client-${FAFVERSIONNUMBER:1}
 rm _dfc_unix_$FAFVERSION.tar.gz
+sleep 1
 chmod +x downlords-faf-client && chmod +x lib/faf-uid
 cd
 echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss3.so' >> ~/.bashrc
@@ -202,30 +200,24 @@ echo 'export WINEDLLPATH=/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/l
 echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/steamapps/compatdata/9420/pfx/' >> ~/.bashrc
 echo 'export SteamGameId=9420' >> ~/.bashrc
 echo 'export SteamAppId=9420' >> ~/.bashrc
-source ~/.bashrc
-
+sleep 3
+source .bashrc
 echo "launching FAF"
 echo "[$(date --rfc-3339=seconds)] FAF installed, launching FAF..." >> ~/'fafstack-'$STACKVERSION'.log'
-gnome-terminal --tab --active -- bash -c "cd ~/faf; timeout -k 5 30 ./downlords-faf-client"
-
-sleep 30
-sed -i '/"preferencesFile": "\/home\/'$USER'\/.wine\/drive_c\/users\/'$USER'\/Application Data\/Gas Powered Games\/Supreme Commander Forged Alliance\/Game.prefs"/c\
-    "path": "\/home\/'$USER'\/.steam\/steam\/steamapps\/common\/Supreme Commander Forged Alliance",\
-    "preferencesFile": "\/home\/'$USER'\/.steam\/steam\/steamapps\/compatdata/9420/pfx/drive_c\/users\/steamuser\/Local Settings/Application Data\/Gas Powered Games\/Supreme Commander Forged Alliance\/Game.prefs",\
-    "executableDecorator": "\/home\/'$USER'\/.steam/compatibilitytools.d\/Proton\/dist\/bin\/wine \"%s\"",\
-    "executionDirectory": "\/home\/'$USER'\/.faforever\/bin,"' /home/$USER/.faforever/client.prefs
-
+gnome-terminal --tab -- bash -c "cd ~/faf; timeout -k 5 100 ./downlords-faf-client"
 
 echo "starting Forged Alliance Download..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
-eval "steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit"
+eval "steamcmd +login +@sSteamCmdForcePlatformType windows ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit"
 echo "starting Forged Alliance..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance..." >> ~/'fafstack-'$STACKVERSION'.log'
-steam -applaunch -login $STEAMUSERNAME $STEAMPASSWORD 9420
-sleep 10
+steam -login $STEAMUSERNAME $STEAMPASSWORD -applaunch 9420
+#[ ! -f ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance ] && steam -login $STEAMUSERNAME $STEAMPASSWORD -applaunch 9420 || echo ""
+#[ ! -f ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance ] && steam -applaunch 9420 || echo ""
 STEAMUSERNAME=''
 STEAMPASSWORD=''
 cd
+mv ~/.steam/compatibilitytools.d/$PROTONNAME ~/.steam/compatibilitytools.d/Proton
 echo "making map & mods symbolic links"
 echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/'fafstack-'$STACKVERSION'.log'
 cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
