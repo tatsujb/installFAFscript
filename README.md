@@ -80,4 +80,6 @@ GL HF!
 - a linux system (preferably debian-based such as ubuntu,  for further compatibility please contribute)
 - no pre-existing java version (preferably)
 - preferably an untouched /etc/environement file
+- have at least a total of 25 GB on SDA (~15 GB of those being your OS)
+- be willing to write to your SDA (first drive / SSD / M2 ...)
 - be willing to have stuff put into both /etc/environement and .bashrc
