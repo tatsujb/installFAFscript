@@ -1,6 +1,6 @@
 #!/bin/bash
-# version 1.3
-STACKVERSION=1.3
+# version 1.4
+STACKVERSION=1.4
 echo 'new log file, fafSTACK version '$STACKVERSION >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
 read STEAMUSERNAME
@@ -49,7 +49,24 @@ echo "starting Forged Alliance Download..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
 
 
-gnome-terminal --tab -- bash -c 'steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit'
+gnome-terminal --tab -- bash -c 'steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD';
+steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -nofriendsui -applaunch 9420 -shutdown;
+STEAMUSERNAME=e;
+STEAMPASSWORD=e;
+cd;
+mv /home/'$USER'/.steam/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0 /home/'$USER'/.steam/compatibilitytools.d/Proton;
+echo "making map & mods symbolic links";
+echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/fafstack-'$STACKVERSION'.log;
+cd /home/$USER/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance;
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
+cd /home/$USER/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser;
+rm -rf My\ Documents;
+mkdir My\ Documents;
+cd My\ Documents;
+ln -s ~/My\ Games/ My\ Games;
+cd'
+
 
 sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
 
@@ -104,49 +121,48 @@ gnome-terminal --tab -- bash -c 'timeout -k 5 180 steam -nofriendsui -login '$ST
 cd
 if [[ $(command -v java) ]] || [[ $(type -p java) ]] || [[ -n "$JAVA_HOME" ]] || [[ -x "$JAVA_HOME/bin/java" ]]
 then
-	echo "UH-OH, Java is already installed!"
-	echo "This is suboptimal, crossing fingers for correct version Java version (E.G. version number 10)..."
-    	echo "[$(date --rfc-3339=seconds)] JAVA already installed!" >> ~/'fafstack-'$STACKVERSION'.log'
-	if [ $(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | cut -f1 -d'.') -eq "10" ]
-	then
-		echo "Huzzah! you have the correct version of Java, here's hoping for the best!"
-		echo "Checking, if .bashrc config is also correct..."
-		echo "[$(date --rfc-3339=seconds)] specifically JAVA 10." >> ~/'fafstack-'$STACKVERSION'.log'
-		if grep -q "export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2" ~/.bashrc
-		then
-			echo "Huzzah! Java looks all set, let's move on..."
-			echo "[$(date --rfc-3339=seconds)] satisfied with JAVA config." >> ~/'fafstack-'$STACKVERSION'.log'
-        else
-            echo "Hmmm... we're not looking to hot on .bashrc, let's see if we can fix that..."
-	echo "[$(date --rfc-3339=seconds)] but not correct config." >> ~/'fafstack-'$STACKVERSION'.log'
-            if (whiptail --title "Entered : \"Java 10 present but .bashrc not correctly configured use-case\"" --yesno "Attempt .bashrc automated correct? \n\"No\" will close this script \n\"Yes\" will automatically edit bashrc \n(keep in mind this script was written by a donkey...)" 10 100)
-			then
-				echo export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2 >> ~/.bashrc
-				echo "OK! \".bashrc\" edited!"
-				echo "assuming Java is all set, let's move on..."
-				echo "[$(date --rfc-3339=seconds)] corrected JAVA config." >> ~/'fafstack-'$STACKVERSION'.log'
-			else
-				echo "You're probably right to choose this..."
-				echo "please edit .bashrc yourself or remove java 10 and start over."
-				echo "exiting upon demand..."
-				echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, JAVA was ill-configured" >> ~/'fafstack-'$STACKVERSION'.log'
-				exit 1
-			fi
-            
-        fi
-        else
-        echo "You have a version of java that is not Java 10"
-        echo "This is problematic as this case is not yet handled by this script (though it could easily be!)"
-        echo "Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
-        echo "The easliest sollution for you to use this script as-is, is for you to purge all java versions from your system (be sure to remove references in /etc/environment),"
-        echo "then, re-run this script"
-        echo "FAF-stack not installed, exiting..."
-	echo "[$(date --rfc-3339=seconds)] Incorrect JAVA version, exiting!" >> ~/'fafstack-'$STACKVERSION'.log'
-        exit 1
-	fi
+#	echo "UH-OH, Java is already installed!"
+#	echo "This is suboptimal, crossing fingers for correct version Java version (E.G. version number 10)..."
+#   	echo "[$(date --rfc-3339=seconds)] JAVA already installed!" >> ~/'fafstack-'$STACKVERSION'.log'
+#	if [ $(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | cut -f1 -d'.') -eq "10" ]
+#	then
+#		echo "Huzzah! you have the correct version of Java, here's hoping for the best!"
+#		echo "Checking, if .bashrc config is also correct..."
+#		echo "[$(date --rfc-3339=seconds)] specifically JAVA 10." >> ~/'fafstack-'$STACKVERSION'.log'
+#		if grep -q "export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2" ~/.bashrc
+#		then
+#			echo "Huzzah! Java looks all set, let's move on..."
+#			echo "[$(date --rfc-3339=seconds)] satisfied with JAVA config." >> ~/'fafstack-'$STACKVERSION'.log'
+#       else
+#            echo "Hmmm... we're not looking to hot on .bashrc, let's see if we can fix that..."
+#	echo "[$(date --rfc-3339=seconds)] but not correct config." >> ~/'fafstack-'$STACKVERSION'.log'
+#           if (whiptail --title "Entered : \"Java 10 present but .bashrc not correctly configured use-case\"" --yesno "Attempt .bashrc automated correct? \n\"No\" will close this script \n\"Yes\" will automatically edit bashrc \n(keep in mind this script was written by a donkey...)" 10 100)
+#			then
+#				echo export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2 >> ~/.bashrc
+#				echo "OK! \".bashrc\" edited!"
+#				echo "assuming Java is all set, let's move on..."
+#				echo "[$(date --rfc-3339=seconds)] corrected JAVA config." >> ~/'fafstack-'$STACKVERSION'.log'
+#			else
+#				echo "You're probably right to choose this..."
+#				echo "please edit .bashrc yourself or remove java 10 and start over."
+#				echo "exiting upon demand..."
+#				echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, JAVA was ill-configured" >> ~/'fafstack-'$STACKVERSION'.log'
+#				exit 1
+#			fi           
+#        fi
+#        else
+#        echo "You have a version of java that is not Java 10"
+#        echo "This is problematic as this case is not yet handled by this script (though it could easily be!)"
+#        echo "Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
+#        echo "The easliest sollution for you to use this script as-is, is for you to purge all java versions from your system (be sure to remove references in /etc/environment),"
+#        echo "then, re-run this script"
+#        echo "FAF-stack not installed, exiting..."
+#	echo "[$(date --rfc-3339=seconds)] Incorrect JAVA version, exiting!" >> ~/'fafstack-'$STACKVERSION'.log'
+#        exit 1
+#	fi
 else
-	echo "installing java 10..."
-	echo "[$(date --rfc-3339=seconds)] JAVA 10 installing..." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo "installing java 10..."
+    echo "[$(date --rfc-3339=seconds)] JAVA 10 installing..." >> ~/'fafstack-'$STACKVERSION'.log'
     
     wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
     sudo mkdir /usr/lib/jvm
@@ -165,11 +181,13 @@ echo "[$(date --rfc-3339=seconds)] installing DOWNLORD" >> ~/'fafstack-'$STACKVE
 ENVIRONMENT=$( cat /etc/environment )
 RESOLVEDPATH=$('PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/bin:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin"')
 RESOLVEDJAVA='JAVA_HOME="/usr/lib/jvm/jdk-10.0.2"'
+
 if [ ! -f /etc/environment ] || [ 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' == "$ENVIRONMENT" ]
 then
     echo "environment is vanilla..."
     echo "proceeding..."
     echo "[$(date --rfc-3339=seconds)] optimal use-case" >> ~/'fafstack-'$STACKVERSION'.log'
+    sudo rm -f /etc/environment
     [ ! -f /etc/environment ] && sudo touch /etc/environment || echo ""
     sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
     sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
@@ -213,32 +231,11 @@ echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/steamapps/compatdata/9420/pfx
 echo 'export SteamGameId=9420' >> ~/.bashrc
 echo 'export SteamAppId=9420' >> ~/.bashrc
 
-source .bashrc
+
 
 echo "starting Forged Alliance..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance..." >> ~/'fafstack-'$STACKVERSION'.log'
-steam -login $STEAMUSERNAME $STEAMPASSWORD -nofriendsui -applaunch 9420 -shutdown
-
-STEAMUSERNAME=''
-STEAMPASSWORD=''
-cd
-mv /$USER/tatsu/.steam/compatibilitytools.d/$PROTONNAME /home/$USER/.steam/compatibilitytools.d/Proton
-echo "making map & mods symbolic links"
-echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/'fafstack-'$STACKVERSION'.log'
-cd /home/$USER/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
-ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
-ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
-cd /home/$USER/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
-rm -rf My\ Documents
-mkdir My\ Documents
-cd My\ Documents
-ln -s ~/My\ Games/ My\ Games
-cd
-echo "launching FAF"
-echo "[$(date --rfc-3339=seconds)] FAF installed, launching FAF..." >> ~/'fafstack-'$STACKVERSION'.log'
-source .bashrc
-gnome-terminal --tab -- bash -c "cd ~/faf; timeout -k 5 100 ./downlords-faf-client"
-echo "[$(date --rfc-3339=seconds)] made it to the end." >> ~/'fafstack-'$STACKVERSION'.log'
-echo "well done! we made it all the way! you'll need to set the executable permissions on all of the contents of .faforever after hosting a game yourself."
-
+source ~/.bashrc
+cd ~/faf
+./downlords-faf-client
 
