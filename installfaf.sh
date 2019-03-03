@@ -26,7 +26,11 @@ wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$
 tar xfv Proton_3.16-6_Gallium_Nine_Extras_0.3.0.tar.xz -C ~/.steam/compatibilitytools.d
 rm Proton_3.16-6_Gallium_Nine_Extras_0.3.0.tar.xz
 sudo apt install libd3dadapter9-mesa:i386 libd3dadapter9-mesa
-
+#########################################################################################################################
+#                                                                                                                       #
+# WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
+#                                                                                                                       #
+#########################################################################################################################
 gnome-terminal -e "steam -nofriendsui -login ${STEAMUSERNAME} ${STEAMPASSWORD} -remember_password"
 sleep 6m
 if [ $(command -v steamcmd) ]
@@ -48,16 +52,6 @@ else
     sudo apt install -y lib32gcc1
 fi
 cd
-
-
-#########################################################################################################################
-#                                                                                                                       #
-# WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
-#                                                                                                                       #
-#########################################################################################################################
-
-steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit
-steam -applaunch 9420
 
 if [[ $(command -v java) ]] || [[ $(type -p java) ]] || [[ -n "$JAVA_HOME" ]] || [[ -x "$JAVA_HOME/bin/java" ]]
 then
@@ -185,3 +179,5 @@ mkdir My\ Documents
 cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
 cd
+steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit
+steam -applaunch 9420
