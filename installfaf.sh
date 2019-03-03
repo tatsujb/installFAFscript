@@ -1,6 +1,6 @@
 #!/bin/bash
-# version 11
-STACKVERSION=1.1
+# version 1.2
+STACKVERSION=1.2
 echo "new log file, fafSTACK version 1.0" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
 read STEAMUSERNAME
@@ -28,7 +28,7 @@ then
 else
     cd
     echo "[$(date --rfc-3339=seconds)] curl was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
-    sudo apt install -y lib32gcc1
+    sudo apt install -y curl
 fi
 
 
@@ -57,7 +57,7 @@ wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$
 tar xfv $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d
 rm $PROTONNAME.tar.xz
 cd ~/.steam/compatibilitytools.d
-mv $PROTONNAME Proton
+#mv $PROTONNAME Proton
 cd
 
 #########################################################################################################################
@@ -155,29 +155,31 @@ fi
 echo "now moving on to installing Downlord's FAF..."
 echo "[$(date --rfc-3339=seconds)] installing DOWNLORD" >> ~/'fafstack-'$STACKVERSION'.log'
 ENVIRONMENT=$( cat /etc/environment )
+RESOLVEDPATH=$('PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/bin:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin"')
+RESOLVEDJAVA='JAVA_HOME="/usr/lib/jvm/jdk-10.0.2"'
 if [ ! -f /etc/environment ] || [ 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' == "$ENVIRONMENT" ]
 then
     echo "environment is vanilla..."
     echo "proceeding..."
     echo "[$(date --rfc-3339=seconds)] optimal use-case" >> ~/'fafstack-'$STACKVERSION'.log'
-    sudo rm /etc/environment
-    sudo echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/bin:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin"' >> /etc/environment
-    sudo echo 'JAVA_HOME="/usr/lib/jvm/jdk-10.0.2"' >> /etc/environment
+    [ ! -f /etc/environment ] && sudo touch /etc/environment || echo ""
+    sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
+    sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
     source /etc/environment
 else
     if (whiptail --title "Entered : \"Java 10 present but evironement is non-vanilla use-case\"" --yesno "Overwrite /etc/environment? \n\user config that you may have set yourself was discovered in environment. is this keep-worthy? \n\"No\" will skip this \n\"Yes\" will delete and replace /etc/environment \n(keep in mind this script was written by a donkey...)" 11 100)
     then
     echo "[$(date --rfc-3339=seconds)] sub-optimal use-case, corrected /etc/environment" >> ~/'fafstack-'$STACKVERSION'.log'
-    sudo rm /etc/environment
-    sudo echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/bin:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin"' >> /etc/environment
-    sudo echo 'JAVA_HOME="/usr/lib/jvm/jdk-10.0.2"' >> /etc/environment
+    [ ! -f /etc/environment ] && sudo touch /etc/environment || echo ""
+    sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
+    sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
     source /etc/environment
         echo "OK! \".bashrc\" edited!"
         echo "assuming Java is all set, let's move on..."
     else
         echo "You're probably right to choose this..."
         echo "you'll have to check /etc/environment 's variables yourself at the end of this script."
-    echo "[$(date --rfc-3339=seconds)] user chose to leave /etc/environement untouched, this might be the cause." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo "[$(date --rfc-3339=seconds)] user chose to leave /etc/environment untouched, this might be the cause." >> ~/'fafstack-'$STACKVERSION'.log'
 	fi
 fi
 cd
@@ -220,6 +222,7 @@ eval "steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validat
 echo "starting Forged Alliance..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance..." >> ~/'fafstack-'$STACKVERSION'.log'
 steam -applaunch -login $STEAMUSERNAME $STEAMPASSWORD 9420
+sleep 10
 STEAMUSERNAME=''
 STEAMPASSWORD=''
 cd
