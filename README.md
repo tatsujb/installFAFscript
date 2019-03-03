@@ -15,7 +15,7 @@ make it executable : (terminal) `chmod +x installfaf.sh`
 
 ### 3rd 
 
-run the script within a terminal : ./installfaf.sh
+run the script within a terminal : `./installfaf.sh`
 
 you'll be asked in order :
 - your steam account usename
