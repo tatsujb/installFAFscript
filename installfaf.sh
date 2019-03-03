@@ -5,6 +5,7 @@ read STEAMUSERNAME
 echo "steam password :"
 read -s STEAMPASSWORD
 sudo echo "now sudo"
+echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 PROTON_USE_GALLIUM_NINE=1 PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1"%command%' >> ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
 
 echo "installing steam and steam CMD..."
 if [ $(command -v steam) ]
@@ -32,7 +33,7 @@ sudo apt install libd3dadapter9-mesa:i386 libd3dadapter9-mesa
 #                                                                                                                       #
 #########################################################################################################################
 gnome-terminal -e "steam -nofriendsui -login ${STEAMUSERNAME} ${STEAMPASSWORD} -remember_password"
-sleep 6m
+sleep 2m #BE SURE TO EDIT THIS VALUE ACCORDING TO YOUR INTERNET SPEED
 if [ $(command -v steamcmd) ]
 then
     echo "steam CMD is already installed, proceeding..."
@@ -150,16 +151,14 @@ cd
 mkdir faf
 cd faf
 FAFVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
-TEMP=${VERSIONNUMBER:1}
-FAFVERSIONNUMBERNAME=${TEMP//./_}
-wget https://github.com/FAForever/downlords-faf-client/releases/download/$FAFVERSIONNUMBER/_dfc_unix_$FAFVERSIONNUMBERNAME.tar.gz
+VERSION=$( echo ${VERSIONNUMBER:1} | tr '.' '_' )
+wget https://github.com/FAForever/downlords-faf-client/releases/download/$FAFVERSIONNUMBER/_dfc_unix_$VERSION.tar.gz
 tar -xpvzf _dfc_unix_0_9_3-beta.tar.gz
 mv downlords-faf-client-0.9.3-beta/{.,}* .
 rmdir downlords-faf-client-0.9.3-beta
 rm _dfc_unix_0_9_3-beta.tar.gz
 chmod +x downlords-faf-client && chmod +x lib/faf-uid
 cd
-echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 PROTON_USE_GALLIUM_NINE=1 PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1"%command%' >> ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
 echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss3.so' >> ~/.bashrc
 echo 'export DEF_CMD=("/home/'$USER'/.steam/steam/steamapps/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")' >> ~/.bashrc
 echo 'export TERM=xterm' >> ~/.bashrc
@@ -179,5 +178,6 @@ mkdir My\ Documents
 cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
 cd
-steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit
+gnome-terminal -e "eval steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit"
+sleep 7m #AGAIN depending on how fast you get FA
 steam -applaunch 9420
