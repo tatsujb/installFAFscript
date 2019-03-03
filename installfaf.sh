@@ -178,6 +178,6 @@ mkdir My\ Documents
 cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
 cd
-gnome-terminal -e "eval steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit"
-sleep 7m #AGAIN depending on how fast you get FA
+eval "steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit"
+#sleep 7m #AGAIN depending on how fast you get FA
 steam -applaunch 9420
