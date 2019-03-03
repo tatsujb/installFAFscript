@@ -171,6 +171,14 @@ cd
 # WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
 #                                                                                                                       #
 #########################################################################################################################
-
+cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
+cd /home/$USER/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
+rm -rf My\ Documents
+mkdir My\ Documents
+cd My\ Documents
+ln -s ~/My\ Games/ My\ Games
+cd
 steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit
 steam -applaunch 9420
