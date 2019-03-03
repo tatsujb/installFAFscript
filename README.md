@@ -65,11 +65,14 @@ then with faf running, log in and set your preferences under "Forged Alliance Fo
 ```
 where "USERNAME" is what you get when you type `echo $USER` into the terminal.
 
-try to join to games and on the second run in your terminal :
+try two join to games and on the second run in your terminal :
 
 ```
 chmod +x ~/.faforever/bin/ForgedAlliance.exe
 ```
+### 7th
+
+GL HF!
 
 # Pre-requisites 
 
