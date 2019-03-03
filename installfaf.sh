@@ -143,7 +143,8 @@ tar xfv Proton_3.16-6_Gallium_Nine_Extras_0.3.0.tar.xz -C ~/.steam/compatibility
 rm Proton_3.16-6_Gallium_Nine_Extras_0.3.0.tar.xz
 sudo apt-get install libd3dadapter9-mesa:i386 libd3dadapter9-mesa
 
-steam -nofriendsui -login ${STEAMUSERNAME} ${STEAMPASSWORD} -remember_password 
+gnome-terminal -e "steam -nofriendsui -login ${STEAMUSERNAME} ${STEAMPASSWORD} -remember_password"
+sleep 6m
 if [ $(command -v steamcmd) ]
 then
     echo "steam CMD is already installed, proceeding..."
@@ -165,11 +166,11 @@ fi
 cd
 
 
-####################################################################################################################
-#                                                                                                                  #
-# WIP! have not figured out a way to enable proton for all games via command line, but this would be required !    #
-#                                                                                                                  #
-####################################################################################################################
+#########################################################################################################################
+#                                                                                                                       #
+# WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
+#                                                                                                                       #
+#########################################################################################################################
 
 steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit
 steam -applaunch 9420
