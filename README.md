@@ -35,8 +35,6 @@ when steam starts again use steam's icon in the notifications area to quit steam
 
 ### 5th
 
-some waiting.
-
 then it's off and you can got to your pillates class and when you come back it should have just barely finished installing Forged Alliance + FAF on your linux system
 
 Forged Alliance should be running, you can set a profile, then set your prefered resulution, then quit the game.
