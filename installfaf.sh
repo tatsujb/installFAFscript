@@ -19,7 +19,9 @@ echo "[$(date --rfc-3339=seconds)] now sudo" >> ~/'fafstack-'$STACKVERSION'.log'
 sudo apt -y dist-upgrade &&
 echo "[$(date --rfc-3339=seconds)] installing dependencies" >> ~/'fafstack-'$STACKVERSION'.log'
 
-sudo apt install libd3dadapter9-mesa:i386 libd3dadapter9-mesa
+sudo apt install libd3dadapter9-mesa:i386 libd3dadapter9-mesa curl &&
+sudo apt autoremove &&
+sudo apt autoclean &&
 echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' >> ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
 
 echo "installing steam and steam CMD..."
