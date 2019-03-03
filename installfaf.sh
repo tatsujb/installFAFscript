@@ -16,7 +16,7 @@ else
     sudo apt install -y steam
 fi
 mkdir -p ~/.steam/compatibilitytools.d
-https://api.github.com/repos/popsUlfr/Proton/releases
+
 PROTONVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
 REPLACING=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"target_commitish": ' | head -n 1 | cut -f4,4 -d'"' | sed 's/[^_]\+/\L\u&/g')
 PROTONVERSION=${REPLACING/_G/-6_G}
