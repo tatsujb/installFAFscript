@@ -57,7 +57,7 @@ then with faf running, log in and set your preferences under "Forged Alliance Fo
 ```
 "Command line format for executable" :
 ```
-/home/USERNAME/.steam/steam/steamapps/common/Proton/dist/bin/wine "%s"
+/home/USERNAME/.steam/compatibilitytools.d/Proton/dist/bin/wine "%s"
 ```
 "Execution Dirrectory" :
 ```
