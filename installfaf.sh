@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# version 1.0
 echo "steam user name :"
 read STEAMUSERNAME
 echo "steam password :"
