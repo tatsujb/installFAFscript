@@ -1,12 +1,11 @@
 #!/bin/bash
-# version 1.2
-STACKVERSION=1.2
-echo "new log file, fafSTACK version 1.0" >> ~/'fafstack-'$STACKVERSION'.log'
+# version 1.3
+STACKVERSION=1.3
+echo 'new log file, fafSTACK version '$STACKVERSION >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
 read STEAMUSERNAME
 echo "steam password :"
 read -s STEAMPASSWORD
-
 if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
 then
     echo "enabled partners" >> ~/'fafstack-'$STACKVERSION'.log'
@@ -17,7 +16,40 @@ fi
 sudo apt update -y &&
 echo "[$(date --rfc-3339=seconds)] now sudo" >> ~/'fafstack-'$STACKVERSION'.log'
 sudo apt -y dist-upgrade &&
+
+
+if [ $(command -v lib32gcc1) ]
+then
+    echo "[$(date --rfc-3339=seconds)] lib32gcc1 is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo "lib32gcc1 is already installed, proceeding..."
+else
+    cd
+    echo "[$(date --rfc-3339=seconds)] lib32gcc1 was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
+    sudo apt install -y lib32gcc1
+fi
+
+if [ $(command -v steamcmd) ]
+then
+    echo "[$(date --rfc-3339=seconds)] steam CMD is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo "steam CMD is already installed, proceeding..."
+else
+    echo "[$(date --rfc-3339=seconds)] steam CMD was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo steamcmd steam/question select "I AGREE" | sudo debconf-set-selections
+    echo steamcmd steam/license note '' | sudo debconf-set-selections
+    sudo useradd -m steam
+    cd /home/steam
+    sudo apt install -y steamcmd
+	cd
+fi
+
+
 echo "[$(date --rfc-3339=seconds)] installing dependencies" >> ~/'fafstack-'$STACKVERSION'.log'
+
+echo "starting Forged Alliance Download..."
+echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
+
+
+gnome-terminal --tab -- bash -c 'steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit'
 
 sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
 
@@ -54,7 +86,7 @@ REPLACING=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releas
 PROTONVERSION=${REPLACING/_G/-6_G}
 PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-}
 wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz
-tar xfv $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d
+tar xf $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d
 rm $PROTONNAME.tar.xz
 
 
@@ -65,30 +97,10 @@ rm $PROTONNAME.tar.xz
 #########################################################################################################################
 
 #BE SURE TO EDIT THIS VALUE ("180") ACCORDING TO YOUR INTERNET SPEED
-gnome-terminal --tab --active -- bash -c 'timeout -k 5 180 steam -nofriendsui -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password'
+gnome-terminal --tab -- bash -c 'timeout -k 5 180 steam -nofriendsui -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password'
 
-if [ $(command -v steamcmd) ]
-then
-    echo "[$(date --rfc-3339=seconds)] steam CMD is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
-    echo "steam CMD is already installed, proceeding..."
-else
-    echo "[$(date --rfc-3339=seconds)] steam CMD was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
-    echo steamcmd steam/question select "I AGREE" | sudo debconf-set-selections
-    echo steamcmd steam/license note '' | sudo debconf-set-selections
-    sudo useradd -m steam
-    cd /home/steam
-    sudo apt install -y steamcmd
-	cd
-fi
-if [ $(command -v lib32gcc1) ]
-then
-    echo "[$(date --rfc-3339=seconds)] lib32gcc1 is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
-    echo "lib32gcc1 is already installed, proceeding..."
-else
-    cd
-    echo "[$(date --rfc-3339=seconds)] lib32gcc1 was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
-    sudo apt install -y lib32gcc1
-fi
+
+
 cd
 if [[ $(command -v java) ]] || [[ $(type -p java) ]] || [[ -n "$JAVA_HOME" ]] || [[ -x "$JAVA_HOME/bin/java" ]]
 then
@@ -139,7 +151,7 @@ else
     wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
     sudo mkdir /usr/lib/jvm
     cd /usr/lib/jvm
-    sudo tar -xvzf ~/openjdk-10.0.2_linux-x64_bin.tar.gz
+    sudo tar xzf ~/openjdk-10.0.2_linux-x64_bin.tar.gz
     cd
     rm openjdk-10.0.2_linux-x64_bin.tar.gz
     sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk-10.0.2/bin/java" 0
@@ -184,7 +196,7 @@ cd faf
 FAFVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
 FAFVERSION=$( echo ${FAFVERSIONNUMBER:1} | tr '.' '_' )
 wget https://github.com/FAForever/downlords-faf-client/releases/download/$FAFVERSIONNUMBER/_dfc_unix_$FAFVERSION.tar.gz
-tar -xpvzf _dfc_unix_$FAFVERSION.tar.gz
+tar xpzf _dfc_unix_$FAFVERSION.tar.gz
 sleep 8
 mv downlords-faf-client-${FAFVERSIONNUMBER:1}/{.,}* .
 rmdir downlords-faf-client-${FAFVERSIONNUMBER:1}
@@ -200,32 +212,33 @@ echo 'export WINEDLLPATH=/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/l
 echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/steamapps/compatdata/9420/pfx/' >> ~/.bashrc
 echo 'export SteamGameId=9420' >> ~/.bashrc
 echo 'export SteamAppId=9420' >> ~/.bashrc
-sleep 3
-source .bashrc
-echo "launching FAF"
-echo "[$(date --rfc-3339=seconds)] FAF installed, launching FAF..." >> ~/'fafstack-'$STACKVERSION'.log'
-gnome-terminal --tab -- bash -c "cd ~/faf; timeout -k 5 100 ./downlords-faf-client"
 
-echo "starting Forged Alliance Download..."
-echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
-eval "steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit"
+source .bashrc
+
 echo "starting Forged Alliance..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance..." >> ~/'fafstack-'$STACKVERSION'.log'
-steam -login $STEAMUSERNAME $STEAMPASSWORD -applaunch 9420
-#[ ! -f ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance ] && steam -login $STEAMUSERNAME $STEAMPASSWORD -applaunch 9420 || echo ""
-#[ ! -f ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance ] && steam -applaunch 9420 || echo ""
+steam -login $STEAMUSERNAME $STEAMPASSWORD -nofriendsui -applaunch 9420 -shutdown
+
 STEAMUSERNAME=''
 STEAMPASSWORD=''
 cd
-mv ~/.steam/compatibilitytools.d/$PROTONNAME ~/.steam/compatibilitytools.d/Proton
+mv /$USER/tatsu/.steam/compatibilitytools.d/$PROTONNAME /home/$USER/.steam/compatibilitytools.d/Proton
 echo "making map & mods symbolic links"
 echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/'fafstack-'$STACKVERSION'.log'
-cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
+cd /home/$USER/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
-cd /home/$USER/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
+cd /home/$USER/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
 rm -rf My\ Documents
 mkdir My\ Documents
 cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
 cd
+echo "launching FAF"
+echo "[$(date --rfc-3339=seconds)] FAF installed, launching FAF..." >> ~/'fafstack-'$STACKVERSION'.log'
+source .bashrc
+gnome-terminal --tab -- bash -c "cd ~/faf; timeout -k 5 100 ./downlords-faf-client"
+echo "[$(date --rfc-3339=seconds)] made it to the end." >> ~/'fafstack-'$STACKVERSION'.log'
+echo "well done! we made it all the way! you'll need to set the executable permissions on all of the contents of .faforever after hosting a game yourself."
+
+
