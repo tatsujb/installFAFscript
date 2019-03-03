@@ -32,19 +32,9 @@ sudo apt install libd3dadapter9-mesa:i386 libd3dadapter9-mesa
 # WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
 #                                                                                                                       #
 #########################################################################################################################
-cd
-echo "making map & mods symbolic links"
-cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
-ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
-ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
-cd /home/$USER/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
-rm -rf My\ Documents
-mkdir My\ Documents
-cd My\ Documents
-ln -s ~/My\ Games/ My\ Games
-cd
-gnome-terminal -e "steam -nofriendsui -login ${STEAMUSERNAME} ${STEAMPASSWORD} -remember_password"
-sleep 2m #BE SURE TO EDIT THIS VALUE ACCORDING TO YOUR INTERNET SPEED
+
+#BE SURE TO EDIT THIS VALUE ("210") ACCORDING TO YOUR INTERNET SPEED
+gnome-terminal -e "timeout -k 5 210 steam -nofriendsui -login ${STEAMUSERNAME} ${STEAMPASSWORD} -remember_password"
 if [ $(command -v steamcmd) ]
 then
     echo "steam CMD is already installed, proceeding..."
@@ -117,9 +107,9 @@ else
     source ~/.bashrc
 fi
 echo "now moving on to installing Downlord's FAF..."
-[ $(date +%w) -eq 6 ] && { NOENV=true } || NOENV=false
+
 ENVIRONMENT=$( cat /etc/environment )
-if [ 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' == "$ENVIRONMENT" ]
+if [ ! -f /etc/environment ] || [ 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' == "$ENVIRONMENT" ]
 then
     echo "environment is vanilla..."
     echo "proceeding..."
@@ -178,3 +168,15 @@ echo "starting Forged Alliance Download..."
 eval "steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit"
 echo "starting Forged Alliance..."
 steam -applaunch 9420
+
+cd
+echo "making map & mods symbolic links"
+cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
+cd /home/$USER/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
+rm -rf My\ Documents
+mkdir My\ Documents
+cd My\ Documents
+ln -s ~/My\ Games/ My\ Games
+cd
