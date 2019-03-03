@@ -44,6 +44,7 @@ PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-}
 wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz
 tar xfv $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d
 rm $PROTONNAME.tar.xz
+cd ~/.steam/compatibilitytools.d
 mv $PROTONNAME Proton
 cd
 
