@@ -208,7 +208,7 @@ gnome-terminal --tab -- bash -c "cd ~/faf; timeout -k 5 100 ./downlords-faf-clie
 
 echo "starting Forged Alliance Download..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
-eval "steamcmd +login +@sSteamCmdForcePlatformType windows ${STEAMUSERNAME} ${STEAMPASSWORD} +app_update 9420 validate +quit"
+eval "steamcmd +login ${STEAMUSERNAME} ${STEAMPASSWORD} +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit"
 echo "starting Forged Alliance..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance..." >> ~/'fafstack-'$STACKVERSION'.log'
 steam -login $STEAMUSERNAME $STEAMPASSWORD -applaunch 9420
