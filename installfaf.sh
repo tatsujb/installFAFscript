@@ -7,7 +7,14 @@ read STEAMUSERNAME
 echo "steam password :"
 read -s STEAMPASSWORD
 
-sudo apt update &&
+if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
+then
+    echo "enabled partners" >> ~/'fafstack-'$STACKVERSION'.log'
+    sudo sed -i 's/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g' /etc/apt/sources.list
+else
+    echo "did not enable partners, hoping it was already enabled." >> ~/'fafstack-'$STACKVERSION'.log'
+fi
+sudo apt update -y &&
 echo "[$(date --rfc-3339=seconds)] now sudo" >> ~/'fafstack-'$STACKVERSION'.log'
 sudo apt -y dist-upgrade &&
 echo "[$(date --rfc-3339=seconds)] installing dependencies" >> ~/'fafstack-'$STACKVERSION'.log'
@@ -183,8 +190,7 @@ source ~/.bashrc
 echo "launching FAF"
 echo "[$(date --rfc-3339=seconds)] FAF installed, launching FAF..." >> ~/'fafstack-'$STACKVERSION'.log'
 gnome-terminal --tab --active -- bash -c "cd ~/faf; timeout -k 5 30 ./downlords-faf-client"
-#sed -i '17d' /home/$USER/.faforever/client.prefs
-#sed -i 's/"autoDownloadMaps": true,/"autoDownloadMaps": true/g' /home/$USER/.faforever/client.prefs
+
 sleep 30
 sed -i '/"preferencesFile": "\/home\/'$USER'\/.wine\/drive_c\/users\/'$USER'\/Application Data\/Gas Powered Games\/Supreme Commander Forged Alliance\/Game.prefs"/c\
     "path": "\/home\/'$USER'\/.steam\/steam\/steamapps\/common\/Supreme Commander Forged Alliance",\
