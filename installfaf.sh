@@ -150,7 +150,7 @@ then
     echo "This is suboptimal, crossing fingers for correct version Java version (E.G. version number 10)..."
     echo "[$(date --rfc-3339=seconds)] JAVA already installed!" >> ~/'fafstack-'$STACKVERSION'.log'
 
-    if [ $(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | cut -f1 -d'.') -eq "10" ]
+    if [ $(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | cut -f1 -d'.') == "10" ]
     then
 	echo "Huzzah! you have the correct version of Java, here's hoping for the best!"
 	echo "Checking, if .bashrc config is also correct..."
@@ -174,7 +174,7 @@ then
 		echo "please edit .bashrc yourself or remove java 10 and start over."
 		echo "exiting upon demand..."
 		echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, JAVA was ill-configured" >> ~/'fafstack-'$STACKVERSION'.log'
-		return 0;
+		exit 1
 	    fi           
         fi
     else
@@ -191,7 +191,7 @@ then
         echo "then, re-run this script"
         echo "FAF-stack not installed, exiting..."
 	echo "[$(date --rfc-3339=seconds)] Incorrect JAVA version, exiting!" >> ~/'fafstack-'$STACKVERSION'.log'
-        return 0;
+        exit 1
     fi
 else
     echo "Java 10 installation procedure..."
@@ -217,6 +217,7 @@ RESOLVEDPATH='PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bi
 RESOLVEDJAVA='JAVA_HOME=\"/usr/lib/jvm/jdk-10.0.2\"'
 if [ ! -f /etc/environment ] || [ 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' == "$ENVIRONMENT" ]
 then
+#TODO : also test if environment is exactly as we wish it to be.
     echo "environment is vanilla..."
     echo "proceeding..."
     echo "[$(date --rfc-3339=seconds)] optimal use-case" >> ~/'fafstack-'$STACKVERSION'.log'
