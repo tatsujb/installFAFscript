@@ -111,7 +111,7 @@ here are a couple safe bets however, run this in your terminal:
 
 ```
 rm ~/the\ contents\ of\ this*
-rm ~/fafstack-$STACKVERSION.log
+rm ~/fafstack-*.log
 rm -rf ~/faf
 rm -rf ~/.faforever
 rm -rf ~/.com.faforever.client.FafClientApplication
