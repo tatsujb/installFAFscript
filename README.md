@@ -5,7 +5,7 @@ A shell script that installs a so-called fafSTACK on linux
 
 #### What is a fafSTACK?
 
-a faf stack is a set of software and environement and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") on linux as you would under windows.
+a faf stack is a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") on linux as you would under windows.
 
 such a setup includes (at minimum) :
  - Supreme Commander Forged Alliance
