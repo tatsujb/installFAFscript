@@ -41,17 +41,52 @@ else
     sudo apt install -y steamcmd
 	cd
 fi
-
-
 echo "[$(date --rfc-3339=seconds)] installing dependencies" >> ~/'fafstack-'$STACKVERSION'.log'
-
 echo "starting Forged Alliance Download..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
+gnome-terminal --tab --active -- bash -c 'eval "steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit"'
+echo "got to after main segment"
+sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
+if [ $(command -v curl) ]
+then
+    echo "[$(date --rfc-3339=seconds)] curl is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo "curl is already installed, proceeding..."
+else
+    cd
+    echo "[$(date --rfc-3339=seconds)] curl was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
+    sudo apt install -y curl
+fi
+sudo apt autoremove -y &&
+sudo apt autoclean &&
+echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' >> ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
+echo "installing steam and steam CMD..."
+echo "[$(date --rfc-3339=seconds)] installing steam and steam CMD..." >> ~/'fafstack-'$STACKVERSION'.log'
+if [ $(command -v steam) ]
+then
+    echo "steam is already installed, proceeding..."
+    echo "[$(date --rfc-3339=seconds)] steam is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
+else
+    echo "[$(date --rfc-3339=seconds)] steam was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo steam steam/question select "I AGREE" | sudo debconf-set-selections
+    echo steam steam/license note '' | sudo debconf-set-selections
+    sudo apt install -y steam
+fi
+mkdir -p ~/.steam/compatibilitytools.d
+PROTONVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
+REPLACING=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"target_commitish": ' | head -n 1 | cut -f4,4 -d'"' | sed 's/[^_]\+/\L\u&/g')
+PROTONVERSION=${REPLACING/_G/-6_G}
+PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-}
+wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz
+tar xf $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d
+rm $PROTONNAME.tar.xz
+#########################################################################################################################
+#                                                                                                                       #
+# WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
+#                                                                                                                       #
+#########################################################################################################################
+#BE SURE TO EDIT THIS VALUE ("180") ACCORDING TO YOUR INTERNET SPEED
 
-
-gnome-terminal --tab --active -- bash -c 'eval "steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit";
-steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -nofriendsui -applaunch 9420 -shutdown;
-cd;
+gnome-terminal --tab -- bash -c 'timeout -k 5 180 steam -nofriendsui -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password;
 mv ~/.steam/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0 ~/.steam/compatibilitytools.d/Proton;
 echo "making map & mods symbolic links";
 echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/fafstack-'$STACKVERSION'.log;
@@ -95,58 +130,8 @@ ln -s ~/My\ Games/ My\ Games;
 else;
 echo "[$(date --rfc-3339=seconds)] steamapps compatdata not found" >> ~/fafstack-'$STACKVERSION'.log;
 fi;
-cd'
-
-echo "got to after main segment"
-sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
-
-if [ $(command -v curl) ]
-then
-    echo "[$(date --rfc-3339=seconds)] curl is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
-    echo "curl is already installed, proceeding..."
-else
-    cd
-    echo "[$(date --rfc-3339=seconds)] curl was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
-    sudo apt install -y curl
-fi
-
-
-sudo apt autoremove -y &&
-sudo apt autoclean &&
-echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' >> ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
-
-echo "installing steam and steam CMD..."
-echo "[$(date --rfc-3339=seconds)] installing steam and steam CMD..." >> ~/'fafstack-'$STACKVERSION'.log'
-if [ $(command -v steam) ]
-then
-    echo "steam is already installed, proceeding..."
-    echo "[$(date --rfc-3339=seconds)] steam is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
-else
-    echo "[$(date --rfc-3339=seconds)] steam was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
-    echo steam steam/question select "I AGREE" | sudo debconf-set-selections
-    echo steam steam/license note '' | sudo debconf-set-selections
-    sudo apt install -y steam
-fi
-mkdir -p ~/.steam/compatibilitytools.d
-PROTONVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
-REPLACING=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep '"target_commitish": ' | head -n 1 | cut -f4,4 -d'"' | sed 's/[^_]\+/\L\u&/g')
-PROTONVERSION=${REPLACING/_G/-6_G}
-PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-}
-wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz
-tar xf $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d
-rm $PROTONNAME.tar.xz
-
-
-#########################################################################################################################
-#                                                                                                                       #
-# WIP! have not figured out a way to enable proton for all games via command line, right now you have to do it manually #
-#                                                                                                                       #
-#########################################################################################################################
-
-#BE SURE TO EDIT THIS VALUE ("180") ACCORDING TO YOUR INTERNET SPEED
-gnome-terminal --tab -- bash -c 'timeout -k 5 180 steam -nofriendsui -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password'
-
-
+cd;
+steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -nofriendsui -applaunch 9420 -shutdown'
 
 cd
 if [[ $(command -v java) ]] || [[ $(type -p java) ]] || [[ -n "$JAVA_HOME" ]] || [[ -x "$JAVA_HOME/bin/java" ]]
@@ -190,6 +175,7 @@ then
 #	echo "[$(date --rfc-3339=seconds)] Incorrect JAVA version, exiting!" >> ~/'fafstack-'$STACKVERSION'.log'
 #        exit 1
 #	fi
+echo "boop"
 else
     echo "installing java 10..."
     echo "[$(date --rfc-3339=seconds)] JAVA 10 installing..." >> ~/'fafstack-'$STACKVERSION'.log'
@@ -210,7 +196,6 @@ echo "[$(date --rfc-3339=seconds)] installing DOWNLORD" >> ~/'fafstack-'$STACKVE
 ENVIRONMENT=$( cat /etc/environment )
 RESOLVEDPATH=$('PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/bin:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin"')
 RESOLVEDJAVA='JAVA_HOME="/usr/lib/jvm/jdk-10.0.2"'
-
 if [ ! -f /etc/environment ] || [ 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' == "$ENVIRONMENT" ]
 then
     echo "environment is vanilla..."
@@ -259,12 +244,8 @@ echo 'export WINEDLLPATH=/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/l
 echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/steamapps/compatdata/9420/pfx/' >> ~/.bashrc
 echo 'export SteamGameId=9420' >> ~/.bashrc
 echo 'export SteamAppId=9420' >> ~/.bashrc
-
-
-
 echo "starting Forged Alliance..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance..." >> ~/'fafstack-'$STACKVERSION'.log'
 source ~/.bashrc
 cd ~/faf
 ./downlords-faf-client
-
