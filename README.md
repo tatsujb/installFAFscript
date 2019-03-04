@@ -8,15 +8,20 @@ A shell script that installs a so-called fafSTACK on linux
 a faf stack is a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") on linux as you would under windows.
 
 such a setup includes (at minimum) :
+
  - Supreme Commander Forged Alliance
  - (FAF) JAVA client
  - Java 10
  - Gallium-Proton /or/ Proton /or/ Wine (to run the windows game)
+ 
 In the case of this script, we will have recourse to some supplementary items in order to automate our task :
+
  - curl (fetches installers from git)
  - steamCMD (downloads the game) 
  - steam (installs it)
+ 
  Dependencies :
+ 
  - lib32gcc1 (steamcmd)
  - libd3dadapter9-mesa:i386 libd3dadapter9-mesa (Gallium-Proton)
 
