@@ -169,8 +169,8 @@ source  /etc/environement
 
 5. curl
 
-really? I mean it's handy any only 395kilobytes, ok then...
-
+really? I mean it's handy and only 395kilobytes.
+ok then...
 ```
 sudo apt remove curl
 ```
