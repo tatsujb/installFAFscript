@@ -41,8 +41,8 @@ you'll be asked in order :
 
 ### 4rth
 
-at a certain point steam starts up and you'll need to enter the Steam Guard code
-once steam is opened
+at a certain point steam starts up and you'll need to enter Steam Guard.
+
 1. right click on "Supreme Commander - Forged Alliance" in your games Library" -> "SET LAUCNH OPTIONS..." and enter the contents of "the contents of this file are to be pasted in the forged alliance properties launch options" situated in your home folder, just in case, here they are : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%`
 2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" (Gallium-nine should be the proton version)
 
@@ -52,9 +52,10 @@ when steam starts again use steam's icon in the notifications area to quit steam
 
 ### 5th
 
-then it's off and you can got to your pillates class and when you come back it should have just barely finished installing Forged Alliance + FAF on your linux system
+Then it downloads Forged Alliance. this will take a while.
+Once it's done steam starts again in order to finalize installation and start (non root hard drive installation is not supported. (E.G.: to a secondary storage HHD, for now I only support installing to SDA.))
 
-Forged Alliance should be running, you can set a profile, then set your prefered resulution, then quit the game.
+Forged Alliance should start, you can set a profile, then set your prefered resulution, then quit the game. (use steam's notification-area icon to close steam once again)
 
 ### 6th
 
@@ -97,7 +98,7 @@ GL HF!
 - a steam account with Forged Alliance activated on it (9420)
 - a linux system (preferably debian-based such as ubuntu,  for further compatibility please contribute)
 - no pre-existing java version (preferably)
-- preferably an untouched /etc/environement file
+- preferably an untouched (or absent) /etc/environement 
 - have at least a total of 11.7GB of free space on boot drive
 - be willing to write to your boot drive
 - be willing to have stuff put into both /etc/environement and .bashrc
