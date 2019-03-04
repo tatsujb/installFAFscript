@@ -37,6 +37,7 @@ fi
 #########################################################################################################################
 
 echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
+
 gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c 'echo "installing proton and running steam...";
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
@@ -54,10 +55,10 @@ wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$
 tar xf $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d;
 rm $PROTONNAME.tar.xz;
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password -nofriendsui;
-sleep 1;
+sleep 2;
 echo "[$(date --rfc-3339=seconds)] running steam cmd" >> ~/fafstack-'$STACKVERSION'.log;
 steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit;
-sleep 1;
+sleep 2;
 echo "[$(date --rfc-3339=seconds)] running steam cmd finished / exited, starting steam again" >> ~/fafstack-'$STACKVERSION'.log;
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password -nofriendsui -applaunch 9420 -shutdown;
 echo "making map & mods symbolic links";
