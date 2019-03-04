@@ -51,22 +51,53 @@ echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'f
 
 gnome-terminal --tab -- bash -c 'steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD';
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -nofriendsui -applaunch 9420 -shutdown;
-STEAMUSERNAME=e;
-STEAMPASSWORD=e;
 cd;
-mv /home/'$USER'/.steam/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0 /home/'$USER'/.steam/compatibilitytools.d/Proton;
+mv ~/.steam/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0 ~/.steam/compatibilitytools.d/Proton;
 echo "making map & mods symbolic links";
 echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/fafstack-'$STACKVERSION'.log;
-cd /home/$USER/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance;
+if [ -f ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance ];
+then;
+echo "[$(date --rfc-3339=seconds)] SteamApps SupCom found" >> ~/fafstack-'$STACKVERSION'.log;
+cd ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance;
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
-cd /home/$USER/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser;
+else;
+echo "[$(date --rfc-3339=seconds)] SteamApps SupCom not found" >> ~/fafstack-'$STACKVERSION'.log;
+fi;
+if [ -f ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance ];
+then;
+echo "[$(date --rfc-3339=seconds)] steamapps SupCom found" >> ~/fafstack-'$STACKVERSION'.log;
+cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance;
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
+else;
+echo "[$(date --rfc-3339=seconds)] steamapps SupCom not found" >> ~/fafstack-'$STACKVERSION'.log;
+fi;
+if [ -f ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance ];
+then;
+echo "[$(date --rfc-3339=seconds)] SteamApps compatdata found" >> ~/fafstack-'$STACKVERSION'.log;
+cd ~/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser;
 rm -rf My\ Documents;
 mkdir My\ Documents;
 cd My\ Documents;
 ln -s ~/My\ Games/ My\ Games;
+else;
+echo "[$(date --rfc-3339=seconds)] SteamApps compatdata not found" >> ~/fafstack-'$STACKVERSION'.log;
+fi;
+if [ -f ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance ];
+then;
+echo "[$(date --rfc-3339=seconds)] steamapps compatdata found" >> ~/fafstack-'$STACKVERSION'.log;
+cd ~/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser;
+rm -rf My\ Documents;
+mkdir My\ Documents;
+cd My\ Documents;
+ln -s ~/My\ Games/ My\ Games;
+else;
+echo "[$(date --rfc-3339=seconds)] steamapps compatdata not found" >> ~/fafstack-'$STACKVERSION'.log;
+fi;
 cd'
 
+echo "got to after main segment"
 
 sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
 
@@ -174,7 +205,6 @@ else
     sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac" 0
     sudo update-alternatives --set java /usr/lib/jvm/jdk-10.0.2/bin/java
     sudo update-alternatives --set javac /usr/lib/jvm/jdk-10.0.2/bin/javac
-    echo export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2 >> ~/.bashrc
 fi
 echo "now moving on to installing Downlord's FAF..."
 echo "[$(date --rfc-3339=seconds)] installing DOWNLORD" >> ~/'fafstack-'$STACKVERSION'.log'
