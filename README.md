@@ -3,6 +3,22 @@
 A shell script that installs a so-called fafSTACK on linux
 ![warty-final-ubuntu](https://user-images.githubusercontent.com/5132359/53690402-25b5a600-3d6a-11e9-94cd-3ac2fc06cf9a.png)
 
+#### What is a fafSTACK?
+
+a faf stack is a set of software and environement and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") on linux as you would under windows.
+
+such a setup includes (at minimum) :
+ - Supreme Commander Forged Alliance
+ - (FAF) JAVA client
+ - Java 10
+ - Gallium-Proton /or/ Proton /or/ Wine (to run the windows game)
+In the case of this script, we will have recourse to some supplementary items in order to automate our task :
+ - curl (fetches installers from git)
+ - steamCMD (downloads the game) 
+ - steam (installs it)
+ Dependencies :
+ - lib32gcc1 (steamcmd)
+ - libd3dadapter9-mesa:i386 libd3dadapter9-mesa (Gallium-Proton)
 
 # User-Guide
 
@@ -32,7 +48,7 @@ once steam is opened
 
 it will ask to restart.
 
-when steam starts again use steam's icon in the notifications area to quit steam.
+when steam starts again use steam's icon in the notifications area to quit steam (or close it instead of logging back in).
 
 ### 5th
 
@@ -42,7 +58,8 @@ Forged Alliance should be running, you can set a profile, then set your prefered
 
 ### 6th
 
-use your trusty terminal :
+FAF should also be running.
+if not use your trusty terminal :
 
 ```
 cd ~/faf
@@ -66,10 +83,10 @@ then with faf running, log in and set your preferences under "Forged Alliance Fo
 ```
 where "USERNAME" is what you get when you type `echo $USER` into the terminal.
 
-try two join to games and on the second run in your terminal :
+try two join to games and before the second run in your terminal :
 
 ```
-chmod +x ~/.faforever/bin/ForgedAlliance.exe
+chmod +x -R ~/.faforever/*
 ```
 ### 7th
 
@@ -84,3 +101,56 @@ GL HF!
 - have at least a total of 11.7GB of free space on boot drive
 - be willing to write to your boot drive
 - be willing to have stuff put into both /etc/environement and .bashrc
+
+# Un-installing :
+
+this will very much depend on how much of what you already had installed before running this script that this script has in common.
+
+here are a couple safe bets however, run this in your terminal:
+
+```
+rm ~/the\ contents\ of\ this*
+rm ~/fafstack-$STACKVERSION.log
+rm -rf ~/faf
+rm -rf ~/.faforever
+rm -rf ~/.com.faforever.client.FafClientApplication
+grep -v 'LD_PRELOAD' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'DEF_CMD' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'export TERM' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'WINEDLLPATH' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'WINEPREFIX' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'WINEDEBUG' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'SteamGameId' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'SteamAppId' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'INSTALL4J_JAVA_HOME' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+sudo apt purge -y steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1
+sudo apt -y autoremove
+source ~/.bashrc
+```
+now all that remains is :
+
+1. steam
+if steam wasn't on your system before you ran this script and you are fine with seeing it and Supreme Commander Forged Alliance go then you can run the following :
+```
+rm -rf ~/.steam
+rm -rf ~/Steam
+sudo apt purge -y steam
+sudo apt -y autoremove
+```
+
+2. JUST supreme commander, NOT steam (if you ran the above ignore this)
+```
+rm -rf ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
+```
+3. now the only change I made with my script remaining is /etc/environement
+
+I don't store your /etc/environement's original state, sorry I really rushed this script together :D
+
+but if you want a vanilla /etc/environement for ubuntu :
+
+```
+sudo rm /etc/environement
+sudo bash -c 'echo PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games\" >> /etc/environment'
+source  /etc/environement
+```
+...will do the trick.
