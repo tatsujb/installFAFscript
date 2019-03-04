@@ -3,7 +3,7 @@
 STACKVERSION=1.6
 echo 'new log file, fafSTACK version '$STACKVERSION >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
-read -s STEAMUSERNAME
+read STEAMUSERNAME
 echo "steam password :"
 read -s STEAMPASSWORD
 
@@ -69,6 +69,7 @@ sleep 2;
 echo "[$(date --rfc-3339=seconds)] running steam cmd finished / exited, starting steam again" >> ~/fafstack-'$STACKVERSION'.log;
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -applaunch 9420 -shutdown;
 echo "FA install done waiting in case it isnt";
+cp /tmp/proton_$USER/run ~/
 sleep 5;
 echo "making map & mods symbolic links";
 echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/fafstack-'$STACKVERSION'.log;
