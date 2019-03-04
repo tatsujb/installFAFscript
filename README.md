@@ -167,5 +167,11 @@ sudo bash -c 'echo PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbi
 source  /etc/environement
 ```
 
+5. curl
 
+really? I mean it's handy any only 395kilobytes, ok then...
+
+```
+sudo apt remove curl
+```
 
