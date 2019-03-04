@@ -8,7 +8,7 @@ A shell script that installs a so-called fafSTACK on linux
 
 ### 1st
 
-download installfaf.sh anywhere. (go to that dirrectory in your terminal, EXAMPLE: `cd Downloads`)
+click on installfaf.sh above, then click on "RAW", then type <kbd>Ctrl</kbd> + <kbd>S</kbd>, (you can place anywhere, in home folder is comfortable to work with), then <kbd>Enter</kbd> to save file.
 
 ### 2nd
 
@@ -16,7 +16,7 @@ make it executable : (terminal) `chmod +x installfaf.sh`
 
 ### 3rd 
 
-run the script within a terminal : `./installfaf.sh`
+run the script within a terminal : `. ./installfaf.sh` (the dot is of important here, without it FAF will fail to run without you personally, running `source ~/.bashrc` and `source /etc/environment` ...minor hassle)
 
 you'll be asked in order :
 - your steam account usename
