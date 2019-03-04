@@ -1,6 +1,6 @@
 #!/bin/bash
-# version 1.5
-STACKVERSION=1.5
+# version 1.6
+STACKVERSION=1.6
 echo 'new log file, fafSTACK version '$STACKVERSION >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
 read -s STEAMUSERNAME
@@ -28,6 +28,16 @@ else
     echo steam steam/license note '' | sudo debconf-set-selections
     sudo apt install -y steam
 fi
+if [ $(command -v curl) ]
+then
+    echo "[$(date --rfc-3339=seconds)] curl is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
+    echo "curl is already installed, proceeding..."
+else
+    cd
+    echo "[$(date --rfc-3339=seconds)] curl was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
+    sudo apt install -y curl
+fi
+sudo
 #########################################################################################################################
 #                                                                                                                       #
 # WIP! have not figured out a way to toggle proton-> [on] via command line, right now                                   #
@@ -39,7 +49,7 @@ gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bas
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
 echo "once thats done edit steam settings in order to enable Proton for all games";
-echo "it should have Gallium pres-elected already, this is what you want, just tick the box next to it.";
+echo "it should have Gallium pre-selected already, this is what you want, just tick the box next to it.";
 echo "";
 echo "";
 echo "[$(date --rfc-3339=seconds)] running steam" >> ~/fafstack-'$STACKVERSION'.log;
@@ -51,15 +61,15 @@ PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-};
 wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz;
 tar xf $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d;
 rm $PROTONNAME.tar.xz;
-steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password -nofriendsui;
+steam -login '$STEAMUSERNAME' '$STEAMPASSWORD';
 sleep 2;
 echo "[$(date --rfc-3339=seconds)] running steam cmd" >> ~/fafstack-'$STACKVERSION'.log;
 steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit;
 sleep 2;
 echo "[$(date --rfc-3339=seconds)] running steam cmd finished / exited, starting steam again" >> ~/fafstack-'$STACKVERSION'.log;
-steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -remember_password -nofriendsui -applaunch 9420 -shutdown;
+steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -applaunch 9420 -shutdown;
 echo "FA install done waiting in case it isnt";
-sleep 190;
+sleep 5;
 echo "making map & mods symbolic links";
 echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/fafstack-'$STACKVERSION'.log;
 if [ -d ~/.steam/steam/SteamApps ] ;
@@ -78,7 +88,7 @@ rm -rf My\ Documents;
 mkdir My\ Documents;
 cd My\ Documents;
 ln -s ~/My\ Games/ My\ Games;
-else echo "[$(date --rfc-3339=seconds)] steamuser profile folder found" >> ~/fafstack-'$STACKVERSION'.log;
+else echo "[$(date --rfc-3339=seconds)] steamuser profile folder not found" >> ~/fafstack-'$STACKVERSION'.log;
 fi;
 else echo "[$(date --rfc-3339=seconds)] SteamApps not found" >> ~/fafstack-'$STACKVERSION'.log;
 fi;
@@ -98,11 +108,15 @@ rm -rf My\ Documents;
 mkdir My\ Documents;
 cd My\ Documents;
 ln -s ~/My\ Games/ My\ Games;
-else echo "[$(date --rfc-3339=seconds)] steamuser profile folder found" >> ~/fafstack-'$STACKVERSION'.log;
+else echo "[$(date --rfc-3339=seconds)] steamuser profile folder not found" >> ~/fafstack-'$STACKVERSION'.log;
 fi;
 else echo "[$(date --rfc-3339=seconds)] steamapps not found" >> ~/fafstack-'$STACKVERSION'.log;
 fi;
-mv ~/.steam/compatibilitytools.d/'$PROTONNAME' ~-
+cp ~/.steam/compatibilitytools.d/'$PROTONNAME' ~/.steam/compatibilitytools.d/Proton'
+
+
+if [ $(command -v lib32gcc1) ]
+then
     echo "[$(date --rfc-3339=seconds)] lib32gcc1 is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
     echo "lib32gcc1 is already installed, proceeding..."
 else
@@ -128,16 +142,7 @@ echo "starting Forged Alliance Download..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
 echo "got to after main segment"
 sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
-if [ $(command -v curl) ]
-then
-    echo "[$(date --rfc-3339=seconds)] curl is already installed, proceeding..." >> ~/'fafstack-'$STACKVERSION'.log'
-    echo "curl is already installed, proceeding..."
-else
-    cd
-    echo "[$(date --rfc-3339=seconds)] curl was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
-    sudo apt install -y curl
-fi
-sudo apt autoremove -y &&
+apt autoremove -y &&
 sudo apt autoclean &&
 echo "Now probing the Java status of this OS..."
 echo "[$(date --rfc-3339=seconds)] Now probing the Java status of this OS..." >> ~/'fafstack-'$STACKVERSION'.log'
@@ -246,9 +251,6 @@ rmdir downlords-faf-client-${FAFVERSIONNUMBER:1}
 rm _dfc_unix_$FAFVERSION.tar.gz
 chmod +x downlords-faf-client && chmod +x lib/faf-uid
 cd
-cd ~/faf
-./downlords-faf-client
-cd
 echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss3.so' >> ~/.bashrc
 echo 'export DEF_CMD=("/home/'$USER'/.steam/steam/SteamApps/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")' >> ~/.bashrc
 echo 'export TERM=xterm' >> ~/.bashrc
@@ -259,4 +261,6 @@ echo 'export SteamGameId=9420' >> ~/.bashrc
 echo 'export SteamAppId=9420' >> ~/.bashrc
 source ~/.bashrc
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
-echo "[$(date --rfc-3339=seconds)] Finished thread one. (proton/downlord/open-jdk/bashrc) >> ~/'fafstack-'$STACKVERSION'.log'
+echo "[$(date --rfc-3339=seconds)] Finished thread one. (proton/downlord/open-jdk/bashrc)" >> ~/'fafstack-'$STACKVERSION'.log'
+gnome-terminal --tab --active --title="FAF client thread" -- bash -c 'cd ~/faf;
+./downlords-faf-client'
