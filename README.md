@@ -1,4 +1,4 @@
-# fafSTACK  [W.I.P.]
+# fafSTACK   [W.I.P.]
 
 A shell script that installs a so-called fafSTACK on linux
 ![warty-final-ubuntu](https://user-images.githubusercontent.com/5132359/53690402-25b5a600-3d6a-11e9-94cd-3ac2fc06cf9a.png)
@@ -53,18 +53,20 @@ at a certain point steam starts up and you'll need to enter Steam Guard.
 
 it will ask to restart.
 
-when steam starts again use steam's icon in the notifications area to quit steam (or close it instead of logging back in).
+when steam starts don't login just close both windows login windows, this will execute the rest of the script.
 
 ### 5th
 
 Then it downloads Forged Alliance. this will take a while.
 Once it's done steam starts again in order to finalize installation and start (non root hard drive installation is not supported. (E.G.: to a secondary storage HHD, for now I only support installing to SDA.))
 
-Forged Alliance should start, you can set a profile, then set your prefered resulution, then quit the game. (use steam's notification-area icon to close steam once again)
+accept terms. you can tick the box "Launch game as soon as it's read ready".
+
+Forged Alliance should start, you can set a profile, then set your prefered resulution, then quit the game. (use steam's notification-area icon to close steam once again, to allow the script to continue)
 
 ### 6th
 
-FAF should also be running.
+FAF should be running.
 if not use your trusty terminal :
 
 ```
@@ -83,6 +85,12 @@ then with faf running, log in and set your preferences under "Forged Alliance Fo
 ```
 /home/USERNAME/.steam/compatibilitytools.d/Proton/dist/bin/wine "%s"
 ```
+if this doesn't work try :
+```
+/home/USERNAME/run "%s"
+```
+
+
 "Execution Dirrectory" :
 ```
 /home/USERNAME/.faforever/bin
