@@ -49,7 +49,7 @@ echo "starting Forged Alliance Download..."
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
 
 
-gnome-terminal --tab -- bash -c 'steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD';
+gnome-terminal --tab --active -- bash -c 'eval "steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit";
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -nofriendsui -applaunch 9420 -shutdown;
 cd;
 mv ~/.steam/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0 ~/.steam/compatibilitytools.d/Proton;
@@ -98,7 +98,6 @@ fi;
 cd'
 
 echo "got to after main segment"
-
 sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
 
 if [ $(command -v curl) ]
