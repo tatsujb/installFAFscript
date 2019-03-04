@@ -37,7 +37,6 @@ fi
 #########################################################################################################################
 
 echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
-
 gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c 'echo "installing proton and running steam...";
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
