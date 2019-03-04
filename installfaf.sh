@@ -263,11 +263,11 @@ cd ~/faf
 ./downlords-faf-client
 cd
 echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss3.so' >> ~/.bashrc
-echo 'export DEF_CMD=("/home/'$USER'/.steam/steam/steamapps/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")' >> ~/.bashrc
+echo 'export DEF_CMD=("/home/'$USER'/.steam/steam/SteamApps/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")' >> ~/.bashrc
 echo 'export TERM=xterm' >> ~/.bashrc
 echo 'export WINEDEBUG=-all' >> ~/.bashrc
 echo 'export WINEDLLPATH=/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/lib64/wine:/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/lib/wine' >> ~/.bashrc
-echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/steamapps/compatdata/9420/pfx/' >> ~/.bashrc
+echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/SteamApps/compatdata/9420/pfx/' >> ~/.bashrc
 echo 'export SteamGameId=9420' >> ~/.bashrc
 echo 'export SteamAppId=9420' >> ~/.bashrc
 source ~/.bashrc
