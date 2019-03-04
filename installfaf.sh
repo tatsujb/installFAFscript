@@ -3,7 +3,7 @@
 STACKVERSION=1.5
 echo 'new log file, fafSTACK version '$STACKVERSION >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
-read STEAMUSERNAME
+read -s STEAMUSERNAME
 echo "steam password :"
 read -s STEAMPASSWORD
 
