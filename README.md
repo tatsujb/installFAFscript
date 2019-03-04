@@ -134,6 +134,7 @@ if steam wasn't on your system before you ran this script and you are fine with 
 ```
 rm -rf ~/.steam
 rm -rf ~/Steam
+echo steam steam/purge note '' | sudo debconf-set-selections
 sudo apt purge -y steam
 sudo apt -y autoremove
 ```
