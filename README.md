@@ -162,14 +162,14 @@ sudo update-alternatives --remove-all javac
 
 4. now the only change I made with my script remaining is /etc/environement
 
-I don't store your /etc/environement's original state, sorry I really rushed this script together :D
+I don't store your /etc/environment's original state, sorry I really rushed this script together :D
 
-but if you want a vanilla /etc/environement for ubuntu :
+but if you want a vanilla /etc/environment for ubuntu :
 
 ```
-sudo rm /etc/environement
+sudo rm /etc/environment
 sudo bash -c 'echo PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games\" >> /etc/environment'
-source  /etc/environement
+source  /etc/environment
 ```
 
 5. curl
