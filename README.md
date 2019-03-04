@@ -143,7 +143,19 @@ sudo apt -y autoremove
 ```
 rm -rf ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
 ```
-3. now the only change I made with my script remaining is /etc/environement
+
+...will do the trick.
+
+3. Java 10 (you will have to put back your other versions of java yourself)
+```
+grep -v 'INSTALL4J_JAVA_HOME' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+source ~/.bashrc
+sudo rm -rf /usr/lib/jvm/jdk-10.0.2/
+sudo update-alternatives --remove-all java
+sudo update-alternatives --remove-all javac
+```
+
+4. now the only change I made with my script remaining is /etc/environement
 
 I don't store your /etc/environement's original state, sorry I really rushed this script together :D
 
@@ -154,4 +166,6 @@ sudo rm /etc/environement
 sudo bash -c 'echo PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games\" >> /etc/environment'
 source  /etc/environement
 ```
-...will do the trick.
+
+
+
