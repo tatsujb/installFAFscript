@@ -134,8 +134,8 @@ GL HF!
 
 ## Not working ?
 
-this is likely. this is still Work in Progress. success rate is basically null at this point.
-feedback will help me make fix things, though. this script creates a very minimal log file called "fafstack-versionNumber.log" in your home. you can paste it's contents as part of an issue/bug report.
+This is likely. This is still Work In Progress. Success rate is basically null at this point.
+Feedback will help me fix things. This script creates a very minimal log file called "fafstack-\*.log" in your home. Paste it's contents as part of an issue/bug report.
 
 # Un-installing :
 
