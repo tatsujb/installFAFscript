@@ -24,7 +24,7 @@ In the case of this script, we will have recourse to some supplementary items in
  
  Dependencies :
  
- - lib32gcc1 (steamcmd)
+ - lib32gcc1 (steamCMD)
  - libd3dadapter9-mesa:i386 libd3dadapter9-mesa (Gallium-Proton)
 
 # User-Guide
