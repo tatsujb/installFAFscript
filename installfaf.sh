@@ -95,7 +95,7 @@ else echo "[$(date --rfc-3339=seconds)] SteamApps not found" >> ~/fafstack-'$STA
 fi;
 if [ -d ~/.steam/steam/steamapps ] ;
 then echo "[$(date --rfc-3339=seconds)] steamapps found" >> ~/fafstack-'$STACKVERSION'.log;
-if [ -d ~/.steam/steam/SteamApps/common/Supreme* ] ;
+if [ -d ~/.steam/steam/steamapps/common/Supreme* ] ;
 then echo "[$(date --rfc-3339=seconds)] Supreme Commander folder found" >> ~/fafstack-'$STACKVERSION'.log;
 cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance;
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
