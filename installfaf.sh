@@ -190,7 +190,7 @@ gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bas
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
 echo "once thats done edit steam settings in order to enable Proton for all games";
-echo "it should have Gallium pre-selected already, this is what you want, just tick the box next to it.";
+[ '$USEPROTON' ] && echo "it should have Gallium pre-selected already, this is what you want, just tick the box next to it.";
 echo "";
 echo "";
 echo "[$(date --rfc-3339=seconds)] running steam" >> ~/fafstack-'$STACKVERSION'.log;
