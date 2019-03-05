@@ -207,16 +207,15 @@ fi;
 echo "starting Steam...";
 echo "[$(date --rfc-3339=seconds)] starting Steam..." >> ~/fafstack-'$STACKVERSION'.log;
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD';
-sleep 2;
 echo "starting Forged Alliance Download...";
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/fafstack-'$STACKVERSION'.log;
-sleep 2;
+sleep 10;
 steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit;
 echo "steamCMD terminated (in a good way), starting FA to finalize install";
 echo "[$(date --rfc-3339=seconds)] steamCMD terminated (in a good way), starting FA to finalize install" >> ~/fafstack-'$STACKVERSION'.log;
 sleep 2;
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -applaunch 9420 -shutdown;
-echo "FA install done waiting in case it isnt";
+echo "FA install done. Waiting in case it isnt";
 cp /tmp/proton_$USER/run ~/
 sleep 5;
 echo "making map & mods symbolic links";
@@ -261,7 +260,7 @@ else echo "[$(date --rfc-3339=seconds)] steamuser profile folder not found" >> ~
 fi;
 else echo "[$(date --rfc-3339=seconds)] steamapps not found" >> ~/fafstack-'$STACKVERSION'.log;
 fi;
-[ '$USEPROTON' ] && cp ~/.steam/compatibilitytools.d/'$PROTONNAME' ~/.steam/Proton || ~/.steam/steam/steamapps/common/Proton* ~/.steam/Proton;
+[ '$USEPROTON' ] && cp -r ~/.steam/compatibilitytools.d/'$PROTONNAME' ~/.steam/Proton || ~/.steam/steam/steamapps/common/Proton* ~/.steam/Proton;
 [ -d ~/.steam/Proton ] && echo "[$(date --rfc-3339=seconds)] PROTON folder found" >> ~/fafstack-'$STACKVERSION'.log || echo "[$(date --rfc-3339=seconds)] PROTON folder not found" >> ~/fafstack-'$STACKVERSION'.log;'
 # end of second thread
 
