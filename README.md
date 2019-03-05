@@ -118,9 +118,9 @@ GL HF!
 - be willing to write to your boot drive
 - be willing to have stuff put into both /etc/environement and .bashrc
 
-# Axes of improvements
+## Axes of improvements
 
-- prevent runnning right at the top of te script in all crazy sorts of senarios (like attempting to run on windows or other unsupported distro)
+- prevent runnning right at the top of the script in all crazy sorts of senarios (like attempting to run on windows or other unsupported distro)
 - get rid of behaviors that the user may not be comfortable with; case in point and first offender: giving a shell script sudo priveledges in it's entirety. if the user is warned first hand that he needs curl, steamCMD, steam, lib32gcc1, libd3dadapter9-mesa:i386, libd3dadapter9-mesa beforehand or given an apt install command that opens up ready to run in a seperate terminal (that terminal's outcome being on an "if") so that the user sees firsthand what he's allowing sudo for and what sudo priveledges have been constrained to, then the script can come off less bad practice. Also there should be an opt out of steam username and password entering, in which case at the begining, the script should be able to detect if the condition of Forged Alliance being installed (easy) and first-run have been met (bit of a pickle, it's not as easy as having a config file. although, this requires some testing, perhaps FAF requires nothing more than FA phyisical files, reg entries and perferal runtime libraries may be unused).
 - make this script more posix-compliant
 - detect linux distro and create if-cases for differing systems (E.G. use yogurt if on an arch-based system instead of apt)
@@ -129,7 +129,7 @@ GL HF!
 - figure out a proper fix to the current lack of path-resolving for FAF's setting "Command line format for executable" than the current workaround: Currently I'm forced to copy Proton Gallium nine's folder to a new folder and point to that new folder instead because the new folder's path doesn't contain dots, numbers or spaces which "Command line format for executable" setting entry in FAF apparently cannot handle. I haven't researched this sufficiently but I suspect there's a better way to do this.
 - ideas welcome.
 
-# Not working ?
+## Not working ?
 
 this is likely. this is still Work in Progress. success rate is basically null at this point.
 feedback will help me make fix things, though. this script creates a very minimal log file called "fafstack-versionNumber.log" in your home. you can paste it's contents as part of an issue/bug report.
