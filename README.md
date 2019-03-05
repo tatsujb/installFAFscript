@@ -128,6 +128,7 @@ GL HF!
 - add support for custom install location. this one is a nightmare. and not facillitated by paths 
 - figure out a proper fix to the current lack of path-resolving for FAF's setting "Command line format for executable" than the current workaround: Currently I'm forced to copy Proton Gallium nine's folder to a new folder and point to that new folder instead because the new folder's path doesn't contain dots, numbers or spaces which "Command line format for executable" setting entry in FAF apparently cannot handle. I haven't researched this sufficiently but I suspect there's a better way to do this.
 - a workaround to focing the user to `. ./script.sh` instead of `./script.sh` as they would be used to.
+- figure out if any chages to /etc/environement are actually needed. I haven't been able to / or had time to rule out these changes as useless. ideally /ec/environment wouldn't be touched at all.
 - ideas welcome.
 
 ## Not working ?
