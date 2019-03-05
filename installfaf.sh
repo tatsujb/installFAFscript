@@ -131,12 +131,13 @@ echo "__________________________________________________________________________
 LSBLK=$(lsblk | grep -v 'loop')
 echo "$LSBLK" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "_______________________________________________________________________________________________________" >> ~/'fafstack-'$STACKVERSION'.log'
+echo "" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
 read STEAMUSERNAME
 echo "steam password :"
 read -s STEAMPASSWORD
-echo "steam credentials entrusted to scritp" >> ~/'fafstack-'$STACKVERSION'.log' # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-sudo echo "sudo priveledges entrusted to script" >> ~/'fafstack-'$STACKVERSION'.log' # AGAIN, SUGGESTIONS WELCOME...
+echo "[$(date --rfc-3339=seconds)] Steam credentials entrusted to scritp" >> ~/'fafstack-'$STACKVERSION'.log' # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
+sudo echo "[$(date --rfc-3339=seconds)] sudo priveledges entrusted to script" >> ~/'fafstack-'$STACKVERSION'.log' # AGAIN, SUGGESTIONS WELCOME...
 if (whiptail --title "Use Gallium Nine Proton instead of vanilla Proton?" --yesno "If you don't know what Gallium Nine is or don't care, choose \"No\"." 10 100)
 then
     USEPROTON=true
@@ -155,7 +156,6 @@ else
     echo "[$(date --rfc-3339=seconds)] did not enable partners, hoping it was already enabled." >> ~/'fafstack-'$STACKVERSION'.log'
 fi
 sudo apt update -y &&
-echo "[$(date --rfc-3339=seconds)] now sudo" >> ~/'fafstack-'$STACKVERSION'.log'
 sudo apt -y dist-upgrade &&
 
 if [ $(command -v steam) ]
