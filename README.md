@@ -205,16 +205,11 @@ sudo update-alternatives --remove-all java
 sudo update-alternatives --remove-all javac
 ```
 
-5. now the only change I made with my script remaining is /etc/environement
-
-I don't store your /etc/environment's original state, sorry I really rushed this script together :D
-
-but if you want a vanilla /etc/environment for ubuntu :
+5. now the only change I made with my script remaining is /etc/environement :
 
 ```
-sudo rm /etc/environment
-sudo bash -c 'echo PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games\" >> /etc/environment'
-source  /etc/environment
+sudo mv /etc/environment.bak /etc/environment
+source /etc/environment
 ```
 
 
