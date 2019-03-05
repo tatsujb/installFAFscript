@@ -207,6 +207,7 @@ fi;
 echo "starting Steam...";
 echo "[$(date --rfc-3339=seconds)] starting Steam..." >> ~/fafstack-'$STACKVERSION'.log;
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD';
+sleep 2;
 echo "starting Forged Alliance Download...";
 echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/fafstack-'$STACKVERSION'.log;
 sleep 2;
