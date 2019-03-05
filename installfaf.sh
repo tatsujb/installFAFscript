@@ -1,12 +1,152 @@
 #!/bin/bash
-# version 1.6
-STACKVERSION=1.6
-echo 'new log file, fafSTACK version '$STACKVERSION >> ~/'fafstack-'$STACKVERSION'.log'
+# version 1.7
+STACKVERSION=1.7
+echo "_______________________________________________________________________________________________________" >> ~/'fafstack-'$STACKVERSION'.log'
+echo "-------------------------------------------------------------------------------------------------------" >> ~/'fafstack-'$STACKVERSION'.log'
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)
+echo "[$(date --rfc-3339=seconds)] New log file. fafSTACK version "$STACKVERSION" running : "$unameOut  >> ~/'fafstack-'$STACKVERSION'.log';;
+    Darwin*)
+echo "Mac / Apple Macintosh is not supported yet though it could technically be; as evidenced by previous examples of people running FA and even FAF on mac. Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
+echo "[$(date --rfc-3339=seconds)] New log file. fafSTACK version "$STACKVERSION". FAILIURE. MAC UNSUPPORTED. "$unameOut  >> ~/'fafstack-'$STACKVERSION'.log'
+exit 1;;
+    CYGWIN*)
+echo "Hello, you can go straight to : www.faforever.com and click on \"Download Client\". This script exists in order to help linux users achieve the same thing you can do out-of-the-box on your operating system. You have not the remotest use for this script :) be free, wild bird!"
+echo "[$(date --rfc-3339=seconds)] New log file. fafSTACK version "$STACKVERSION". FAILIURE. WINDOWS UNSUPPORTED. "$unameOut  >> ~/'fafstack-'$STACKVERSION'.log'
+exit 1;;
+    MINGW*)
+echo "Hello, you can on MinGW you cannot run Forged Alliance, this script is of no use to you."
+echo "[$(date --rfc-3339=seconds)] New log file. fafSTACK version "$STACKVERSION". FAILIURE. MINGW UNSUPPORTED. "$unameOut  >> ~/'fafstack-'$STACKVERSION'.log'
+exit 1
+esac
+
+if [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd / recent ubuntus will fall here / majority use-case
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+    echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'  
+elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
+    echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
+    if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
+    then
+	echo "You're probably right to choose this..."
+	echo "exiting upon demand..."
+	echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, OS version too experimental" >> ~/'fafstack-'$STACKVERSION'.log'
+	exit 1
+    else
+	echo "OK! fingers crossed!"
+	echo "continuing..."
+	echo "[$(date --rfc-3339=seconds)] wrong distribution, user-chosen continue." >> ~/'fafstack-'$STACKVERSION'.log'
+    fi
+elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+    echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
+    if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
+    then
+	echo "You're probably right to choose this..."
+	echo "exiting upon demand..."
+	echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, OS version too experimental" >> ~/'fafstack-'$STACKVERSION'.log'
+	exit 1
+    else
+	echo "OK! fingers crossed!"
+	echo "continuing..."
+	echo "[$(date --rfc-3339=seconds)] wrong distribution, user-chosen continue." >> ~/'fafstack-'$STACKVERSION'.log'
+    fi
+elif [ -f /etc/debian_version ]; then
+    # Older Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
+    echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
+    if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
+    then
+	echo "You're probably right to choose this..."
+	echo "exiting upon demand..."
+	echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, OS version too experimental" >> ~/'fafstack-'$STACKVERSION'.log'
+	exit 1
+    else
+	echo "OK! fingers crossed!"
+	echo "continuing..."
+	echo "[$(date --rfc-3339=seconds)] wrong distribution, user-chosen continue." >> ~/'fafstack-'$STACKVERSION'.log'
+    fi
+elif [ -f /etc/SuSe-release ]; then
+    # Older SuSE/etc.
+    OS="Open SuSE"
+    VER="unknown version but likely very old"
+    echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
+    if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
+    then
+	echo "You're probably right to choose this..."
+	echo "exiting upon demand..."
+	echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, OS version too experimental" >> ~/'fafstack-'$STACKVERSION'.log'
+	exit 1
+    else
+	echo "OK! fingers crossed!"
+	echo "continuing..."
+	echo "[$(date --rfc-3339=seconds)] wrong distribution, user-chosen continue." >> ~/'fafstack-'$STACKVERSION'.log'
+    fi
+elif [ -f /etc/redhat-release ]; then
+    # Older Red Hat, CentOS, etc.
+    OS="RedHat or CentOS or similar"
+    VER="unknown version but likely very old"
+    echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
+    if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
+    then
+	echo "You're probably right to choose this..."
+	echo "exiting upon demand..."
+	echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, OS version too experimental" >> ~/'fafstack-'$STACKVERSION'.log'
+	exit 1
+    else
+	echo "OK! fingers crossed!"
+	echo "continuing..."
+	echo "[$(date --rfc-3339=seconds)] wrong distribution, user-chosen continue." >> ~/'fafstack-'$STACKVERSION'.log'
+    fi
+else
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
+    echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
+    if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
+    then
+	echo "You're probably right to choose this..."
+	echo "exiting upon demand..."
+	echo "[$(date --rfc-3339=seconds)] Abandoned on user demand, OS version too experimental" >> ~/'fafstack-'$STACKVERSION'.log'
+	exit 1
+    else
+	echo "OK! fingers crossed!"
+	echo "continuing..."
+	echo "[$(date --rfc-3339=seconds)] wrong distribution, user-chosen continue." >> ~/'fafstack-'$STACKVERSION'.log'
+    fi
+fi
+echo "-------------------------------------------------------------------------------------------------------" >> ~/'fafstack-'$STACKVERSION'.log'
+echo "Hard storage setup :" >> ~/'fafstack-'$STACKVERSION'.log'
+echo "_______________________________________________________________________________________________________" >> ~/'fafstack-'$STACKVERSION'.log'
+LSBLK=$(lsblk | grep -v 'loop')
+echo "$LSBLK" >> ~/'fafstack-'$STACKVERSION'.log'
+echo "_______________________________________________________________________________________________________" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
 read STEAMUSERNAME
 echo "steam password :"
 read -s STEAMPASSWORD
-
+echo "steam credentials entrusted to scritp" >> ~/'fafstack-'$STACKVERSION'.log' # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
+sudo echo "sudo priveledges entrusted to script" >> ~/'fafstack-'$STACKVERSION'.log' # AGAIN, SUGGESTIONS WELCOME...
+if (whiptail --title "Use Gallium Nine Proton instead of vanilla Proton?" --yesno "If you don't know what Gallium Nine is or don't care, choose \"No\"." 10 100)
+then
+    USEPROTON=true
+    echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
+    echo "[$(date --rfc-3339=seconds)] Gallium Nine chosen" >> ~/'fafstack-'$STACKVERSION'.log'
+else
+    echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
+    USEPROTON=false
+    echo "[$(date --rfc-3339=seconds)] Vanilla Proton chosen" >> ~/'fafstack-'$STACKVERSION'.log'
+fi
 if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
 then
     echo "enabled partners" >> ~/'fafstack-'$STACKVERSION'.log'
@@ -38,13 +178,14 @@ else
     sudo apt install -y curl
 fi
 sudo
+
+
 #########################################################################################################################
 #                                                                                                                       #
-# WIP! have not figured out a way to toggle proton-> [on] via command line, right now                                   #
+# WIP! have not figured out a way to toggle proton-> [on] & set set launch options via command line, right now          #
 # you have to do it yourself when steam starts up while the script is running                                           #
 #                                                                                                                       #
 #########################################################################################################################
-echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
 gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c 'echo "installing proton and running steam...";
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
@@ -53,7 +194,8 @@ echo "it should have Gallium pre-selected already, this is what you want, just t
 echo "";
 echo "";
 echo "[$(date --rfc-3339=seconds)] running steam" >> ~/fafstack-'$STACKVERSION'.log;
-mkdir -p ~/.steam/compatibilitytools.d;
+if '$USEPROTON' ;
+then mkdir -p ~/.steam/compatibilitytools.d;
 PROTONVERSIONNUMBER=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep "tag_name" | head -n 1 | cut -f4,4 -d"\"");
 REPLACING=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep "target_commitish" | head -n 1 | cut -f4,4 -d"\"" | sed "s/[^_]\+/\L\u&/g");
 PROTONVERSION=${REPLACING/_G/-6_G};
@@ -61,18 +203,23 @@ PROTONNAME=$PROTONVERSION"_"${PROTONVERSIONNUMBER##*-};
 wget https://github.com/popsUlfr/Proton/releases/download/$PROTONVERSIONNUMBER/$PROTONNAME.tar.xz;
 tar xf $PROTONNAME.tar.xz -C ~/.steam/compatibilitytools.d;
 rm $PROTONNAME.tar.xz;
+fi;
+echo "starting Steam...";
+echo "[$(date --rfc-3339=seconds)] starting Steam..." >> ~/fafstack-'$STACKVERSION'.log;
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD';
+echo "starting Forged Alliance Download...";
+echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/fafstack-'$STACKVERSION'.log;
 sleep 2;
-echo "[$(date --rfc-3339=seconds)] running steam cmd" >> ~/fafstack-'$STACKVERSION'.log;
 steamcmd +login '$STEAMUSERNAME' '$STEAMPASSWORD' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit;
+echo "steamCMD terminated (in a good way), starting FA to finalize install";
+echo "[$(date --rfc-3339=seconds)] steamCMD terminated (in a good way), starting FA to finalize install" >> ~/fafstack-'$STACKVERSION'.log;
 sleep 2;
-echo "[$(date --rfc-3339=seconds)] running steam cmd finished / exited, starting steam again" >> ~/fafstack-'$STACKVERSION'.log;
 steam -login '$STEAMUSERNAME' '$STEAMPASSWORD' -applaunch 9420 -shutdown;
 echo "FA install done waiting in case it isnt";
 cp /tmp/proton_$USER/run ~/
 sleep 5;
 echo "making map & mods symbolic links";
-echo "[$(date --rfc-3339=seconds)] Maps & Mods" >> ~/fafstack-'$STACKVERSION'.log;
+echo "[$(date --rfc-3339=seconds)] making map & mods symbolic links" >> ~/fafstack-'$STACKVERSION'.log;
 if [ -d ~/.steam/steam/SteamApps ] ;
 then echo "[$(date --rfc-3339=seconds)] SteamApps found" >> ~/fafstack-'$STACKVERSION'.log;
 if [ -d ~/.steam/steam/SteamApps/common/Supreme* ] ;
@@ -113,8 +260,12 @@ else echo "[$(date --rfc-3339=seconds)] steamuser profile folder not found" >> ~
 fi;
 else echo "[$(date --rfc-3339=seconds)] steamapps not found" >> ~/fafstack-'$STACKVERSION'.log;
 fi;
-cp ~/.steam/compatibilitytools.d/'$PROTONNAME' ~/.steam/compatibilitytools.d/Proton'
+[ '$USEPROTON' ] && cp ~/.steam/compatibilitytools.d/'$PROTONNAME' ~/.steam/Proton || ~/.steam/steam/steamapps/common/Proton* ~/.steam/Proton;
+[ -d ~/.steam/Proton ] && echo "[$(date --rfc-3339=seconds)] PROTON folder found" >> ~/fafstack-'$STACKVERSION'.log || echo "[$(date --rfc-3339=seconds)] PROTON folder not found" >> ~/fafstack-'$STACKVERSION'.log;'
+# end of second thread
 
+# finalising apt-install
+echo "[$(date --rfc-3339=seconds)] start of second thread did not crash first thread" >> ~/'fafstack-'$STACKVERSION'.log'
 
 if [ $(command -v lib32gcc1) ]
 then
@@ -138,13 +289,12 @@ else
     sudo apt install -y steamcmd
     cd
 fi
-echo "[$(date --rfc-3339=seconds)] installing dependencies" >> ~/'fafstack-'$STACKVERSION'.log'
-echo "starting Forged Alliance Download..."
-echo "[$(date --rfc-3339=seconds)] starting Forged Alliance Download..." >> ~/'fafstack-'$STACKVERSION'.log'
-echo "got to after main segment"
-sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
+[ $USEPROTON ] && sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
 apt autoremove -y &&
 sudo apt autoclean &&
+# no more apt-install
+
+# Java fix-me block
 echo "Now probing the Java status of this OS..."
 echo "[$(date --rfc-3339=seconds)] Now probing the Java status of this OS..." >> ~/'fafstack-'$STACKVERSION'.log'
 if [[ $(command -v java) ]] || [[ $(type -p java) ]] || [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]]
@@ -205,39 +355,47 @@ else
     sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac" 0
     sudo update-alternatives --set java /usr/lib/jvm/jdk-10.0.2/bin/java
     sudo update-alternatives --set javac /usr/lib/jvm/jdk-10.0.2/bin/javac
-    echo "export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2" >> ~/.bashrc
-    source ~/.bashrc
+    ! grep -q 'INSTALL4J_JAVA_HOME' ~/.bashrc && echo "export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2" >> ~/.bashrc
 fi
+# /end Java fix-me block
+
+# Download & finish install java 10 open jdk
 ENVIRONMENT=$(cat /etc/environment)
-RESOLVEDPATH='PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/bin:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin\"'
-RESOLVEDJAVA='JAVA_HOME=\"/usr/lib/jvm/jdk-10.0.2\"'
-if [ ! -f /etc/environment ] || [ 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' == "$ENVIRONMENT" ]
-then
-#TODO : also test if environment is exactly as we wish it to be.
-    echo "environment is vanilla..."
-    echo "proceeding..."
-    echo "[$(date --rfc-3339=seconds)] optimal use-case" >> ~/'fafstack-'$STACKVERSION'.log'
-    sudo rm -f /etc/environment
-    [ ! -f /etc/environment ] && sudo touch /etc/environment
-    sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
-    sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
-    source /etc/environment
+DEFAULTENV='PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/home/'$USER'/.steam/Proton/dist/bin:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin"
+JAVA_HOME="/usr/lib/jvm/jdk-10.0.2"'
+if [ "${ENVIRONMENT}" = "${DEFAULTENV}" ]; then
+    echo "[$(date --rfc-3339=seconds)] ENV perfect, optimal use-case" >> ~/'fafstack-'$STACKVERSION'.log'
 else
-    if (whiptail --title "Entered : \"Java 10 present but evironement is non-vanilla use-case\"" --yesno "Overwrite /etc/environment? \n\user config that you may have set yourself was discovered in environment. is this keep-worthy? \n\"No\" will skip this \n\"Yes\" will delete and replace /etc/environment \n(keep in mind this script was written by a donkey...)" 11 100)
+    RESOLVEDPATH='PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/home/'$USER'/.steam/Proton/dist/bin:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin\"'
+    RESOLVEDJAVA='JAVA_HOME=\"/usr/lib/jvm/jdk-10.0.2\"'
+    if [ ! -f /etc/environment ] || [ 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"' == "$ENVIRONMENT" ]
     then
-    echo "[$(date --rfc-3339=seconds)] sub-optimal use-case, corrected /etc/environment" >> ~/'fafstack-'$STACKVERSION'.log'
-        [ ! -f /etc/environment ] && sudo touch /etc/environment
-        sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
-        sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
-        source /etc/environment
-        echo "OK! \".bashrc\" edited!"
-        echo "assuming Java is all set, let's move on..."
+	echo "environment is vanilla..."
+	echo "proceeding..."
+	echo "[$(date --rfc-3339=seconds)] nominal use-case" >> ~/'fafstack-'$STACKVERSION'.log'
+	sudo rm -f /etc/environment
+	sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
+	sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
+	source /etc/environment
     else
-        echo "You're probably right to choose this..."
-        echo "you'll have to check /etc/environment 's variables yourself at the end of this script."
-        echo "[$(date --rfc-3339=seconds)] user chose to leave /etc/environment untouched, this might be the cause." >> ~/'fafstack-'$STACKVERSION'.log'
+    if (whiptail --title "Entered : \"Java 10 present but evironement is non-vanilla use-case\"" --yesno "Overwrite /etc/environment? \n\user config that you may have set yourself was discovered in environment. is this keep-worthy? \n\"No\" will skip this \n\"Yes\" will delete and replace /etc/environment \n(keep in mind this script was written by a donkey...)" 11 100)
+	then
+	echo "[$(date --rfc-3339=seconds)] sub-optimal use-case, corrected /etc/environment" >> ~/'fafstack-'$STACKVERSION'.log'
+            sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
+            sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
+            source /etc/environment
+            echo "OK! \".bashrc\" edited!"
+            echo "assuming Java is all set, let's move on..."
+	else
+            echo "You're probably right to choose this..."
+            echo "you'll have to check /etc/environment 's variables yourself at the end of this script."
+            echo "[$(date --rfc-3339=seconds)] user chose to leave /etc/environment untouched, this might be the cause." >> ~/'fafstack-'$STACKVERSION'.log'
+	fi
     fi
 fi
+# /end Download & finish install java 10 open jdk
+
+# Download & install FAF client
 echo "now moving on to installing Downlord's FAF..."
 echo "[$(date --rfc-3339=seconds)] installing DOWNLORD" >> ~/'fafstack-'$STACKVERSION'.log'
 cd
@@ -252,16 +410,25 @@ rmdir downlords-faf-client-${FAFVERSIONNUMBER:1}
 rm _dfc_unix_$FAFVERSION.tar.gz
 chmod +x downlords-faf-client && chmod +x lib/faf-uid
 cd
-echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss3.so' >> ~/.bashrc
-echo 'export DEF_CMD=("/home/'$USER'/.steam/steam/SteamApps/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")' >> ~/.bashrc
-echo 'export TERM=xterm' >> ~/.bashrc
-echo 'export WINEDEBUG=-all' >> ~/.bashrc
-echo 'export WINEDLLPATH=/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/lib64/wine:/home/'$USER'/.steam/compatibilitytools.d/Proton/dist/lib/wine' >> ~/.bashrc
-echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/SteamApps/compatdata/9420/pfx/' >> ~/.bashrc
-echo 'export SteamGameId=9420' >> ~/.bashrc
-echo 'export SteamAppId=9420' >> ~/.bashrc
-source ~/.bashrc
+# /end Download & install FAF client
+
+
+# add proton variables to .bashrc
+! grep -q 'LD_PRELOAD' ~/.bashrc && echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss3.so' >> ~/.bashrc
+! grep -q 'DEF_CMD' ~/.bashrc && echo 'export DEF_CMD=("/home/'$USER'/.steam/steam/SteamApps/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")' >> ~/.bashrc
+! grep -q 'export TERM' ~/.bashrc && echo 'export TERM=xterm' >> ~/.bashrc
+! grep -q 'WINEDEBUG' ~/.bashrc && echo 'export WINEDEBUG=-all' >> ~/.bashrc
+! grep -q 'WINEDLLPATH' ~/.bashrc && echo 'export WINEDLLPATH=/home/'$USER'/.steam/Proton/dist/lib64/wine:/home/'$USER'/.steam/Proton/dist/lib/wine' >> ~/.bashrc
+! grep -q 'WINEPREFIX' ~/.bashrc && echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/SteamApps/compatdata/9420/pfx/' >> ~/.bashrc
+! grep -q 'SteamGameId' ~/.bashrc && echo 'export SteamGameId=9420' >> ~/.bashrc
+! grep -q 'SteamAppId' ~/.bashrc && echo 'export SteamAppId=9420' >> ~/.bashrc
+# source ~/.bashrc
+# testing new line that should make bash sourceable on ubuntu without have to run this script with a dot in front of it
+eval "$(cat ~/.bashrc | tail -n +10)"
+
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
 echo "[$(date --rfc-3339=seconds)] Finished thread one. (proton/downlord/open-jdk/bashrc)" >> ~/'fafstack-'$STACKVERSION'.log'
-gnome-terminal --tab --active --title="FAF client thread" -- bash -c 'cd ~/faf;
+
+# third thread : run faf client
+gnome-terminal --tab --active --title="(FAF)" -- bash -c 'cd ~/faf;
 ./downlords-faf-client'
