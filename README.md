@@ -121,6 +121,9 @@ GL HF!
 
 ## Axes of improvements
 
+```diff
+- Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options my script rather than have the user do it himself via GUI.
+```
 - W.I.P. make this script more posix-compliant
 - W.I.P. detect linux distro and create if-cases for differing systems (E.G. use yogurt if on an arch-based system instead of apt)
 - get rid of behaviors that the user may not be comfortable with; case in point and first offender: giving a shell script sudo priveledges in it's entirety. if the user is warned first hand that he needs curl, steamCMD, steam, lib32gcc1, libd3dadapter9-mesa:i386, libd3dadapter9-mesa beforehand or given an apt install command that opens up ready to run in a seperate terminal (that terminal's outcome being on an "if") so that the user sees firsthand what he's allowing sudo for and what sudo priveledges have been constrained to, then the script can come off less bad practice. Also there should be an opt out of steam username and password entering, in which case at the begining, the script should be able to detect if the condition of Forged Alliance being installed (easy) and first-run have been met (bit of a pickle, it's not as easy as having a config file. although, this requires some testing, perhaps FAF requires nothing more than FA physical files, reg entries and peripheral runtime libraries may be unused by FAF to run it's FA).
@@ -134,6 +137,11 @@ GL HF!
 
 This is likely. This is still Work In Progress. Success rate is basically null at this point.
 Feedback will help me fix things. This script creates a very minimal log file called "fafstack-\*.log" in your home. Paste it's contents as part of an issue/bug report.
+
+### known issues :
+
+- "game already running" preventing steam restart after enableing proton or preventing  install finislazion after download : 
+  it's a timing issue. you can adjust the sleep value or try to be quicker when setting launch options or enabling proton.
 
 # Un-installing :
 
