@@ -200,9 +200,11 @@ sudo apt -y autoremove
 ```
 grep -v 'INSTALL4J_JAVA_HOME' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 source ~/.bashrc
+rm -rf ~/.java
 sudo rm -rf /usr/lib/jvm/jdk-10.0.2/
-sudo update-alternatives --remove-all java
-sudo update-alternatives --remove-all javac
+sudo update-alternatives --remove "java" "/usr/lib/jvm/jdk-10.0.2/bin/java"
+sudo update-alternatives --remove "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac"
+sudo update-alternatives --remove "javaws" "/usr/lib/jvm/jdk-10.0.2/jre/bin/javaws"
 ```
 
 5. now the only change I made with my script remaining is /etc/environement :
