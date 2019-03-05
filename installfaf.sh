@@ -373,14 +373,14 @@ else
 	echo "environment is vanilla..."
 	echo "proceeding..."
 	echo "[$(date --rfc-3339=seconds)] nominal use-case" >> ~/'fafstack-'$STACKVERSION'.log'
-	sudo rm -f /etc/environment
 	sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
 	sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
 	source /etc/environment
     else
-    if (whiptail --title "Entered : \"Java 10 present but evironement is non-vanilla use-case\"" --yesno "Overwrite /etc/environment? \n\user config that you may have set yourself was discovered in environment. is this keep-worthy? \n\"No\" will skip this \n\"Yes\" will delete and replace /etc/environment \n(keep in mind this script was written by a donkey...)" 11 100)
+    if (whiptail --title "Entered : \"Java 10 present but evironement is non-vanilla use-case\"" --yesno "move /etc/environment to /etc/environment.bak? \n\"No\" will leave your environment file alone and continue \n\"Yes\" will create a backup environment and create new environement files with desired values" 11 100)
 	then
 	echo "[$(date --rfc-3339=seconds)] sub-optimal use-case, corrected /etc/environment" >> ~/'fafstack-'$STACKVERSION'.log'
+            sudo mv /etc/environment /etc/environment.bak
             sudo bash -c 'echo '$RESOLVEDPATH' >> /etc/environment'
             sudo bash -c 'echo '$RESOLVEDJAVA' >> /etc/environment'
             source /etc/environment
