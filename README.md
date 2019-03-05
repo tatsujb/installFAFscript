@@ -51,7 +51,7 @@ you'll be asked in order :
 at a certain point steam starts up and you'll need to enter Steam Guard.
 
 1. right click on "Supreme Commander - Forged Alliance" in your games Library" -> "SET LAUCNH OPTIONS..." and enter the contents of "the contents of this file are to be pasted in the forged alliance properties launch options" situated in your home folder, just in case, here they are : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%`
-2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" (Gallium-nine should already be preselected in th edrop-down.)
+2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" (Gallium-nine should already be preselected in the drop-down.)
 
 it will ask to restart.
 
@@ -127,6 +127,7 @@ GL HF!
 - finish Java 10 workarounds, right now this script only supports use cases for a vanilla ubuntu, or where a user has clubsily removed previous fafSTACK. ideally it would be able to handle keeping a developper's JDK as a neighbor + the config allowing it to be found and default yet somehow still have FAF java client run. hopefully FAF client moves to java 11 and the whole ordeal can be forgotten. then it just become a "do you have java? good! is it 11? no? that's fine i'll just put this jre on and only FAF will use it. The whole java 10 thing is just a nightmare because of the fact the release is frowed upon in the linux community and not in the repos. attempting to install oracle or open jre or jdk **10** via traditional means will **allways** result in your system pulling **11** instead. And the issue with the manual install is that it is a pain to get it to be detected. With apt managing, all this would have been so much easier, the `INSTALL4J_JAVA_HOME` in bashrc would have been sufficient, grting you the leisure to not change user' default java. so bottom right now I don't see the worthwhileness of inversting more time into that part of the script since it would be moot with FAF switching to java 11.
 - add support for custom install location. this one is a nightmare. and not facillitated by paths 
 - figure out a proper fix to the current lack of path-resolving for FAF's setting "Command line format for executable" than the current workaround: Currently I'm forced to copy Proton Gallium nine's folder to a new folder and point to that new folder instead because the new folder's path doesn't contain dots, numbers or spaces which "Command line format for executable" setting entry in FAF apparently cannot handle. I haven't researched this sufficiently but I suspect there's a better way to do this.
+- a workaround to focing the user to `. ./script.sh` instead of `./script.sh` as they would be used to.
 - ideas welcome.
 
 ## Not working ?
