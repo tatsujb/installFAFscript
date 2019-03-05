@@ -1,4 +1,6 @@
-# fafSTACK   [W.I.P.]
+# fafSTACK   [W.I.P.] (not yet successful)
+
+contributions welcome!
 
 A shell script that installs a so-called fafSTACK on linux
 ![warty-final-ubuntu](https://user-images.githubusercontent.com/5132359/53690402-25b5a600-3d6a-11e9-94cd-3ac2fc06cf9a.png)
@@ -83,7 +85,7 @@ then with faf running, log in and set your preferences under "Forged Alliance Fo
 ```
 "Command line format for executable" :
 ```
-/home/USERNAME/.steam/compatibilitytools.d/Proton/dist/bin/wine "%s"
+/home/USERNAME/.steam/Proton/dist/bin/wine "%s"
 ```
 if this doesn't work try :
 ```
@@ -116,6 +118,22 @@ GL HF!
 - be willing to write to your boot drive
 - be willing to have stuff put into both /etc/environement and .bashrc
 
+# Axes of improvements
+
+- prevent runnning right at the top of te script in all crazy sorts of senarios (like attempting to run on windows or other unsupported distro)
+- get rid of behaviors that the user may not be comfortable with; case in point and first offender: giving a shell script sudo priveledges in it's entirety. if the user is warned first hand that he needs curl, steamCMD, steam, lib32gcc1, libd3dadapter9-mesa:i386, libd3dadapter9-mesa beforehand or given an apt install command that opens up ready to run in a seperate terminal (that terminal's outcome being on an "if") so that the user sees firsthand what he's allowing sudo for and what sudo priveledges have been constrained to, then the script can come off less bad practice. Also there should be an opt out of steam username and password entering, in which case at the begining, the script should be able to detect if the condition of Forged Alliance being installed (easy) and first-run have been met (bit of a pickle, it's not as easy as having a config file. although, this requires some testing, perhaps FAF requires nothing more than FA phyisical files, reg entries and perferal runtime libraries may be unused).
+- make this script more posix-compliant
+- detect linux distro and create if-cases for differing systems (E.G. use yogurt if on an arch-based system instead of apt)
+- finish Java 10 workarounds, right now this script only supports use cases for a vanilla ubuntu, or where a user has clubsily removed previous fafSTACK. ideally it would be able to handle keeping a developper's JDK as a neighbor + the config allowing it to be found and default yet somehow still have FAF java client run. hopefully FAF client moves to java 11 and the whole ordeal can be forgotten. then it just become a "do you have java? good! is it 11? no? that's fine i'll just put this jre on and only FAF will use it. The whole java 10 thing is just a nightmare because of the fact the release is frowed upon in the linux community and not in the repos. attempting to install oracle or open jre or jdk **10** via traditional means will **allways** result in your system pulling **11** instead. And the issue with the manual install is that it is a pain to get it to be detected. With apt managing, all this would have been so much easier, the `INSTALL4J_JAVA_HOME` in bashrc would have been sufficient, grting you the leisure to not change user' default java. so bottom right now I don't see the worthwhileness of inversting more time into that part of the script since it would be moot with FAF switching to java 11.
+- add support for custom install location. this one is a nightmare. and not facillitated by paths 
+- figure out a proper fix to the current lack of path-resolving for FAF's setting "Command line format for executable" than the current workaround: Currently I'm forced to copy Proton Gallium nine's folder to a new folder and point to that new folder instead because the new folder's path doesn't contain dots, numbers or spaces which "Command line format for executable" setting entry in FAF apparently cannot handle. I haven't researched this sufficiently but I suspect there's a better way to do this.
+- ideas welcome.
+
+# Not working ?
+
+this is likely. this is still Work in Progress. success rate is basically null at this point.
+feedback will help me make fix things, though. this script creates a very minimal log file called "fafstack-versionNumber.log" in your home. you can paste it's contents as part of an issue/bug report.
+
 # Un-installing :
 
 this will very much depend on how much of what you already had installed before running this script that this script has in common.
@@ -125,6 +143,8 @@ here are a couple safe bets however, run this in your terminal:
 ```
 rm ~/the\ contents\ of\ this*
 rm ~/fafstack-*.log
+rm ~/run
+rm -rf ~/My\ Games
 rm -rf ~/faf
 rm -rf ~/.faforever
 rm -rf ~/.com.faforever.client.FafClientApplication
@@ -143,23 +163,31 @@ source ~/.bashrc
 now all that remains is :
 
 1. steam
-if steam wasn't on your system before you ran this script and you are fine with seeing it and Supreme Commander Forged Alliance go then you can run the following :
+if steam wasn't on your system before you ran this script and you are fine with seeing it and Supreme Commander Forged Alliance as well as steamCMD and eventual dependencies go then you can run the following :
 ```
 rm -rf ~/.steam
 rm -rf ~/Steam
 echo steam steam/purge note '' | sudo debconf-set-selections
-sudo apt purge -y steam
+sudo apt purge -y steam steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1
 sudo apt -y autoremove
 ```
 
-2. JUST supreme commander, NOT steam (if you ran the above ignore this)
+2. JUST supreme commander, NOT steam (if you ran n°2 ignore this) :
 ```
 rm -rf ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
 ```
 
 ...will do the trick.
 
-3. Java 10 (you will have to put back your other versions of java yourself)
+3. keep steam but remove my steam extras such as Gallium9Proton and steamCMD and their dependencies (if you ran n°2 ignore this) : 
+```
+rm -rf ~/.steam/Proton
+rm -rf ~/.steam/compatibilitytools.d
+sudo apt purge -y steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1
+sudo apt -y autoremove
+```
+
+4. Java 10 (you will have to put back your other versions of java yourself)
 ```
 grep -v 'INSTALL4J_JAVA_HOME' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 source ~/.bashrc
@@ -168,7 +196,7 @@ sudo update-alternatives --remove-all java
 sudo update-alternatives --remove-all javac
 ```
 
-4. now the only change I made with my script remaining is /etc/environement
+5. now the only change I made with my script remaining is /etc/environement
 
 I don't store your /etc/environment's original state, sorry I really rushed this script together :D
 
