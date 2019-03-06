@@ -181,14 +181,14 @@ sudo apt purge -y steam steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa li
 sudo apt -y autoremove
 ```
 
-2. JUST supreme commander, NOT steam (if you ran n°2 ignore this) :
+2. JUST supreme commander, NOT steam (if you ran n°1 ignore this) :
 ```
 rm -rf ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
 ```
 
 ...will do the trick.
 
-3. keep steam but remove my steam extras such as Gallium9Proton and steamCMD and their dependencies (if you ran n°2 ignore this) : 
+3. keep steam but remove my steam extras such as Gallium9Proton and steamCMD and their dependencies (if you ran n°1 ignore this) : 
 ```
 rm -rf ~/.steam/Proton
 rm -rf ~/.steam/compatibilitytools.d
