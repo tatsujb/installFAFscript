@@ -61,7 +61,7 @@ when steam starts don't login just close both login windows, this will all the r
 ### 5th
 
 Then it downloads Forged Alliance. this will take a while.
-Once it's done steam starts again in order to finalize installation and start (non root hard drive installation is not supported. (E.G.: to a secondary storage HHD, for now I only support installing to SDA.))
+Once it's done steam starts again in order to finalize installation (non root hard drive installation is not supported. (E.G.: to a secondary storage HHD, for now I only support installing to SDA.)) and then start Forged Alliance.
 
 accept terms. you can tick the box "Launch game as soon as it's read ready".
 
