@@ -143,6 +143,8 @@ echo "Hard storage setup :" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "_______________________________________________________________________________________________________" >> ~/'fafstack-'$STACKVERSION'.log'
 LSBLK=$(lsblk | grep -v 'loop')
 echo "$LSBLK" >> ~/'fafstack-'$STACKVERSION'.log'
+DFH=$(df -h --total | grep -v 'loop')
+echo "$DFH" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "_______________________________________________________________________________________________________" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "steam user name :"
