@@ -22,13 +22,13 @@ exit 1
 esac
 
 if [ -f /etc/os-release ]; then
-    # freedesktop.org and systemd / recent ubuntus will fall here / majority use-case
+    # freedesktop.org and systemd (Ubuntu 18.04+)
     . /etc/os-release
     OS=$NAME
     VER=$VERSION_ID
     echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'  
 elif type lsb_release >/dev/null 2>&1; then
-    # linuxbase.org
+    # linuxbase.org (older Debian / Ubuntu should be here)
     OS=$(lsb_release -si)
     VER=$(lsb_release -sr)
     echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
@@ -62,7 +62,7 @@ elif [ -f /etc/lsb-release ]; then
     fi
 elif [ -f /etc/debian_version ]; then
     # Older Debian/Ubuntu/etc.
-    OS=Debian
+    OS=oldDebian
     VER=$(cat /etc/debian_version)
     echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
     if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
@@ -78,7 +78,7 @@ elif [ -f /etc/debian_version ]; then
     fi
 elif [ -f /etc/SuSe-release ]; then
     # Older SuSE/etc.
-    OS="Open SuSE"
+    OS=OpenSuSE
     VER="unknown version but likely very old"
     echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
     if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
@@ -94,7 +94,7 @@ elif [ -f /etc/SuSe-release ]; then
     fi
 elif [ -f /etc/redhat-release ]; then
     # Older Red Hat, CentOS, etc.
-    OS="RedHat or CentOS or similar"
+    OS=oldRedHatorCentos
     VER="unknown version but likely very old"
     echo "Distribution name + version + kernel version + architecture : "$OS" "$VER" "$(uname -rm) >> ~/'fafstack-'$STACKVERSION'.log'
     if (whiptail --title "Distribution $OS $VER is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n            Abort?         \"Yes\" will stop the scipt,          \"No\" will pursue" 10 100)
@@ -125,6 +125,19 @@ else
 	echo "[$(date --rfc-3339=seconds)] wrong distribution, user-chosen continue." >> ~/'fafstack-'$STACKVERSION'.log'
     fi
 fi
+# template for use cases according to distributions TODO: test output of above if statement on different virtualboxed distros
+#case "${OS}" in
+#    Ubuntu*)
+#    ;;
+#    Debian*)
+#    ;;
+#    oldDebian*)
+#    ;;
+#    OpenSuSE*)
+#    ;;
+#    oldRedHatorCentos*)
+#    
+#esac
 echo "-------------------------------------------------------------------------------------------------------" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "Hard storage setup :" >> ~/'fafstack-'$STACKVERSION'.log'
 echo "_______________________________________________________________________________________________________" >> ~/'fafstack-'$STACKVERSION'.log'
@@ -156,9 +169,13 @@ else
     echo "[$(date --rfc-3339=seconds)] did not enable partners, hoping it was already enabled." >> ~/'fafstack-'$STACKVERSION'.log'
 fi
 
-# on fedore, will be
+# on fedora, will be
 # dnf update
 # dnf upgrade
+# centos redhat and fedora all seem to use 
+# yum update
+# arch seems to be pacman -Syu I've used yoghurt before when trying arch out but know it to not be shipped with arch
+
 sudo apt update -y &&
 sudo apt -y full-upgrade
 
