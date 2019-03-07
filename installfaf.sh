@@ -155,8 +155,12 @@ then
 else
     echo "[$(date --rfc-3339=seconds)] did not enable partners, hoping it was already enabled." >> ~/'fafstack-'$STACKVERSION'.log'
 fi
+
+# on fedore, will be
+# dnf update
+# dnf upgrade
 sudo apt update -y &&
-sudo apt -y dist-upgrade &&
+sudo apt -y full-upgrade
 
 if [ $(command -v steam) ]
 then
@@ -177,7 +181,7 @@ else
     echo "[$(date --rfc-3339=seconds)] curl was not yet installed, installing..." >> ~/'fafstack-'$STACKVERSION'.log'
     sudo apt install -y curl
 fi
-sudo
+
 
 
 #########################################################################################################################
@@ -290,7 +294,7 @@ else
     cd
 fi
 [ $USEPROTON ] && sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa &&
-apt autoremove -y &&
+sudo apt autoremove -y &&
 sudo apt autoclean &&
 # no more apt-install
 
