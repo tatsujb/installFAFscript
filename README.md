@@ -154,6 +154,7 @@ here are a couple safe bets however, run this in your terminal:
 rm ~/the\ contents\ of\ this*
 rm ~/fafstack-*.log
 rm ~/run
+rm ~/.install4j
 rm -rf ~/My\ Games
 rm -rf ~/faf
 rm -rf ~/.faforever
@@ -175,6 +176,8 @@ now all that remains is :
 1. steam
 if steam wasn't on your system before you ran this script and you are fine with seeing it and Supreme Commander Forged Alliance as well as steamCMD and eventual dependencies go then you can run the following :
 ```
+rm ~/.steampath
+rm ~/.steampid
 rm -rf ~/.steam
 rm -rf ~/Steam
 echo steam steam/purge note '' | sudo debconf-set-selections
@@ -214,5 +217,6 @@ sudo update-alternatives --remove "javaws" "/usr/lib/jvm/jdk-10.0.2/jre/bin/java
 sudo mv /etc/environment.bak /etc/environment
 source /etc/environment
 ```
+
 
 
