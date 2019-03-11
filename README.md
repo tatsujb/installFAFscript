@@ -1,4 +1,4 @@
-# fafSTACK   [W.I.P.] (not yet successful)
+# fafSTACK   [W.I.P.] (first succesfull run! ubuntu 18.04.2)
 
 contributions welcome!
 
