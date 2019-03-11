@@ -77,6 +77,7 @@ FAF should be running.
 if not use your trusty terminal :
 
 ```
+source ~/.bashrc
 cd ~/faf
 ./downlords-faf-client
 ```
@@ -111,6 +112,8 @@ try to join two games and before the second run in your terminal :
 chmod +x -R ~/.faforever/bin/ForgedAlliance.exe
 ```
 ### 7th
+
+the script is now done and managed to run FAF within it's context (the script) if you wish to run FAF again you'll have to type : `source ~/.bashrc` yourself. (the script does so but in most distros this will be short-circuited)
 
 GL HF!
 
