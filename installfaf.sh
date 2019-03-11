@@ -237,6 +237,9 @@ esac
 # you have to do it yourself when steam starts up while the script is running                                       	#
 #                                                                                                                   	#
 #########################################################################################################################
+# internally debating the use of "--active" here which makes the tab have focus. since te user gets the steam gui pop up
+# anyways, the only time he needs to be on this tab is to enter the second steam gard code for steamCMD and he'll have
+# seen the message telling him to switch to this tab long before then.
 gnome-terminal --tab --title="install & run steam, steamcmd, FA" -- bash -c 'echo "installing gallium/proton and running steam...";
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
@@ -446,13 +449,17 @@ chmod +x downlords-faf-client && chmod +x lib/faf-uid
 cd
 # /end Download & install FAF client
 
-echo "switch to tab \"install & run steam, steamcmd, FA\""
+echo "please switch to terminal tab : \"install & run steam, steamcmd, FA\" and finish assisting it, in order to continue."
+echo ""
 no_proton_found=true
+i=1
+sp="/-\|"
+echo -n "waiting...  "
 while $no_proton_found
 do
-echo "..."
-[[ ( -d ~/.steam/steam/steamapps/common/Proton ) || ( -d ~/.steam/steam/SteamApps/common/Proton ) ]] && no_proton_found=false
-sleep 20
+  printf "\b${sp:i++%${#sp}:1}"
+  [[ ( -d ~/.steam/steam/steamapps/common/Proton ) || ( -d ~/.steam/steam/SteamApps/common/Proton ) ]] && no_proton_found=fa
+  sleep 1
 done
 
 sudo cp ~/.steam/root/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libgudev* /usr/lib32;
