@@ -1,4 +1,4 @@
-# fafSTACK   [W.I.P.] (first succesfull run! ubuntu 18.04.2)
+# fafSTACK   [W.I.P.] (first succesfull run! ubuntu 18.04.2 [11/03/2019] )
 
 contributions welcome!
 
@@ -21,6 +21,7 @@ In the case of this script, we will have recourse to some supplementary items in
  - curl (fetches installers from git)
  - steamCMD (downloads the game) 
  - steam (installs it)
+ - pv (progress indicators)
  
  Dependencies :
  
@@ -28,6 +29,8 @@ In the case of this script, we will have recourse to some supplementary items in
  - libd3dadapter9-mesa:i386 libd3dadapter9-mesa (Gallium-Proton)
 
 # User-Guide
+
+(read entirely before running)
 
 ### 1st
 
@@ -49,6 +52,7 @@ you'll be asked in order :
 
 ### 4rth
 
+(be fast here)
 at a certain point steam starts up and you'll need to enter Steam Guard.
 
 1. right click on "Supreme Commander - Forged Alliance" in your games Library" -> "SET LAUNCH OPTIONS..." and enter the contents of "the contents of this file are to be pasted in the forged alliance properties launch options" situated in your home folder, just in case, here they are : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%`
@@ -86,8 +90,9 @@ then with faf running, log in and set your preferences under "Forged Alliance Fo
 ```
 "Command line format for executable" :
 ```
-/home/USERNAME/.steam/Proton/dist/bin/wine "%s"
+/home/USERNAME/.steam/steam/steamapps/common/Proton/dist/bin/wine "%s"
 ```
+(steamapps may be SteamApps for you, first navigate to the wine executable in your browser and copy paste the path from you brwoser to make sure we're talking about a dirrectory that exists) 
 if this doesn't work try (if you do this you may have to remove /etc/enviroment enntiries for proton same for .bashrc) :
 ```
 /home/USERNAME/run "%s"
@@ -103,7 +108,7 @@ where "USERNAME" is what you get when you type `echo $USER` into the terminal.
 try to join two games and before the second run in your terminal :
 
 ```
-chmod +x -R ~/.faforever/*
+chmod +x -R ~/.faforever/bin/ForgedAlliance.exe
 ```
 ### 7th
 
