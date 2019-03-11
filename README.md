@@ -1,5 +1,6 @@
-# fafSTACK   [W.I.P.] (first succesfull run! ubuntu 18.04.2 [11/03/2019] )
+# fafSTACK 1.9
 
+## (first succesfull run! ubuntu 18.04.2 [11/03/2019] )
 contributions welcome!
 
 A shell script that installs a so-called fafSTACK on linux
