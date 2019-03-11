@@ -1,5 +1,5 @@
 #!/bin/bash
-  faf_stack_version=1.8
+  faf_stack_version=1.9
 
 
 echo "_______________________________________________________________________________________________________" >> ~/'fafstack-'$faf_stack_version'.log'
@@ -237,10 +237,8 @@ esac
 # you have to do it yourself when steam starts up while the script is running                                       	#
 #                                                                                                                   	#
 #########################################################################################################################
-# internally debating the use of "--active" here which makes the tab have focus. since te user gets the steam gui pop up
-# anyways, the only time he needs to be on this tab is to enter the second steam gard code for steamCMD and he'll have
-# seen the message telling him to switch to this tab long before then.
-gnome-terminal --tab --title="install & run steam, steamcmd, FA" -- bash -c 'echo "installing gallium/proton and running steam...";
+
+gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c 'echo "installing gallium/proton and running steam...";
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
 echo "once thats done edit steam settings in order to enable Proton for all games";
@@ -272,8 +270,8 @@ cp -f /tmp/proton_$USER/run ~/
 echo "making map & mods symbolic links";
 echo "[$(date --rfc-3339=seconds)] making map & mods symbolic links" >> ~/fafstack-'$faf_stack_version'.log;
 if [ -d ~/.steam/steam/steamapps ] ;
-then echo "[$(date --rfc-3339=seconds)] steamapps found" >> ~/fafstack-'$faf_stack_version'.log;
-isCammelCase=false;
+then steamapps="steamapps";
+echo "[$(date --rfc-3339=seconds)] steamapps found" >> ~/fafstack-'$faf_stack_version'.log;
 if [ -d ~/.steam/steam/steamapps/common/Supreme* ] ;
 then echo "[$(date --rfc-3339=seconds)] Supreme Commander folder found" >> ~/fafstack-'$faf_stack_version'.log;
 cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance;
@@ -290,9 +288,9 @@ cd My\ Documents;
 ln -s ~/My\ Games/ My\ Games;
 else echo "[$(date --rfc-3339=seconds)] steamuser profile folder not found" >> ~/fafstack-'$faf_stack_version'.log;
 fi;
-elif [ -d ~/.steam/steam/SteamApps ] ;
-then echo "[$(date --rfc-3339=seconds)] SteamApps found" >> ~/fafstack-'$faf_stack_version'.log;
-isCammelCase=true;
+elif [ -d ~/.steam/steam/SteamApps ];
+then steamapps="SteamApps";
+echo "[$(date --rfc-3339=seconds)] SteamApps found" >> ~/fafstack-'$faf_stack_version'.log;
 if [ -d ~/.steam/steam/SteamApps/common/Supreme* ] ;
 then echo "[$(date --rfc-3339=seconds)] Supreme Commander folder found" >> ~/fafstack-'$faf_stack_version'.log;
 cd ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance;
@@ -310,30 +308,41 @@ ln -s ~/My\ Games/ My\ Games;
 else echo "[$(date --rfc-3339=seconds)] steamuser profile folder not found" >> ~/fafstack-'$faf_stack_version'.log;
 fi;
 else echo "[$(date --rfc-3339=seconds)] neither cammel case (SteamApps), nor lowercase (steamapps) found" >> ~/fafstack-'$faf_stack_version'.log;
+echo "UNACCEPTABLEEEEEEEEEEEEEEEE";
+exit 1;
 fi;
-if [ '$gallium_nine' ];
-then if $isCammelCase ;
+if '$gallium_nine' ;
 then cp ~/.steam/compatibilitytools.d/'$proton_name' ~/.steam/compatibilitytools.d/Proton;
-cp -rf ~/.steam/compatibilitytools.d/Proton ~/.steam/steam/SteamApps/common;
-else cp ~/.steam/compatibilitytools.d/'$proton_name' ~/.steam/compatibilitytools.d/Proton;
-cp -rf ~/.steam/compatibilitytools.d/Proton ~/.steam/steam/steamapps/common;
+cp -rf ~/.steam/compatibilitytools.d/Proton ~/.steam/steam/$steamapps/common;
+else cp ~/.steam/steam/$steamapps/common/Proton* ~/.steam/steam/$steamapps/common/Proton;
+cp -rf ~/.steam/steam/$steamapps/common/Proton* ~/.steam/steam/$steamapps/common;
 fi;
-else if $isCammelCase ;
-then cp ~/.steam/steam/SteamApps/common/Proton* ~/.steam/steam/SteamApps/common/Proton;
-cp -rf ~/.steam/steam/SteamApps/common/Proton* ~/.steam/steam/SteamApps/common;
-else cp ~/.steam/steam/steamapps/common/Proton* ~/.steam/steam/steamapps/common/Proton;
-cp -rf ~/.steam/steam/steamapps/common/Proton* ~/.steam/steam/steamapps/common;
-fi;
-fi;
-[[ ( -d ~/.steam/steam/steamapps/common/Proton ) || ( -d ~/.steam/steam/SteamApps/common/Proton ) ]] && echo "[$(date --rfc-3339=seconds)] PROTON folder found" >> ~/fafstack-'$faf_stack_version'.log || echo "[$(date --rfc-3339=seconds)] Proton folder not found" >> ~/fafstack-'$faf_stack_version'.log;'
+[[ ( -d ~/.steam/steam/steamapps/common/Proton ) || ( -d ~/.steam/steam/SteamApps/common/Proton ) ]] && echo "[$(date --rfc-3339=seconds)] PROTON folder found" >> ~/fafstack-'$faf_stack_version'.log || echo "[$(date --rfc-3339=seconds)] Proton folder not found" >> ~/fafstack-'$faf_stack_version'.log;
+! grep -q "DEF_CMD" ~/.bashrc && echo "export DEF_CMD=(\"/home/${USER}/.steam/steam/${steamapps}/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe\")" >> ~/.bashrc;
+! grep -q "export TERM" ~/.bashrc && echo "export TERM=xterm" >> ~/.bashrc;
+! grep -q "WINEDEBUG" ~/.bashrc && echo "export WINEDEBUG=-all" >> ~/.bashrc;
+! grep -q "WINEDLLPATH" ~/.bashrc && echo "export WINEDLLPATH=/home/${USER}/.steam/steam/${steamapps}/common/Proton/dist/lib64/wine:/home/${USER}/.steam/steam/${steamapps}/common/Proton/dist/lib/wine" >> ~/.bashrc;
+! grep -q "LD_LIBRARY_PATH" ~/.bashrc && echo "export LD_LIBRARY_PATH=/home/${USER}/.steam/steam/${steamapps}/common/Proton/dist/lib64:/home/${USER}/.steam/steam/${steamapps}/common/Proton/dist/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/pinned_libs_32:/home/${USER}/.steam/ubuntu12_32/steam-runtime/pinned_libs_64:/usr/lib/x86_64-linux-gnu/libfakeroot:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib:/usr/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu:/home/${USER}/.steam/ubuntu12_32/steam-runtime/i386/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu:/home/${USER}/.steam/ubuntu12_32/steam-runtime/i386/usr/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/amd64/lib/x86_64-linux-gnu:/home/${USER}/.steam/ubuntu12_32/steam-runtime/amd64/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu:/home/${USER}/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib" >> ~/.bashrc;
+! grep -q "WINEDLLPATH" ~/.bashrc && echo "export WINEDLLPATH=/home/${USER}/.steam/Proton/dist/lib64/wine:/home/${USER}/.steam/Proton/dist/lib/wine" >> ~/.bashrc;
+! grep -q "WINEPREFIX" ~/.bashrc && echo "export WINEPREFIX=/home/${USER}/.steam/steam/${steamapps}/compatdata/9420/pfx/" >> ~/.bashrc;
+! grep -q "SteamGameId" ~/.bashrc && echo "export SteamGameId=9420" >> ~/.bashrc;
+! grep -q "SteamAppId" ~/.bashrc && echo "export SteamAppId=9420" >> ~/.bashrc;
+! grep -q "WINEDLLOVERRIDES" ~/.bashrc && echo "export WINEDLLOVERRIDES=\"\"" >> ~/.bashrc;
+source ~/.bashrc;
+eval "$(cat ~/.bashrc | tail -n +10)";
+echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue...";
+echo "[$(date --rfc-3339=seconds)] Finished thread one. (proton/downlord/open-jdk/bashrc)" >> ~/fafstack-'$faf_stack_version'.log;
+gnome-terminal --tab --title="(FAF)" -- bash -c "cd ~/faf; ./downlords-faf-client" &'
+
+# source ~/.bashrc be it in main thread or in tab, has no effect the user will have to run it himself.
 # end of second thread
 # finalising apt-install
 
 echo "[$(date --rfc-3339=seconds)] start of second thread did not crash first thread" >> ~/'fafstack-'$faf_stack_version'.log'
-if ! dpkg-query -W -f='${Status}' nano | grep "ok installed"
+if ! dpkg-query -W -f='${Status}' lib32gcc1 | grep "ok installed"
 then
 	echo "[$(date --rfc-3339=seconds)] lib32gcc1 was not yet installed, installing..." >> ~/'fafstack-'$faf_stack_version'.log'
-	sudo apt install -y lib32gcc1 libnss3-tools
+	sudo apt install -y lib32gcc1
 else
 	echo "[$(date --rfc-3339=seconds)] lib32gcc1 is already installed, proceeding..." >> ~/'fafstack-'$faf_stack_version'.log'
 	echo "lib32gcc1 is already installed, proceeding..."
@@ -449,7 +458,7 @@ chmod +x downlords-faf-client && chmod +x lib/faf-uid
 cd
 # /end Download & install FAF client
 
-echo "please switch to terminal tab : \"install & run steam, steamcmd, FA\" and finish assisting it, in order to continue."
+echo "please switch to terminal tab : \"install & run steam, steamcmd, FA\"."
 echo ""
 no_proton_found=true
 i=1
@@ -461,49 +470,5 @@ do
   [[ ( -d ~/.steam/steam/steamapps/common/Proton ) || ( -d ~/.steam/steam/SteamApps/common/Proton ) ]] && no_proton_found=fa
   sleep 1
 done
-
-sudo cp ~/.steam/root/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libgudev* /usr/lib32;
-sudo cp ~/.steam/root/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu/libusb* /usr/lib32;
-if [ -d ~/.steam/steam/steamapps ]
-then
-steamapps="steamapps"
-elif [ -d ~/.steam/steam/SteamApps ]
-then
-steamapps="SteamApps"
-else
-echo "main thread was unable to find either steamapps or SteamApps" >> ~/.bashrc
-echo "UNACCEPTABLEEEEEEEEEEEEEEEE"
-exit 1
-fi
-
-# I removed the edit environment block, further testing revealed none of environement changes where vital to our faf STACK.
-
-# add proton variables to .bashrc
-#! grep -q 'LD_PRELOAD' ~/.bashrc && echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss3.so' >> ~/.bashrc
-# if [ '$gallium_nine' ]
-# then
-# else
-# fi
-# further testing has yet to proove gallium nine vs vanialla proton require seperate/differing variables in bashrc...
-
-! grep -q 'DEF_CMD' ~/.bashrc && echo 'export DEF_CMD=("/home/'$USER'/.steam/steam/'$steamapps'/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")' >> ~/.bashrc
-! grep -q 'export TERM' ~/.bashrc && echo 'export TERM=xterm' >> ~/.bashrc
-! grep -q 'WINEDEBUG' ~/.bashrc && echo 'export WINEDEBUG=-all' >> ~/.bashrc
-! grep -q 'WINEDLLPATH' ~/.bashrc && echo 'export WINEDLLPATH=/home/'$USER'/.steam/steam/'$steamapps'/common/Proton/dist/lib64/wine:/home/'$USER'/.steam/steam/'$steamapps'/common/Proton/dist/lib/wine' >> ~/.bashrc
-! grep -q 'LD_LIBRARY_PATH' ~/.bashrc && echo 'export LD_LIBRARY_PATH=/home/'$USER'/.steam/steam/'$steamapps'/common/Proton/dist/lib64:/home/'$USER'/.steam/steam/'$steamapps'/common/Proton/dist/lib:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/pinned_libs_32:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/pinned_libs_64:/usr/lib/x86_64-linux-gnu/libfakeroot:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib:/usr/lib:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/i386/lib:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/i386/usr/lib:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/lib/x86_64-linux-gnu:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/lib:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu:/home/'$USER'/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib' >> ~/.bashrc
-! grep -q 'WINEDLLPATH' ~/.bashrc && echo 'export WINEDLLPATH=/home/'$USER'/.steam/Proton/dist/lib64/wine:/home/'$USER'/.steam/Proton/dist/lib/wine' >> ~/.bashrc
-! grep -q 'WINEPREFIX' ~/.bashrc && echo 'export WINEPREFIX=/home/'$USER'/.steam/steam/'$steamapps'/compatdata/9420/pfx/' >> ~/.bashrc
-! grep -q 'SteamGameId' ~/.bashrc && echo 'export SteamGameId=9420' >> ~/.bashrc
-! grep -q 'SteamAppId' ~/.bashrc && echo 'export SteamAppId=9420' >> ~/.bashrc
-! grep -q 'WINEDLLOVERRIDES' ~/.bashrc && echo 'export WINEDLLOVERRIDES=""' >> ~/.bashrc
-
-
-
-
-source ~/.bashrc # this is for after the script
-eval "$(cat ~/.bashrc | tail -n +10)" # this is the same thing but effective immediately
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
 echo "[$(date --rfc-3339=seconds)] Finished thread one. (proton/downlord/open-jdk/bashrc)" >> ~/'fafstack-'$faf_stack_version'.log'
-# third thread : run faf client
-gnome-terminal --tab --title="(FAF)" -- bash -c 'cd ~/faf;
-./downlords-faf-client'
