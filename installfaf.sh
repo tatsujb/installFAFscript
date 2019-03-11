@@ -235,7 +235,7 @@ esac
 # you have to do it yourself when steam starts up while the script is running                                       	#
 #                                                                                                                   	#
 #########################################################################################################################
-gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c 'echo "installing gallium/proton and running steam...";
+gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c '[ '$gallium_nine' ] && echo "installing gallium/proton and running steam...";
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
 echo "once thats done edit steam settings in order to enable Proton for all games";
