@@ -10,7 +10,7 @@ A shell script that installs a so-called fafSTACK on linux
 
  1. ubuntu 18.04/18.10 (click the picture for youtube video : )
  
-[![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/54181029-7f6e4c80-449d-11e9-8824-1786417c71f5.png)](https://www.youtube.com/watch?v=c5K7QmK-Xas)
+[![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas)
 
 
 #### What is a fafSTACK?
@@ -152,7 +152,7 @@ GL HF!
 
 ## Not working ?
 
-Feedback will help me fix things. This script creates a very minimal log file called "fafstack-\*.log" in your home. Paste it's contents as part of an issue/bug report. you're first and foremost issue is probably the linux distro flavor, but a couplesyntax edits should therefore make my script work for you.
+Feedback will help me fix things. This script creates a very minimal log file called "fafstack-\*.log" in your home. Paste it's contents as part of an issue/bug report. your first and foremost issue is probably the linux distro flavor, but a couplesyntax edits should therefore make my script work for you.
 
 ### known issues :
 
