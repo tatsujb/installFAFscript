@@ -11,8 +11,7 @@ A shell script that installs a so-called fafSTACK on linux
 Version | Distro | Pass/Fail
 --- | --- | ---
 18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) (click me!) | :heavy_check_mark: 
-9.8 | ![image](https://user-images.githubusercontent.com/5132359/54201624-692cb480-44ce-11e9-9faa-e72a49ecff23.png)
- | :heavy_multiplication_x: 
+9.8 | ![image](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | :heavy_multiplication_x: 
 
 
 #### What is a fafSTACK?
