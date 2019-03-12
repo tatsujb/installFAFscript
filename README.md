@@ -19,7 +19,7 @@ a faf stack is a set of software and environment settings and folder names and c
 
 such a setup includes (at minimum) :
 
- - Supreme Commander Forged Alliance
+ - [Supreme Commander Forged Alliance]("https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/")
  - (FAF) JAVA client
  - Java 10
  - Gallium-Proton /or/ Proton /or/ Wine (to run the windows game)
@@ -81,16 +81,7 @@ Forged Alliance should start, you can set a profile, then set your prefered resu
 
 ### 6th
 
-FAF should be running.
-if not use your trusty terminal :
-
-```
-source ~/.bashrc
-cd ~/faf
-./downlords-faf-client
-```
-
-then with faf running, log in and set your preferences under "Forged Alliance Forever":
+FAF is running, log in and set your preferences under "Forged Alliance Forever":
 ![screenshot from 2019-03-03 04-27-31](https://user-images.githubusercontent.com/5132359/53690540-c0af7f80-3d6c-11e9-9e83-36a25ce7e1f3.png)
 
 "Game Location" :
@@ -102,38 +93,48 @@ then with faf running, log in and set your preferences under "Forged Alliance Fo
 /home/USERNAME/.steam/steam/steamapps/common/Proton/dist/bin/wine "%s"
 ```
 (steamapps may be SteamApps for you, first navigate to the wine executable in your browser and copy paste the path from you brwoser to make sure we're talking about a dirrectory that exists) 
-if this doesn't work try (if you do this you may have to remove /etc/enviroment enntiries for proton same for .bashrc) :
+if this doesn't work try (if you do this you may have to remove .bashrc entries for proton same for ) :
 ```
 /home/USERNAME/run "%s"
 ```
 
-
-"Execution Dirrectory" :
-```
-/home/USERNAME/.faforever/bin
-```
 where "USERNAME" is what you get when you type `echo $USER` into the terminal.
+
+seems optional now :
 
 try to join two games and before the second run in your terminal :
 
 ```
 chmod +x -R ~/.faforever/bin/ForgedAlliance.exe
 ```
+
 ### 7th
 
-the script is now done and managed to run FAF within it's context (the script) if you wish to run FAF again you'll have to type : `source ~/.bashrc` yourself. (the script does so but in most distros this will be short-circuited)
+the script is now done.
+
+after you close FAF / your terminal, to run FAF again you'll have to :
+
+```
+source ~/.bashrc
+cd ~/faf
+./downlords-faf-client
+```
+the first time, and just :
+```
+cd ~/faf
+./downlords-faf-client
+```
+everytime you want to run FAF after that, working on creating a launcher as part of the script, help wanted!
 
 GL HF!
 
 # Pre-requisites 
 
 - a steam account with Forged Alliance activated on it [(9420)](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") 
-- a linux system (preferably debian-based such as ubuntu,  for further compatibility please contribute)
-- no pre-existing java version (preferably)
-- preferably an untouched (or absent) /etc/environement 
+- a linux system (preferably debian-based such as ubuntu,  for further compatibility please contribute) 
 - have at least a total of 11.7GB of free space on boot drive
 - be willing to write to your boot drive
-- be willing to have stuff put into both /etc/environement and .bashrc
+- be willing to have stuff put into .bashrc
 
 ## Axes of improvements
 
@@ -141,13 +142,14 @@ GL HF!
 - Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options my script rather than have the user do it himself via GUI.
 ```
 - W.I.P. make this script more posix-compliant
-- W.I.P. create if-cases for differing linux distros
-- W.I.P. reinstall-uninstall builtin
+- W.I.P. ~~create if-cases for differing linux distros~~ implement different linux distro (including mac) I rely on you the reader for this.
+- W.I.P. uninstall builtin
+- W.I.P. create FAF launcher 
 - get rid of behaviors that the user may not be comfortable with; case in point and first offender: giving a shell script sudo priveledges in it's entirety. if the user is warned first hand that he needs curl, steamCMD, steam, lib32gcc1, libd3dadapter9-mesa:i386, libd3dadapter9-mesa beforehand or given an apt install command that opens up ready to run in a seperate terminal (that terminal's outcome being on an "if") so that the user sees firsthand what he's allowing sudo for and what sudo priveledges have been constrained to, then the script can come off less bad practice. Also there should be an opt out of steam username and password entering, in which case at the begining, the script should be able to detect if the condition of Forged Alliance being installed (easy) and first-run have been met (bit of a pickle, it's not as easy as having a config file. although, this requires some testing, perhaps FAF requires nothing more than FA physical files, reg entries and peripheral runtime libraries may be unused by FAF to run it's FA).
-- finish Java 10 workarounds, right now this script only supports use cases for a vanilla ubuntu, or where a user has clubsily removed previous fafSTACK. ideally it would be able to handle keeping a developper's JDK as a neighbor + the config allowing it to be found and default yet somehow still have FAF java client run. hopefully FAF client moves to java 11 and the whole ordeal can be forgotten. then it just become a "do you have java? good! is it 11? no? that's fine I'll just put this jre on and only FAF will use it. The whole java 10 thing is just a nightmare because of the fact the release is frowned upon in the linux community and not in the repos. attempting to install oracle or open jre or jdk **10** via traditional means will **always** result in your system pulling **11** instead. And the issue with the manual install is that it is a pain to get it to be detected. With apt managing, all this would have been so much easier, the `INSTALL4J_JAVA_HOME` in bashrc would have been sufficient, granting you the leisure to not change user's default java.
+- finish Java 10 workarounds.
 - add support for custom install location. this one is a nightmare. and not facillitated by paths in FAF client settings not resolving reliably.
 - figure out a proper fix to the current lack of path-resolving for FAF's setting "Command line format for executable" then the current workaround: Currently I'm forced to copy Proton Gallium nine's folder to a new folder and point to that new folder instead because the new folder's path doesn't contain dots, numbers or spaces which "Command line format for executable" setting entry in FAF apparently cannot handle. I haven't researched this sufficiently but I suspect there's a better way to do this.
-- figure out if any chages to /etc/environement are actually needed. I haven't been able to / or had time to rule out these changes as useless. ideally /ec/environment wouldn't be touched at all.
+- ~~figure out if any chages to /etc/environement are actually needed. I haven't been able to / or had time to rule out these changes as useless. ideally /ec/environment wouldn't be touched at all.~~ none were needed
 - ideas welcome.
 
 ## Not working ?
@@ -175,6 +177,7 @@ rm -rf ~/faf
 rm -rf ~/.faforever
 rm -rf ~/.com.faforever.client.FafClientApplication
 grep -v 'LD_PRELOAD' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
+grep -v 'LD_LIBRARY_PATH' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 grep -v 'DEF_CMD' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 grep -v 'export TERM' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 grep -v 'WINEDLLPATH' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
@@ -227,12 +230,6 @@ sudo update-alternatives --remove "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac"
 sudo update-alternatives --remove "javaws" "/usr/lib/jvm/jdk-10.0.2/jre/bin/javaws"
 ```
 
-5. now the only change I made with my script remaining is /etc/environement :
-
-```
-sudo mv /etc/environment.bak /etc/environment
-source /etc/environment
-```
 
 
 
