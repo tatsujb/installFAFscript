@@ -8,15 +8,15 @@ A shell script that installs and configures FA + FAF multiplayer client on linux
 
 ### Run successes (by distro) :
 
-Version | Distro | Pass/Fail
---- | --- | ---
-18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) (click me!) | :heavy_check_mark: 
-18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | ...
-5.0 | ![elementary-s](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | :heavy_check_mark:
-19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | ...
-9.8 | ![image](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | :heavy_multiplication_x: 
-18.0.4 | ![image](https://user-images.githubusercontent.com/5132359/54216185-76a36800-44e9-11e9-9e32-52d6a4071643.png) | :heavy_multiplication_x: 
-18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | :heavy_multiplication_x:
+Version | Distro (click icon) | Pass/Fail | Comment
+--- | --- | --- | ---
+18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | :heavy_check_mark: | base of script, flawless
+18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | ... | only issue should be "gnome-terminal not found", elementary fix should work
+5.0 | ![elementary-s](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | :heavy_check_mark: | use this version instead : https://github.com/tatsujb/installFAFscript/issues/2 I didn't know how to shut down steam, there was no tray icon, I used htop
+19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | ... | 
+9.8 | ![image](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | :heavy_multiplication_x: | 
+18.0.4 | ![image](https://user-images.githubusercontent.com/5132359/54216185-76a36800-44e9-11e9-9e32-52d6a4071643.png) | :heavy_multiplication_x: | 
+18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | :heavy_multiplication_x: | 
 
 
 #### What is a faf.sh?
