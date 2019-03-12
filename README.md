@@ -8,11 +8,9 @@ A shell script that installs a so-called fafSTACK on linux
 
 ### Run successes (by distro) :
 
- 1. ubuntu 18.04/18.10 (click the picture for youtube video : )
 Version | Distro | Pass/Fail
 --- | --- | ---
-18.04.2
-18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | :heavy_check_mark: 
+18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | :heavy_check_mark: 
 9.8 | ![iconfinder_configure-debian_23745](https://user-images.githubusercontent.com/5132359/54201455-f91e2e80-44cd-11e9-8a57-61dafbce0288.png) | :heavy_multiplication_x: 
 
 
