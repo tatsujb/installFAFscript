@@ -8,7 +8,8 @@ A shell script that installs a so-called fafSTACK on linux
 
 ### Run sucessess :
 
- 1. ubuntu 18.04/18.10
+ 1. ubuntu 18.04/18.10 (click)
+ 
 [![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/54181029-7f6e4c80-449d-11e9-8824-1786417c71f5.png)](https://www.youtube.com/watch?v=c5K7QmK-Xas)
 
 
