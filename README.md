@@ -1,9 +1,9 @@
-# fafSTACK 1.9
+# faf.sh 1.9
 
 ## (first succesfull run! ubuntu 18.04.2 [11/03/2019] )
 contributions welcome!
 
-A shell script that installs a so-called fafSTACK on linux
+A shell script that installs and configures FA + FAF multiplayer client on linux
 [![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/53690402-25b5a600-3d6a-11e9-94cd-3ac2fc06cf9a.png)](https://www.youtube.com/watch?v=c5K7QmK-Xas)
 
 ### Run successes (by distro) :
@@ -11,15 +11,15 @@ A shell script that installs a so-called fafSTACK on linux
 Version | Distro | Pass/Fail
 --- | --- | ---
 18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) (click me!) | :heavy_check_mark: 
-18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | :heavy_check_mark: 
+18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | ...
 5.0 | ![elementary-s](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | ...
 19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | ...
 9.8 | ![image](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | :heavy_multiplication_x: 
 
 
-#### What is a fafSTACK?
+#### What is a faf.sh?
 
-a faf stack is a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") on linux as you would under windows.
+a faf.sh is a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") on linux as you would under windows.
 
 such a setup includes (at minimum) :
 
