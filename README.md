@@ -6,7 +6,7 @@ contributions welcome!
 A shell script that installs a so-called fafSTACK on linux
 ![warty-final-ubuntu](https://user-images.githubusercontent.com/5132359/53690402-25b5a600-3d6a-11e9-94cd-3ac2fc06cf9a.png)
 
-### Run sucessess :
+### Run successes :
 
  1. ubuntu 18.04/18.10 (click the picture for youtube video : )
  
