@@ -93,7 +93,7 @@ Forged Alliance should start, you can set a profile, then set your prefered resu
 ### 6th
 
 FAF is running, log in and set your preferences under "Forged Alliance Forever":
-![image](https://user-images.githubusercontent.com/5132359/54200701-44cfd880-44cc-11e9-9abd-4eff42f20562.png)
+![faf settings](https://user-images.githubusercontent.com/5132359/54316944-2cea7880-45e2-11e9-9e93-65b597d81363.png)
 
 
 "Game Location" :
