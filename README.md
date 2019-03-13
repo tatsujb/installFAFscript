@@ -8,15 +8,15 @@ A shell script that installs and configures FA + FAF multiplayer client on linux
 
 ### Run successes (by distro) :
 
-Version | Distro (click icon) | Pass/Fail | Comment
---- | --- | --- | ---
-18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | :heavy_check_mark: | base of script, flawless
-18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | ... | only issue should be "gnome-terminal not found", elementary fix should work
-5.0 | ![elementary-s](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | :heavy_check_mark: | use this version instead : https://github.com/tatsujb/installFAFscript/issues/2 I didn't know how to shut down steam, there was no tray icon, I used htop
-19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | ... | 
-9.8 | ![image](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | :heavy_multiplication_x: | 
-18.0.4 | ![image](https://user-images.githubusercontent.com/5132359/54216185-76a36800-44e9-11e9-9e32-52d6a4071643.png) | :heavy_multiplication_x: | 
-18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | :heavy_multiplication_x: | 
+Version | Distro (click icon) | DE |  | Comment
+--- | --- | --- | --- | ---
+18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | gnome3 | :heavy_check_mark: | base of script, flawless
+18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | KDE | ... | only issue should be "gnome-terminal not found", elementary fix should work
+5.0 | ![elementary-s](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | Pantheon | :heavy_check_mark: | use this version instead : https://github.com/tatsujb/installFAFscript/issues/2 I didn't know how to shut down steam, there was no tray icon, I used htop
+19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | Cinnamon | ... | 
+9.8 | ![debian](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | gnome3 | :heavy_multiplication_x: | 
+18.0.4 | ![manjaro](https://user-images.githubusercontent.com/5132359/54216185-76a36800-44e9-11e9-9e32-52d6a4071643.png) | KDE | :heavy_multiplication_x: | 
+18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | gnome3 | :heavy_multiplication_x: | 
 
 
 #### What is a faf.sh?
@@ -45,6 +45,10 @@ In the case of this script, we will have recourse to some supplementary items in
 # User-Guide
 
 (read entirely before running)
+
+### warmup 
+
+ideally run on a fresh system with nothing (such as steam) currently open, although the script has been known to work in those cases.
 
 ### 1st
 
