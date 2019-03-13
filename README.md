@@ -101,13 +101,9 @@ FAF is running, log in and set your preferences under "Forged Alliance Forever":
 ```
 "Command line format for executable" :
 ```
-/home/USERNAME/.steam/steam/steamapps/common/Proton/dist/bin/wine "%s"
+/home/USERNAME/faf/run "%s"
 ```
-(steamapps may be SteamApps for you, first navigate to the wine executable in your browser and copy paste the path from you brwoser to make sure we're talking about a dirrectory that exists) 
-if this doesn't work try (if you do this you may have to remove .bashrc entries for proton same for ) :
-```
-/home/USERNAME/run "%s"
-```
+
 
 where "USERNAME" is what you get when you type `echo $USER` into the terminal.
 
@@ -152,6 +148,7 @@ GL HF!
 ```diff
 - Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options my script rather than have the user do it himself via GUI.
 ```
+- W.I.P. maybe remove as much as possible .bashrc modifications and default to using the run file steam creates, current version does this, if you want bashrc edits it's only one edit ago : https://github.com/tatsujb/installFAFscript/blob/1c3c370ad8ea004ce9de0f92ca953b31e1dd7189/faf.sh
 - W.I.P. make this script more posix-compliant
 - W.I.P. ~~create if-cases for differing linux distros~~ implement different linux distro (including mac) I rely on you the reader for this.
 - W.I.P. uninstall builtin
