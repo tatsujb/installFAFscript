@@ -108,13 +108,7 @@ FAF is running, log in and set your preferences under "Forged Alliance Forever":
 
 where "USERNAME" is what you get when you type `echo $USER` into the terminal.
 
-seems optional now :
 
-try to join two games and before the second run in your terminal :
-
-```
-chmod +x -R ~/.faforever/bin/ForgedAlliance.exe
-```
 
 ### 7th
 
@@ -132,9 +126,19 @@ the first time, and just :
 cd ~/faf
 ./downlords-faf-client
 ```
-everytime you want to run FAF after that, working on creating a launcher as part of the script, help wanted!
+everytime you want to run FAF after that.
+
+if certain types of game modes don't run it may be because you need to : 
+
+```
+chmod +x -R ~/.faforever/bin/ForgedAlliance.exe
+```
+but normally this shouldn't be needed.
+
+Working on creating a launcher as part of the script, help wanted!
 
 GL HF!
+
 
 # Pre-requisites 
 
