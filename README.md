@@ -153,6 +153,7 @@ GL HF!
 ```diff
 - Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options my script rather than have the user do it himself via GUI.
 ```
+- W.I.P. fix script failing to launch FAF games if FA was already installed.
 - W.I.P. maybe remove as much as possible .bashrc modifications and default to using the run file steam creates, current version does this, if you want bashrc edits it's only one edit ago : https://github.com/tatsujb/installFAFscript/blob/1c3c370ad8ea004ce9de0f92ca953b31e1dd7189/faf.sh
 - W.I.P. make this script more posix-compliant
 - W.I.P. ~~create if-cases for differing linux distros~~ implement different linux distro (including mac) I rely on you the reader for this.
