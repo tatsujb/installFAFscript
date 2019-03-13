@@ -26,7 +26,7 @@ if [ -f /etc/os-release ]; then
 	# freedesktop.org and systemd (Ubuntu 18.04+)
 	. /etc/os-release
 	operating_system=$NAME
-	os_version=$os_versionSION_ID
+	os_version=$VERSION_ID
 	echo "Distribution name + version + kernel version + architecture : "$operating_system" "$os_version" "$(uname -rm) >> ~/'faf.sh-'$faf_sh_version'.log'  
 elif type lsb_release >/dev/null 2>&1; then
 	# linuxbase.org (older Debian / Ubuntu should be here)
