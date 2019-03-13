@@ -263,7 +263,7 @@ echo "steamCMD terminated (in a good way), starting FA to finalize install";
 echo "[$(date --rfc-3339=seconds)] T2 steamCMD terminated (in a good way), starting FA to finalize install" >> ~/faf.sh-'$faf_sh_version'.log;
 steam -login '$steam_user_name' '$steam_password' -applaunch 9420 -shutdown;
 echo "FA install done. Waiting in case it isnt";
-cp -f /tmp/proton_$USER/run ~/
+cp -f /tmp/proton_$USER/run ~/faf/
 echo "making map & mods symbolic links";
 echo "[$(date --rfc-3339=seconds)] T2 making map & mods symbolic links" >> ~/faf.sh-'$faf_sh_version'.log;
 if [ -d ~/.steam/steam/steamapps ] ;
@@ -315,16 +315,6 @@ else cp -rf ~/.steam/steam/$steamapps/common/Proton* ~/.steam/steam/$steamapps/c
 mv ~/.steam/steam/$steamapps/common/Proton* ~/.steam/steam/$steamapps/common;
 fi;
 [[ ( -d ~/.steam/steam/steamapps/common/Proton ) || ( -d ~/.steam/steam/SteamApps/common/Proton ) ]] && echo "[$(date --rfc-3339=seconds)] T2 PROTON folder found" >> ~/faf.sh-'$faf_sh_version'.log || echo "[$(date --rfc-3339=seconds)] T2 Proton folder not found" >> ~/faf.sh-'$faf_sh_version'.log;
-! grep -q "DEF_CMD" ~/.bashrc && echo "export DEF_CMD=(\"/home/${USER}/.steam/steam/${steamapps}/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe\")" >> ~/.bashrc;
-! grep -q "export TERM" ~/.bashrc && echo "export TERM=xterm" >> ~/.bashrc;
-! grep -q "WINEDEBUG" ~/.bashrc && echo "export WINEDEBUG=-all" >> ~/.bashrc;
-! grep -q "WINEDLLPATH" ~/.bashrc && echo "export WINEDLLPATH=/home/${USER}/.steam/steam/${steamapps}/common/Proton/dist/lib64/wine:/home/${USER}/.steam/steam/${steamapps}/common/Proton/dist/lib/wine" >> ~/.bashrc;
-! grep -q "LD_LIBRARY_PATH" ~/.bashrc && echo "export LD_LIBRARY_PATH=/home/${USER}/.steam/steam/${steamapps}/common/Proton/dist/lib64:/home/${USER}/.steam/steam/${steamapps}/common/Proton/dist/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/pinned_libs_32:/home/${USER}/.steam/ubuntu12_32/steam-runtime/pinned_libs_64:/usr/lib/x86_64-linux-gnu/libfakeroot:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib:/usr/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu:/home/${USER}/.steam/ubuntu12_32/steam-runtime/i386/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu:/home/${USER}/.steam/ubuntu12_32/steam-runtime/i386/usr/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/amd64/lib/x86_64-linux-gnu:/home/${USER}/.steam/ubuntu12_32/steam-runtime/amd64/lib:/home/${USER}/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu:/home/${USER}/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib" >> ~/.bashrc;
-! grep -q "WINEDLLPATH" ~/.bashrc && echo "export WINEDLLPATH=/home/${USER}/.steam/Proton/dist/lib64/wine:/home/${USER}/.steam/Proton/dist/lib/wine" >> ~/.bashrc;
-! grep -q "WINEPREFIX" ~/.bashrc && echo "export WINEPREFIX=/home/${USER}/.steam/steam/${steamapps}/compatdata/9420/pfx/" >> ~/.bashrc;
-! grep -q "SteamGameId" ~/.bashrc && echo "export SteamGameId=9420" >> ~/.bashrc;
-! grep -q "SteamAppId" ~/.bashrc && echo "export SteamAppId=9420" >> ~/.bashrc;
-! grep -q "WINEDLLOVERRIDES" ~/.bashrc && echo "export WINEDLLOVERRIDES=\"\"" >> ~/.bashrc;
 source ~/.bashrc;
 eval "$(cat ~/.bashrc | tail -n +10)";
 echo "Finished thread two (install & run steam, steamcmd, FA) without issue, starting (FAF)...";
@@ -429,6 +419,8 @@ else
 	sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac" 0
 	sudo update-alternatives --set java /usr/lib/jvm/jdk-10.0.2/bin/java
 	sudo update-alternatives --set javac /usr/lib/jvm/jdk-10.0.2/bin/javac
+	echo "" >> ~/.bashrc
+	echo "" >> ~/.bashrc
 	! grep -q 'INSTALL4J_JAVA_HOME' ~/.bashrc && echo "export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2" >> ~/.bashrc
 	# /end Download & install java 10 open jdk
 fi
