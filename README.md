@@ -143,7 +143,7 @@ GL HF!
 
 # Pre-requisites 
 
-- a steam account with Forged Alliance activated on it [(9420)](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") 
+- a steam account with Forged Alliance activated on it [(9420)](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") (no steam does not need to be preinstalled, it does not need to not be preinstalled either, both work)
 - a linux system (preferably debian-based such as ubuntu,  for further compatibility please contribute) 
 - have at least a total of 11.7GB of free space on boot drive
 - be willing to write to your boot drive
