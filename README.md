@@ -8,9 +8,10 @@ A shell script that installs and configures FA + FAF multiplayer client on linux
 
 ### Run successes (by distro) :
 
-Version | Distro (click icon) | DE |  | Comment
+Version | Distro | distro+DE |  | Comment
 --- | --- | --- | --- | ---
-18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | gnome3 | :heavy_check_mark: | base of script
+18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | ubuntu
+(gnome3) | :heavy_check_mark: | base of script
 19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | Cinnamon | :heavy_check_mark: | likely closest behavior to stock ubuntu. nothing needed to change from base, worked out-of-the-box.
 18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | KDE | ... | only issue should be "gnome-terminal not found", elementary fix should work
 12.4 | ![zorin](https://user-images.githubusercontent.com/5132359/54295562-92734080-45b3-11e9-95ed-627f2931ec94.png) | Zorin | :heavy_check_mark:  | debconf-set-selections for steam is for some reason borked on zorin, trying to auto-accept the eula will result in the opposite. use the following : https://github.com/tatsujb/installFAFscript/issues/2 you'll have two eula accepting manual steps added to your process. really minor.
