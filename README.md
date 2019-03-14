@@ -1,9 +1,9 @@
-# faf.sh 1.9
+# faf.sh 2.0
 
 ## (first succesfull run! ubuntu 18.04.2 [11/03/2019] )
 contributions welcome!
 
-A shell script that installs and configures FA + FAF multiplayer client on linux
+A shell script that installs and configures [FA](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") + [FAF](https://faforever.com "Forged Alliace Forever") multiplayer client on linux
 [![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/53690402-25b5a600-3d6a-11e9-94cd-3ac2fc06cf9a.png)](https://www.youtube.com/watch?v=c5K7QmK-Xas)
 
 ### Run successes (by distro) :
@@ -12,7 +12,7 @@ Version | Distro | distro+DE |  | Comment
 --- | --- | --- | --- | ---
 18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | ubuntu (gnome3) | :heavy_check_mark: | base of script
 19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | Mint (Cinnamon) | :heavy_check_mark: | likely closest behavior to stock ubuntu. nothing needed to change from base, worked out-of-the-box.
-18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (KDE) | ... | only issue should be "gnome-terminal not found", elementary fix should work
+18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (KDE) | :heavy_check_mark: | two adaptations were made for kubuntu to work: detecting plasma + ubuntu = (kubuntu if case). Also gnome-terminal was traded out in favor of konsole.
 12.4 | ![zorin](https://user-images.githubusercontent.com/5132359/54295562-92734080-45b3-11e9-95ed-627f2931ec94.png) | Zorin (zorin) | :heavy_check_mark:  | debconf-set-selections for steam is for some reason borked on zorin, trying to auto-accept the eula will result in the opposite. use the following : https://github.com/tatsujb/installFAFscript/issues/2 you'll have two eula accepting manual steps added to your process. really minor.
 5.0 | ![elementary-s](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | Elementary (Pantheon) | :heavy_check_mark: | use this version instead : https://github.com/tatsujb/installFAFscript/issues/2 I didn't know how to shut down steam, there was no tray icon, I used htop 
 9.8 | ![debian](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | Debian (gnome3) | :heavy_multiplication_x: | 
@@ -20,9 +20,9 @@ Version | Distro | distro+DE |  | Comment
 18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | CenT OS (gnome3) | :heavy_multiplication_x: | 
 
 
-#### What is a faf.sh?
+#### What does faf.sh do?
 
-a faf.sh is a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") on linux as you would under windows.
+faf.sh sets up, on your non-windows PC, a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") as you would under windows.
 
 such a setup includes (at minimum) :
 
@@ -154,6 +154,7 @@ GL HF!
 ```diff
 - Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options my script rather than have the user do it himself via GUI.
 ```
+- W.I.P. refactoring... I lazily copy pasted the script for the distro's if cases, this made it over 1700 lines long... there should be a better way but I'm short on time. it works that's the main factor.
 - W.I.P. fix script failing to launch FAF games if FA was already installed.
 - W.I.P. maybe remove as much as possible .bashrc modifications and default to using the run file steam creates, current version does this, if you want bashrc edits it's only one edit ago : https://github.com/tatsujb/installFAFscript/blob/5d5ffec3c47aa05a09b02429e13b4532311a9d67/faf.sh
 - W.I.P. make this script more posix-compliant
