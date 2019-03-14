@@ -174,6 +174,7 @@ Feedback will help me fix things. This script creates a very minimal log file ca
 
 - "game already running" preventing steam restart after enableing proton; or preventing install finislazion after download : 
   it's a timing issue. you can adjust the sleep value or try to be quicker when setting launch options / enabling proton.
+this happens mostly when you're running this script for the second time (reinstalling) without a reboot.
 
 # Un-installing :
 
