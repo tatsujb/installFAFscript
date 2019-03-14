@@ -89,7 +89,7 @@ Once it's done steam starts again in order to finalize installation (non root ha
 
 accept terms.
 
-Forged Alliance should start, you can set a profile, then set your prefered resulution, then quit the game. (use steam's notification-area icon to close steam once again, to allow the script to continue)
+Forged Alliance should start, you can set a profile, then set your prefered resolution, then quit the game. (use steam's notification-area icon to close steam once again, to allow the script to continue)
 
 ### 6th
 
