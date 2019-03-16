@@ -80,7 +80,7 @@ at a certain point steam starts up and you'll need to enter Steam Guard.
 
 1. right click on "Supreme Commander - Forged Alliance" in your games Library" -> "SET LAUNCH OPTIONS..." and enter the contents of "the contents of this file are to be pasted in the forged alliance properties launch options" situated in your home folder, just in case, here they are (gallium-nine example) : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%`
 (vanilla proton example) : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%`
-2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" (Gallium-nine should already be preselected in the drop-down. obv. if you chose normal proton, it will be proton 3.16-7 beta)
+2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" (Gallium-nine should already be preselected in the drop-down. obv. if you chose normal proton, it will be proton 3.16-8 Beta)
 
 it will ask to restart.
 
@@ -181,6 +181,31 @@ Feedback will help me fix things. This script creates a very minimal log file ca
 - "game already running" preventing steam restart after enableing proton; or preventing install finislazion after download : 
   it's a timing issue. you can adjust the sleep value or try to be quicker when setting launch options / enabling proton.
 this happens mostly when you're running this script for the second time (reinstalling) without a reboot.
+
+If removing everything, rebooting and reinstalling is too much of a hassle (because of how much bandwitdth it takes to download forged alliance, I have a solution for you as well :
+
+ - first reboot
+ - then log into steam and switch proton back to 3.16-8 Beta
+ - accept steam restart
+ - run forged alliance, create the profile, set resolution then exit it and steam 
+ - in a terminal, type :
+   ```
+cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
+rm Maps
+rm Mods
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
+cd ~/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
+rm -rf My\ Documents
+mkdir My\ Documents
+cd My\ Documents
+ln -s ~/My\ Games/ My\ Games
+cd ~/faf
+./downlords-faf-client
+   ```
+   - you should now be able to resume at [step 6](https://github.com/tatsujb/installFAFscript#6th "step 6 of script install process")
+
+
 
 # Un-installing :
 
