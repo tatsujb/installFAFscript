@@ -144,6 +144,38 @@ Working on creating a launcher as part of the script, help wanted!
 
 GL HF!
 
+## Not working ?
+
+Feedback will help me fix things. This script creates a very minimal log file called "faf_sh-\*.log" in your home. Paste it's contents as part of an issue/bug report. your first and foremost issue is probably the linux distro flavor, you can check what release is supported as of now [here](https://github.com/tatsujb/installFAFscript#run-successes-by-distro- "distro compatibility"), but a couplesyntax edits should therefore make my script work for you.
+
+### known issues :
+
+- "game already running" preventing steam restart after enabling proton; or preventing install finislazion after download : 
+
+this happens mostly when you're running this script for the second time (reinstalling) without a reboot.
+
+If removing everything, rebooting and reinstalling is too much of a hassle (because of how much bandwitdth it takes to download forged alliance, I have a solution for you as well :
+
+ - first reboot
+ - then log into steam and switch proton back to 3.16-8 Beta
+ - accept steam restart
+ - run forged alliance, create the profile, set resolution then exit it and steam 
+ - in a terminal, type :
+   ```
+cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
+rm Maps
+rm Mods
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
+ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
+cd ~/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
+rm -rf My\ Documents
+mkdir My\ Documents
+cd My\ Documents
+ln -s ~/My\ Games/ My\ Games
+cd ~/faf
+./downlords-faf-client
+   ```
+   - you should now be able to resume at [step 6](https://github.com/tatsujb/installFAFscript#6th "step 6 of script install process")
 
 # Pre-requisites 
 
@@ -172,41 +204,6 @@ GL HF!
 - ~~figure out if any chages to /etc/environement are actually needed. I haven't been able to / or had time to rule out these changes as useless. ideally /ec/environment wouldn't be touched at all.~~ none were needed
 - ideas welcome.
 
-## Not working ?
-
-Feedback will help me fix things. This script creates a very minimal log file called "fafstack-\*.log" in your home. Paste it's contents as part of an issue/bug report. your first and foremost issue is probably the linux distro flavor, but a couplesyntax edits should therefore make my script work for you.
-
-### known issues :
-
-- "game already running" preventing steam restart after enableing proton; or preventing install finislazion after download : 
-  it's a timing issue. you can adjust the sleep value or try to be quicker when setting launch options / enabling proton.
-this happens mostly when you're running this script for the second time (reinstalling) without a reboot.
-
-If removing everything, rebooting and reinstalling is too much of a hassle (because of how much bandwitdth it takes to download forged alliance, I have a solution for you as well :
-
- - first reboot
- - then log into steam and switch proton back to 3.16-8 Beta
- - accept steam restart
- - run forged alliance, create the profile, set resolution then exit it and steam 
- - in a terminal, type :
-   ```
-cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
-rm Maps
-rm Mods
-ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
-ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
-cd ~/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
-rm -rf My\ Documents
-mkdir My\ Documents
-cd My\ Documents
-ln -s ~/My\ Games/ My\ Games
-cd ~/faf
-./downlords-faf-client
-   ```
-   - you should now be able to resume at [step 6](https://github.com/tatsujb/installFAFscript#6th "step 6 of script install process")
-
-
-
 # Un-installing :
 
 this will very much depend on how much of what you already had installed before running this script that this script has in common.
@@ -215,7 +212,7 @@ here are a couple safe bets however, run this in your terminal:
 
 ```
 rm ~/the\ contents\ of\ this*
-rm ~/fafstack-*.log
+rm ~/faf_sh-*.log
 rm ~/run
 rm ~/.install4j
 rm -rf ~/My\ Games
