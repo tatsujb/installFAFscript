@@ -154,7 +154,7 @@ Feedback will help me fix things. This script creates a very minimal log file ca
 
 this happens mostly when you're running this script for the second time (reinstalling) without a reboot.
 
-If removing everything, rebooting and reinstalling is too much of a hassle (because of how much bandwitdth it takes to download forged alliance, I have a solution for you as well :
+If removing everything, rebooting and reinstalling is too much of a hassle (because of how much bandwitdth it takes to download forged alliance), I have a solution for you as well :
 
  - first reboot
  - then log into steam and switch proton back to 3.16-8 Beta
