@@ -176,6 +176,29 @@ cd ~/faf
 ./downlords-faf-client
    ```
    - you should now be able to resume at [step 6](https://github.com/tatsujb/installFAFscript#6th "step 6 of script install process")
+   
+ - another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
+
+```
+#!/bin/bash
+#Run game or given command in environment
+
+cd "/home/t/.steam/steam/steamapps/common/Supreme Commander Forged Alliance"
+DEF_CMD=("/home/t/.steam/steam/steamapps/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")
+PATH="/home/t/.steam/steam/steamapps/common/Proton/dist/bin/:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/bin:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/usr/bin/python:/usr/bin/gtags:/snap/bin" \
+	TERM="xterm" \
+	WINEDEBUG="-all" \
+	WINEDLLPATH="/home/t/.steam/steam/steamapps/common/Proton/dist/lib64/wine:/home/t/.steam/steam/steamapps/common/Proton/dist/lib/wine" \
+	LD_LIBRARY_PATH="/home/t/.steam/steam/steamapps/common/Proton/dist/lib64:/home/t/.steam/steam/steamapps/common/Proton/dist/lib:/home/t/.steam/ubuntu12_32/steam-runtime/pinned_libs_32:/home/t/.steam/ubuntu12_32/steam-runtime/pinned_libs_64:/usr/lib/x86_64-linux-gnu/libfakeroot:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib:/usr/lib:/home/t/.steam/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/i386/lib:/home/t/.steam/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/i386/usr/lib:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/lib/x86_64-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/lib:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib:" \
+	WINEPREFIX="/home/t/.steam/steam/steamapps/compatdata/9420/pfx/" \
+	SteamGameId="9420" \
+	SteamAppId="9420" \
+	WINEDLLOVERRIDES="d3d11=n;d3d10=n;d3d10core=n;d3d10_1=n;dxgi=n" \
+	STEAM_COMPAT_CLIENT_INSTALL_PATH="/home/t/.steam" \
+	"/home/t/.steam/steam/steamapps/common/Proton/dist/bin//wine" "${@:-${DEF_CMD[@]}}"
+```
+
+possible flaws are `/steam/steamapps/common/Proton/` being a `/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0/` instead or there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `shutdown` at the end of it.
 
 # Pre-requisites 
 
