@@ -161,7 +161,7 @@ If removing everything, rebooting and reinstalling is too much of a hassle (beca
  - accept steam restart
  - run forged alliance, create the profile, set resolution then exit it and steam 
  - in a terminal, type :
-   ```
+```
 cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
 rm Maps
 rm Mods
@@ -174,7 +174,7 @@ cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
 cd ~/faf
 ./downlords-faf-client
-   ```
+```
    - you should now be able to resume at [step 6](https://github.com/tatsujb/installFAFscript#6th "step 6 of script install process")
    
  - another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
