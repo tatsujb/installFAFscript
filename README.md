@@ -156,7 +156,7 @@ GL HF!
 ## Axes of improvements
 
 ```diff
-- Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options my script rather than have the user do it himself via GUI.
+- Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options in my script rather than have the user do it himself via GUI.
 ```
 - W.I.P. refactoring... I lazily copy pasted the script for the distro's if cases, this made it over 1700 lines long... there should be a better way but I'm short on time. it works that's the main factor.
 - W.I.P. fix script failing to launch FAF games if FA was already installed.
@@ -197,16 +197,6 @@ rm -rf ~/My\ Games
 rm -rf ~/faf
 rm -rf ~/.faforever
 rm -rf ~/.com.faforever.client.FafClientApplication
-grep -v 'LD_PRELOAD' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'LD_LIBRARY_PATH' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'DEF_CMD' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'export TERM' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'WINEDLLPATH' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'WINEPREFIX' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'WINEDEBUG' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'SteamGameId' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'SteamAppId' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-grep -v 'WINEDLLOVERRIDES' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 sudo apt purge -y steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1
 sudo apt -y autoremove
 source ~/.bashrc
@@ -240,15 +230,12 @@ sudo apt purge -y steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc
 sudo apt -y autoremove
 ```
 
-4. Java 10 (you will have to put back your other versions of java yourself)
+4. Java 10
 ```
 grep -v 'INSTALL4J_JAVA_HOME' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 source ~/.bashrc
 rm -rf ~/.java
 sudo rm -rf /usr/lib/jvm/jdk-10.0.2/
-sudo update-alternatives --remove "java" "/usr/lib/jvm/jdk-10.0.2/bin/java"
-sudo update-alternatives --remove "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac"
-sudo update-alternatives --remove "javaws" "/usr/lib/jvm/jdk-10.0.2/jre/bin/javaws"
 ```
 
 
