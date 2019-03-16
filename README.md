@@ -150,7 +150,7 @@ Feedback will help me fix things. This script creates a very minimal log file ca
 
 ### known issues :
 
-- "game already running" preventing steam restart after enabling proton; or preventing install finislazion after download : 
+2. "game already running" preventing steam restart after enabling proton; or preventing install finislazion after download : 
 
 this happens mostly when you're running this script for the second time (reinstalling) without a reboot.
 
@@ -177,7 +177,7 @@ cd ~/faf
 ```
    - you should now be able to resume at [step 6](https://github.com/tatsujb/installFAFscript#6th "step 6 of script install process")
    
- - another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
+ 1. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
 
 ```
 #!/bin/bash
