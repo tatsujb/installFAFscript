@@ -57,15 +57,15 @@ Ideally run on a fresh system with nothing (such as steam) currently open, altho
 
 ### 1st
 
-click on installfaf.sh above, then click on "RAW", then type <kbd>Ctrl</kbd> + <kbd>S</kbd>, (you can place anywhere, in home folder is comfortable to work with), then <kbd>Enter</kbd> to save file.
+click on faf.sh above, then click on "RAW", then type <kbd>Ctrl</kbd> + <kbd>S</kbd>, (you can place anywhere, in home folder is comfortable to work with), then <kbd>Enter</kbd> to save file.
 
 ### 2nd
 
-make it executable : (terminal) `chmod +x installfaf.sh`
+make it executable : (terminal) `chmod +x faf.sh`
 
 ### 3rd 
 
-run the script within a terminal : `./installfaf.sh` 
+run the script within a terminal : `./faf.sh` 
 
 you'll be asked in order :
 - your steam account usename
