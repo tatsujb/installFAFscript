@@ -6,7 +6,7 @@ This is a shell script that installs and configures [FA](https://store.steampowe
 
 ### I don't want a script, I want a DIY :
 
-no problem! Foodlfg does short wort of summarizing all you need to know over here : https://github.com/foodlfg/Supreme-Commander-FAF-install-guide
+no problem! Foodlfg makes short work of summarizing all you need to know for how to install FAF over here : https://github.com/foodlfg/Supreme-Commander-FAF-install-guide
 
 ### Run successes (by distro) :
 Distro icon should be clickable for a video-example (for the moment only had the time to record ubuntu but I coded for other distributions. feel free to share another youtube link for another distribution, I'll add it)
