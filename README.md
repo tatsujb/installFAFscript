@@ -55,6 +55,8 @@ Do not run script as root! (Debian being an exception)
 
 Ideally run on a fresh system with nothing (such as steam) currently open, although the script has been known to work in those cases.
 
+if you have made previous attempts at installing faf that are not this script, please remove all elements of faf first : faf-download-client, java 10, and forrged alliance and reboot your computer.
+
 also make sure you made your steam games public (they no longer are by default) so if your account is relatively new and you haven't done this yet follow this guide first :  https://youtu.be/ElH4aetA5Hc
 
 ### 1st
