@@ -646,12 +646,18 @@ echo "done looping!"
 sleep 2
 kill -9 $(pgrep java | tail -1)
 # editting client.prefs :
+if [ -d '$user_path'/.steam/steam/SteamApps ]
+then
+	steamapps="SteamApps"
+else
+	steamapps="steamapps"
+fi
 if ! grep -q '"path"' $user_path/.faforever/client.prefs > /dev/null
 then
-	sed -i '12i"path": "'$user_path'/.steam/steam/steamapps/common/Supreme Commander Forged Alliance",' $user_path/.faforever/client.prefs
-	sed -i '13i"installationPath": "'$user_path'/.steam/steam/steamapps/common/Supreme Commander Forged Alliance",' $user_path/.faforever/client.prefs
+	sed -i '12i"path": "'$user_path'/.steam/steam/'$steamapps'/common/Supreme Commander Forged Alliance",' $user_path/.faforever/client.prefs
+	sed -i '13i"installationPath": "'$user_path'/.steam/steam/'$steamapps'/common/Supreme Commander Forged Alliance",' $user_path/.faforever/client.prefs
 fi
-! grep -q '"preferencesFile": "'$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs",' $user_path/.faforever/client.prefs > /dev/null && sed -i 's_"preferencesFile".*_"preferencesFile": "'$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive\_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs",_' $user_path/.faforever/client.prefs
+! grep -q '"preferencesFile": "'$user_path'/.steam/steam/'$steamapps'/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs",' $user_path/.faforever/client.prefs > /dev/null && sed -i 's_"preferencesFile".*_"preferencesFile": "'$user_path'/.steam/steam/'$steamapps'/compatdata/9420/pfx/drive\_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs",_' $user_path/.faforever/client.prefs
 ! grep -q '"executableDecorator": "'$user_path'/faf/",' $user_path/.faforever/client.prefs > /dev/null && sed -i 's_"executableDecorator".*_"executableDecorator": "'$user_path'/faf/run \\"%s\\""_' $user_path/.faforever/client.prefs
 echo "done editting!"
 gtk-launch faforever
