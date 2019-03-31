@@ -18,49 +18,30 @@ Version | Distro | distro+DE |  | Comment
 18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (Plasma) | :heavy_check_mark: | two adaptations were made for kubuntu to work: detecting plasma + ubuntu = (kubuntu if case). Also gnome-terminal was traded out in favor of konsole.
 12.4 | ![zorin](https://user-images.githubusercontent.com/5132359/54295562-92734080-45b3-11e9-95ed-627f2931ec94.png) | Zorin (zorin) | :heavy_check_mark:  | debconf-set-selections for steam is for some reason borked on zorin, trying to auto-accept the eula will result in the opposite. You'll have two eula accepting manual steps added to your process. really minor.
 5.0 | ![elementary-s](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | Elementary (Pantheon) | :heavy_check_mark: | used xterm instead of gnome-terminal. Also I didn't know how to shut down steam, there was no tray icon, I used htop 
-9.8 | ![debian](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | Debian (gnome3) | :heavy_multiplication_x: | Comming along nicely, I won't be using sudo but instead forcing the user to run as root. the script will therfore deduce which folder is the user's home folder simply based on size of /home's children and cd to that. I know this is iffy but it's the best I've got.
-29 | ![Fedora](https://user-images.githubusercontent.com/5132359/54399527-2978ef00-46bf-11e9-8418-0031c7e991f7.png) | Fedora (gnome3) | :heavy_multiplication_x: | 
+9.8 | ![debian](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | Debian (gnome3) | :heavy_multiplication_x: | run as root, do not sudo ./faf.sh, simply run logged in as root. don't worry, the script will place files in your user's home not root's home.
+29 | ![Fedora](https://user-images.githubusercontent.com/5132359/54399527-2978ef00-46bf-11e9-8418-0031c7e991f7.png) | Fedora (gnome3) | :heavy_multiplication_x: | working on it...
 18.0.4 | ![manjaro](https://user-images.githubusercontent.com/5132359/54216185-76a36800-44e9-11e9-9e32-52d6a4071643.png) | Manjaro (Plasma) | :heavy_multiplication_x: | 
 18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | CenT OS (gnome3) | :heavy_multiplication_x: | 
-10.14 | ![apple](https://user-images.githubusercontent.com/5132359/54368435-6d92d200-4674-11e9-922f-9aebabfd7ca2.png) | Apple (Aqua) | :heavy_multiplication_x: | 
+10.14 | ![apple](https://user-images.githubusercontent.com/5132359/54368435-6d92d200-4674-11e9-922f-9aebabfd7ca2.png) | Apple (Aqua) | :heavy_multiplication_x: | started work...
 
-
-#### What does faf.sh do?
-
-faf.sh sets up, on your non-windows PC, a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") as you would under windows.
-
-such a setup includes (at minimum) :
-
- - [Supreme Commander Forged Alliance]("https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/")
- - (FAF) JAVA client
- - Java 10
- - Gallium-Proton /or/ Proton /or/ Wine (to run the windows game)
- 
-In the case of this script, we will have recourse to some supplementary items in order to automate our task :
-
- - curl (fetches installers from git)
- - steamCMD (downloads the game) 
- - steam (installs it)
- - pv (progress indicators)
- 
- Dependencies :
- 
- - lib32gcc1 (steamCMD)
- - libd3dadapter9-mesa:i386 libd3dadapter9-mesa (Gallium-Proton)
-
-# User-Guide
+# Install
 
 (read entirely before running)
 
-### warmup 
+# Pre-requisites 
+
+- a steam account with Forged Alliance activated on it [(9420)](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") (no steam does not need to be preinstalled, it does not need to not be preinstalled either, both work)
+- your steam games are public (they no longer are by default) so if your account is relatively new and you haven't done this yet follow this guide first :  https://youtu.be/ElH4aetA5Hc
+- a linux system (preferably debian-based such as ubuntu,  for further compatibility please contribute) 
+- have at least a total of 11.7GB of free space on boot drive
+- be willing to write to your boot drive
+- be willing to have stuff put into .bashrc
 
 Do not run script as root! (Debian being an exception)
 
 Ideally run on a fresh system with nothing (such as steam) currently open, although the script has been known to work in those cases.
 
 if you have made previous attempts at installing faf that are not this script, please remove all elements of faf first : faf-download-client, java 10, and forrged alliance and reboot your computer.
-
-also make sure you made your steam games public (they no longer are by default) so if your account is relatively new and you haven't done this yet follow this guide first :  https://youtu.be/ElH4aetA5Hc
 
 ### 1st
 
@@ -114,6 +95,27 @@ if you want to run FAF again do not run faf.sh again (remember, it is a script t
 ![faf in start menu](https://user-images.githubusercontent.com/5132359/55295519-365f4780-540e-11e9-9a9c-02a94dd70b07.png)
 
 GL HF!
+
+## Axes of improvements
+
+```diff
+- Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options in my script rather than have the user do it himself via GUI.
+```
+- W.I.P. implement different linux distro (including mac), I rely on you the reader for this. so far I've done: ubuntu, lubuntu, kubuntu, mint, elementary, zorin and debian.
+- W.I.P. add support for custom install location. this one is a nightmare. and not facillitated by paths in FAF client settings not resolving reliably.
+- W.I.P. fix script failing to launch FAF games if FA was already installed.
+- W.I.P. uninstall builtin
+- W.I.P. finish Java 10 workarounds.
+- W.I.P. get rid of behaviors that the user may not be comfortable with; case in point and first offender: giving a shell script sudo priveledges in it's entirety. if the user is warned first hand that he needs curl, steamCMD, steam, lib32gcc1, libd3dadapter9-mesa:i386, libd3dadapter9-mesa beforehand or given an apt install command that opens up ready to run in a seperate terminal (that terminal's outcome being on an "if") so that the user sees firsthand what he's allowing sudo for and what sudo priveledges have been constrained to, then the script can come off less bad practice. Also there should be an opt out of steam username and password entering, in which case at the begining, the script should be able to detect if the condition of Forged Alliance being installed (easy) and first-run have been met (bit of a pickle, it's not as easy as having a config file. although, this requires some testing, perhaps FAF requires nothing more than FA physical files, reg entries and peripheral runtime libraries may be unused by FAF to run it's FA).
+- r̶e̶f̶a̶c̶t̶o̶r̶i̶n̶g̶.̶.̶.̶ ̶I̶ ̶l̶a̶z̶i̶l̶y̶ ̶c̶o̶p̶y̶ ̶p̶a̶s̶t̶e̶d̶ ̶t̶h̶e̶ ̶s̶c̶r̶i̶p̶t̶ ̶f̶o̶r̶ ̶t̶h̶e̶ ̶d̶i̶s̶t̶r̶o̶'̶s̶ ̶i̶f̶ ̶c̶a̶s̶e̶s̶,̶ ̶t̶h̶i̶s̶ ̶m̶a̶d̶e̶ ̶i̶t̶ ̶o̶v̶e̶r̶ ̶1̶7̶0̶0̶ ̶l̶i̶n̶e̶s̶ ̶l̶o̶n̶g̶.̶.̶.̶ ̶t̶h̶e̶r̶e̶ ̶s̶h̶o̶u̶l̶d̶ ̶b̶e̶ ̶a̶ ̶b̶e̶t̶t̶e̶r̶ ̶w̶a̶y̶ ̶b̶u̶t̶ ̶I̶'̶m̶ ̶s̶h̶o̶r̶t̶ ̶o̶n̶ ̶t̶i̶m̶e̶.̶ ̶i̶t̶ ̶w̶o̶r̶k̶s̶ ̶t̶h̶a̶t̶'̶s̶ ̶t̶h̶e̶ ̶m̶a̶i̶n̶ ̶f̶a̶c̶t̶o̶r̶.̶ now refactored : 2383 −> down to 665 !!!
+- r̶e̶m̶o̶v̶e̶ ̶a̶s̶ ̶m̶u̶c̶h̶ ̶a̶s̶ ̶p̶o̶s̶s̶i̶b̶l̶e̶ ̶.̶b̶a̶s̶h̶r̶c̶ ̶m̶o̶d̶i̶f̶i̶c̶a̶t̶i̶o̶n̶s̶ ̶a̶n̶d̶ ̶d̶e̶f̶a̶u̶l̶t̶ ̶t̶o̶ ̶u̶s̶i̶n̶g̶ ̶t̶h̶e̶ ̶r̶u̶n̶ ̶f̶i̶l̶e̶ ̶s̶t̶e̶a̶m̶ ̶c̶r̶e̶a̶t̶e̶s̶ (if you want bashrc edits it's only one edit ago : https://github.com/tatsujb/installFAFscript/blob/5d5ffec3c47aa05a09b02429e13b4532311a9d67/faf.sh )
+- m̶a̶k̶e̶ ̶t̶h̶i̶s̶ ̶s̶c̶r̶i̶p̶t̶ ̶m̶o̶r̶e̶ ̶p̶o̶s̶i̶x̶-̶c̶o̶m̶p̶l̶i̶a̶n̶t̶ could always be better
+- ~~create if-cases for differing linux distros~~ 
+- r̶e̶m̶o̶v̶e̶ ̶t̶h̶e̶ ̶n̶e̶e̶d̶ ̶f̶o̶r̶ ̶t̶h̶e̶ ̶u̶s̶e̶r̶ ̶s̶o̶ ̶s̶e̶t̶ ̶f̶a̶f̶ ̶s̶e̶t̶t̶i̶n̶g̶s̶ ̶h̶i̶m̶s̶e̶l̶f̶
+- c̶r̶e̶a̶t̶e̶ ̶F̶A̶F̶ ̶l̶a̶u̶n̶c̶h̶e̶r̶ 
+- f̶i̶g̶u̶r̶e̶ ̶o̶u̶t̶ ̶a̶ ̶p̶r̶o̶p̶e̶r̶ ̶f̶i̶x̶ ̶t̶o̶ ̶t̶h̶e̶ ̶c̶u̶r̶r̶e̶n̶t̶ ̶l̶a̶c̶k̶ ̶o̶f̶ ̶p̶a̶t̶h̶-̶r̶e̶s̶o̶l̶v̶i̶n̶g̶ ̶f̶o̶r̶ ̶F̶A̶F̶'̶s̶ ̶s̶e̶t̶t̶i̶n̶g̶ ̶"̶C̶o̶m̶m̶a̶n̶d̶ ̶l̶i̶n̶e̶ ̶f̶o̶r̶m̶a̶t̶ ̶f̶o̶r̶ ̶e̶x̶e̶c̶u̶t̶a̶b̶l̶e̶"̶ ̶t̶h̶e̶n̶ ̶t̶h̶e̶ ̶c̶u̶r̶r̶e̶n̶t̶ ̶w̶o̶r̶k̶a̶r̶o̶u̶n̶d̶:̶ ̶C̶u̶r̶r̶e̶n̶t̶l̶y̶ ̶I̶'̶m̶ ̶f̶o̶r̶c̶e̶d̶ ̶t̶o̶ ̶c̶o̶p̶y̶ ̶P̶r̶o̶t̶o̶n̶ ̶G̶a̶l̶l̶i̶u̶m̶ ̶n̶i̶n̶e̶'̶s̶ ̶f̶o̶l̶d̶e̶r̶ ̶t̶o̶ ̶a̶ ̶n̶e̶w̶ ̶f̶o̶l̶d̶e̶r̶ ̶a̶n̶d̶ ̶p̶o̶i̶n̶t̶ ̶t̶o̶ ̶t̶h̶a̶t̶ ̶n̶e̶w̶ ̶f̶o̶l̶d̶e̶r̶ ̶i̶n̶s̶t̶e̶a̶d̶ ̶b̶e̶c̶a̶u̶s̶e̶ ̶t̶h̶e̶ ̶n̶e̶w̶ ̶f̶o̶l̶d̶e̶r̶'̶s̶ ̶p̶a̶t̶h̶ ̶d̶o̶e̶s̶n̶'̶t̶ ̶c̶o̶n̶t̶a̶i̶n̶ ̶d̶o̶t̶s̶,̶ ̶n̶u̶m̶b̶e̶r̶s̶ ̶o̶r̶ ̶s̶p̶a̶c̶e̶s̶ ̶w̶h̶i̶c̶h̶ ̶"̶C̶o̶m̶m̶a̶n̶d̶ ̶l̶i̶n̶e̶ ̶f̶o̶r̶m̶a̶t̶ ̶f̶o̶r̶ ̶e̶x̶e̶c̶u̶t̶a̶b̶l̶e̶"̶ ̶s̶e̶t̶t̶i̶n̶g̶ ̶e̶n̶t̶r̶y̶ ̶i̶n̶ ̶F̶A̶F̶ ̶a̶p̶p̶a̶r̶e̶n̶t̶l̶y̶ ̶c̶a̶n̶n̶o̶t̶ ̶h̶a̶n̶d̶l̶e̶.̶ ̶I̶ ̶h̶a̶v̶e̶n̶'̶t̶ ̶r̶e̶s̶e̶a̶r̶c̶h̶e̶d̶ ̶t̶h̶i̶s̶ ̶s̶u̶f̶f̶i̶c̶i̶e̶n̶t̶l̶y̶ ̶b̶u̶t̶ ̶I̶ ̶s̶u̶s̶p̶e̶c̶t̶ ̶t̶h̶e̶r̶e̶'̶s̶ ̶a̶ ̶b̶e̶t̶t̶e̶r̶ ̶w̶a̶y̶ ̶t̶o̶ ̶d̶o̶ ̶t̶h̶i̶s̶.̶
+- ~~figure out if any chages to /etc/environement are actually needed. I haven't been able to / or had time to rule out these changes as useless. ideally /ec/environment wouldn't be touched at all.~~ none were needed
+- ideas welcome.
 
 ## Not working ?
 
@@ -172,32 +174,29 @@ PATH="/home/t/.steam/steam/steamapps/common/Proton/dist/bin/:/home/t/.steam/ubun
 
 possible flaws are `/steam/steamapps/common/Proton/` being a `/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0/` instead or there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `shutdown` at the end of it, also `steamapps` instead of `SteamApps`.
 
-# Pre-requisites 
 
-- a steam account with Forged Alliance activated on it [(9420)](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") (no steam does not need to be preinstalled, it does not need to not be preinstalled either, both work)
-- a linux system (preferably debian-based such as ubuntu,  for further compatibility please contribute) 
-- have at least a total of 11.7GB of free space on boot drive
-- be willing to write to your boot drive
-- be willing to have stuff put into .bashrc
+#### What does faf.sh do?
 
-## Axes of improvements
+faf.sh sets up, on your non-windows PC, a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") as you would under windows.
 
-```diff
-- Most Importantly I want to figure out a way to set steam's "proton for all games" flag to true in and set Forged Alliance's launch options in my script rather than have the user do it himself via GUI.
-```
-- W.I.P. refactoring... I lazily copy pasted the script for the distro's if cases, this made it over 1700 lines long... there should be a better way but I'm short on time. it works that's the main factor.
-- W.I.P. fix script failing to launch FAF games if FA was already installed.
-- W.I.P. maybe remove as much as possible .bashrc modifications and default to using the run file steam creates, current version does this, if you want bashrc edits it's only one edit ago : https://github.com/tatsujb/installFAFscript/blob/5d5ffec3c47aa05a09b02429e13b4532311a9d67/faf.sh
-- W.I.P. make this script more posix-compliant
-- W.I.P. ~~create if-cases for differing linux distros~~ implement different linux distro (including mac) I rely on you the reader for this.
-- W.I.P. uninstall builtin
-- W.I.P. create FAF launcher 
-- get rid of behaviors that the user may not be comfortable with; case in point and first offender: giving a shell script sudo priveledges in it's entirety. if the user is warned first hand that he needs curl, steamCMD, steam, lib32gcc1, libd3dadapter9-mesa:i386, libd3dadapter9-mesa beforehand or given an apt install command that opens up ready to run in a seperate terminal (that terminal's outcome being on an "if") so that the user sees firsthand what he's allowing sudo for and what sudo priveledges have been constrained to, then the script can come off less bad practice. Also there should be an opt out of steam username and password entering, in which case at the begining, the script should be able to detect if the condition of Forged Alliance being installed (easy) and first-run have been met (bit of a pickle, it's not as easy as having a config file. although, this requires some testing, perhaps FAF requires nothing more than FA physical files, reg entries and peripheral runtime libraries may be unused by FAF to run it's FA).
-- finish Java 10 workarounds.
-- add support for custom install location. this one is a nightmare. and not facillitated by paths in FAF client settings not resolving reliably.
-- figure out a proper fix to the current lack of path-resolving for FAF's setting "Command line format for executable" then the current workaround: Currently I'm forced to copy Proton Gallium nine's folder to a new folder and point to that new folder instead because the new folder's path doesn't contain dots, numbers or spaces which "Command line format for executable" setting entry in FAF apparently cannot handle. I haven't researched this sufficiently but I suspect there's a better way to do this.
-- ~~figure out if any chages to /etc/environement are actually needed. I haven't been able to / or had time to rule out these changes as useless. ideally /ec/environment wouldn't be touched at all.~~ none were needed
-- ideas welcome.
+such a setup includes (at minimum) :
+
+ - [Supreme Commander Forged Alliance]("https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/")
+ - (FAF) JAVA client
+ - Java 10
+ - Gallium-Proton /or/ Proton /or/ Wine (to run the windows game)
+ 
+In the case of this script, we will have recourse to some supplementary items in order to automate our task :
+
+ - curl (fetches installers from git)
+ - steamCMD (downloads the game) 
+ - steam (installs it)
+ - pv (progress indicators)
+ 
+ Dependencies :
+ 
+ - lib32gcc1 (steamCMD)
+ - libd3dadapter9-mesa:i386 libd3dadapter9-mesa (Gallium-Proton)
 
 # Un-installing :
 
