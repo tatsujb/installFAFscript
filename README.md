@@ -75,9 +75,9 @@ make it executable : (terminal) `chmod +x faf.sh`
 run the script within a terminal : `./faf.sh` 
 
 you'll be asked in order :
+- your linux session password
 - your steam account usename
 - your steam account password
-- your linux session password
 - if you want Gallium Nine or not
 
 ### 4rth
@@ -104,50 +104,14 @@ Forged Alliance should start, you can set a profile, then set your prefered reso
 
 ### 6th
 
-FAF is running, log in and set your preferences under "Forged Alliance Forever":
-![faf settings](https://user-images.githubusercontent.com/5132359/54316944-2cea7880-45e2-11e9-9e93-65b597d81363.png)
+FAF will start, go ahead and log in.
 
+FAF will close almost immediately
 
-"Game Location" :
-```
-/home/USERNAME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance
-```
-"Command line format for executable" :
-```
-/home/USERNAME/faf/run "%s"
-```
+then start again, that was it's preferences being set by my script. you can now play, the script is now done.
 
-
-where "USERNAME" is what you get when you type `echo $USER` into the terminal.
-
-
-
-### 7th
-
-the script is now done.
-
-after you close FAF / your terminal, to run FAF again you'll have to :
-
-```
-source ~/.bashrc
-cd ~/faf
-./downlords-faf-client
-```
-the first time, and just :
-```
-cd ~/faf
-./downlords-faf-client
-```
-everytime you want to run FAF after that.
-
-if certain types of game modes don't run it may be because you need to : 
-
-```
-chmod +x -R ~/.faforever/bin/ForgedAlliance.exe
-```
-but normally this shouldn't be needed.
-
-Working on creating a launcher as part of the script, help wanted!
+if you want to run FAF again do not run faf.sh again (remember, it is a script to install Forged Alliance + FAF client), simply search for FAF from your start:
+![faf in start menu](https://user-images.githubusercontent.com/5132359/55295519-365f4780-540e-11e9-9a9c-02a94dd70b07.png)
 
 GL HF!
 
