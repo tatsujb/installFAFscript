@@ -55,6 +55,8 @@ Do not run script as root! (Debian being an exception)
 
 Ideally run on a fresh system with nothing (such as steam) currently open, although the script has been known to work in those cases.
 
+also make sure you made your steam games public (they no longer are by default) so if your account is relatively new and you haven't done this yet follow this guide first :  https://youtu.be/ElH4aetA5Hc
+
 ### 1st
 
 click on faf.sh above, then click on "RAW", then type <kbd>Ctrl</kbd> + <kbd>S</kbd>, (you can place anywhere, in home folder is comfortable to work with), then <kbd>Enter</kbd> to save file.
