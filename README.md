@@ -179,6 +179,7 @@ cd ~/faf
    
  2. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
 
+### sample :
 ```
 #!/bin/bash
 #Run game or given command in environment
@@ -198,7 +199,7 @@ PATH="/home/t/.steam/steam/steamapps/common/Proton/dist/bin/:/home/t/.steam/ubun
 	"/home/t/.steam/steam/steamapps/common/Proton/dist/bin//wine" "${@:-${DEF_CMD[@]}}"
 ```
 
-possible flaws are `/steam/steamapps/common/Proton/` being a `/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0/` instead or there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `shutdown` at the end of it.
+possible flaws are `/steam/steamapps/common/Proton/` being a `/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0/` instead or there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `shutdown` at the end of it, also `steamapps` instead of `SteamApps`.
 
 # Pre-requisites 
 
