@@ -62,7 +62,7 @@ if [ -f /etc/os-release ]; then
 	then
 		operating_system=Kubuntu
     fi
-    if [[ -z "$os_version" ]]
+    if [ -z "$os_version" ]
     then
         os_version=$(lsb_release -sr)
     fi
@@ -176,12 +176,12 @@ dfh_ouput=$(df -h --total | grep -v 'loop')
 echo "$dfh_ouput" >> $user_path/faf.sh-$faf_sh_version.log
 echo "_______________________________________________________________________________________________________" >> $user_path/faf.sh-$faf_sh_version.log
 echo "" >> $user_path/faf.sh-$faf_sh_version.log
-while [[ -z "$steam_user_name" ]]
+while [ -z "$steam_user_name" ]
 do
 	echo "steam user name :"
 	read steam_user_name
 done
-while [[ -z "$steam_password" ]]
+while [ -z "$steam_password" ]
 do
 	echo "steam password :"
 	read -s steam_password
@@ -400,7 +400,7 @@ echo "[$(date --rfc-3339=seconds)] T2 starting Steam..." >> '$user_path'/faf.sh-
 steam -login '$steam_user_name' '$steam_password';
 echo "starting Forged Alliance Download...";
 echo "[$(date --rfc-3339=seconds)] T2 starting Forged Alliance Download..." >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-while [[ ( ! -d '$user_path'/.steam/steam/steamapps/common/Supreme* ) && ( ! -d '$user_path'/.steam/steam/SteamApps/common/Supreme* ) ]];
+while [ \( ! -d ~/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d ~/.steam/steam/SteamApps/common/Supreme* \) ];
 do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit;
 done;
 echo "steamCMD terminated (in a good way), starting FA to finalize install";
@@ -457,7 +457,7 @@ then cp -rf '$user_path'/.steam/compatibilitytools.d/$proton_name '$user_path'/.
 mv '$user_path'/.steam/compatibilitytools.d/Proton '$user_path'/.steam/steam/$steamapps/common;
 else cp -rf '$user_path'/.steam/steam/$steamapps/common/Proton* '$user_path'/.steam/steam/$steamapps/common/Proton;
 fi;
-[[ ( -d '$user_path'/.steam/steam/steamapps/common/Proton ) || ( -d '$user_path'/.steam/steam/SteamApps/common/Proton ) ]] && echo "[$(date --rfc-3339=seconds)] T2 PROTON folder found" >> '$user_path'/faf.sh-'$faf_sh_version'.log || echo "[$(date --rfc-3339=seconds)] T2 Proton folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+[ \( -d '$user_path'/.steam/steam/steamapps/common/Proton \) -o \( -d '$user_path'/.steam/steam/SteamApps/common/Proton \) ] && echo "[$(date --rfc-3339=seconds)] T2 PROTON folder found" >> '$user_path'/faf.sh-'$faf_sh_version'.log || echo "[$(date --rfc-3339=seconds)] T2 Proton folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 cd '$user_path';
 source .bashrc;
 eval "$(cat .bashrc | tail -n +10)";
