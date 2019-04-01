@@ -176,10 +176,16 @@ dfh_ouput=$(df -h --total | grep -v 'loop')
 echo "$dfh_ouput" >> $user_path/faf.sh-$faf_sh_version.log
 echo "_______________________________________________________________________________________________________" >> $user_path/faf.sh-$faf_sh_version.log
 echo "" >> $user_path/faf.sh-$faf_sh_version.log
-echo "steam user name :"
-read steam_user_name
-echo "steam password :"
-read -s steam_password
+while [[ -z "$steam_user_name" ]]
+do
+	echo "steam user name :"
+	read steam_user_name
+done
+while [[ -z "$steam_password" ]]
+do
+	echo "steam password :"
+	read -s steam_password
+done
 echo "[$(date --rfc-3339=seconds)] T1 Steam credentials entrusted to scritp" >> $user_path/faf.sh-$faf_sh_version.log # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
 
 if (whiptail --title "Use Gallium Nine Proton instead of vanilla Proton?" --yesno "If you don't know what Gallium Nine is or don't care, choose \"No\"." 10 100)
@@ -258,7 +264,6 @@ else
 			echo steam steam/license note '' | sudo debconf-set-selections
 		fi
 	fi
-
 	if [ "$operating_system" = "Debian GNU/Linux" ]
 	then
 		usermod -a -G video,audio $real_user
@@ -282,49 +287,88 @@ else
 	echo "[$(date --rfc-3339=seconds)] T1 pv was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
 	to_be_installed=$((to_be_installed+4))
 fi
-
+if [ $(command -v jq) ]
+then
+	echo "[$(date --rfc-3339=seconds)] T1 jq is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
+	echo "jq is already installed, proceeding..."
+else
+	echo "[$(date --rfc-3339=seconds)] T1 jq was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+	to_be_installed=$((to_be_installed+8))
+fi
 if [ "$operating_system" = "Debian GNU/Linux" ]
 then
 	apt update -y
 	apt -y full-upgrade
 	case "${to_be_installed}" in
-		0*)
+		0)
 		echo "nothing to install";;
-		1*)
+		1)
 		apt install -y steam;;
-		2*)
+		2)
 		apt install -y curl;;
-		3*)
+		3)
 		apt install -y curl steam;;
-		4*)
+		4)
 		apt install -y pv;;
-		5*)
+		5)
 		apt install -y pv steam;;
-		6*)
+		6)
 		apt install -y curl pv;;
-		7*)
-		apt install -y curl pv steam
+		7)
+		apt install -y curl pv steam;;
+		8)
+		apt install -y jq;;
+		9)
+		apt install -y jq steam;;
+		10)
+		apt install -y curl jq;;
+		11)
+		apt install -y curl jq steam;;
+		12)
+		apt install -y pv jq;;
+		13)
+		apt install -y pv jq steam;;
+		14)
+		apt install -y curl jq pv;;
+		15)
+		apt install -y jq curl pv steam
 	esac
 else
 	sudo apt update -y
 	sudo apt -y full-upgrade
 	case "${to_be_installed}" in
-		0*)
+		0)
 		echo "nothing to install";;
-		1*)
+		1)
 		sudo apt install -y steam;;
-		2*)
+		2)
 		sudo apt install -y curl;;
-		3*)
+		3)
 		sudo apt install -y curl steam;;
-		4*)
+		4)
 		sudo apt install -y pv;;
-		5*)
+		5)
 		sudo apt install -y pv steam;;
-		6*)
+		6)
 		sudo apt install -y curl pv;;
-		7*)
-		sudo apt install -y curl pv steam
+		7)
+		sudo apt install -y curl pv steam;;
+		8)
+		sudo apt install -y jq;;
+		9)
+		sudo apt install -y jq steam;;
+		10)
+		sudo apt install -y curl jq;;
+		11)
+		sudo apt install -y curl jq steam;;
+		12)
+		sudo apt install -y pv jq;;
+		13)
+		sudo apt install -y pv jq steam;;
+		14)
+		sudo apt install -y curl jq pv;;
+		15)
+		sudo apt install -y jq curl pv steam
 	esac
 fi
 #########################################################################################################################
@@ -333,7 +377,6 @@ fi
 # you have to do it yourself when steam starts up while the script is running                                       	#
 #                                                                                                                   	#
 #########################################################################################################################
-
 middlescript='[ '$gallium_nine' ] && echo "installing gallium/proton and running steam...";
 echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
@@ -418,15 +461,12 @@ source .bashrc;
 eval "$(cat .bashrc | tail -n +10)";
 echo "Finished thread two (install & run steam, steamcmd, FA) without issue, starting (FAF)...";
 echo "[$(date --rfc-3339=seconds)] T2 Finished thread two (install & run steam, steamcmd, FA) without issue, starting (FAF)..." >> '$user_path'/faf.sh-'$faf_sh_version'.log;'
-
 gnomeTerminalFirstConsoleVar='gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c '"'"''
 konsoleFirstConsoleVar='konsole -e /bin/bash --rcfile <(echo '"'"''
 xtermFirstConsoleVar='xterm -T "install & run steam, steamcmd, FA" -e '"'"''
-
 gnomeTerminalSecondConsoleVar='gnome-terminal --tab --title="(FAF)" -- bash -c "cd ~/faf; ./downlords-faf-client";'"'"''
 konsoleSecondConsoleVar='konsole -e /bin/bash --rcfile <(echo "cd ~/faf; ./downlords-faf-client; exit 0") &'"'"') &'
 xtermSecondConsoleVar='	xterm -T "(FAF)" -e "cd ~/faf; ./downlords-faf-client";'"'"' &'
-
 # this "eval" solution doesn't seem like it will be robust enough to work on any os. suggestions welcome
 if [ "$operating_system" = "Kubuntu" ]
 then
@@ -437,8 +477,6 @@ then
 else
 	eval "$gnomeTerminalFirstConsoleVar $middlescript $gnomeTerminalSecondConsoleVar"
 fi
-
-
 # source $user_path/.bashrc be it in main thread or in tab, has no effect the user will have to run it himself.
 # end of second thread
 # finalising apt-install
@@ -496,7 +534,6 @@ else
 	echo "[$(date --rfc-3339=seconds)] T1 libnss3 is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 	echo "libnss3 is already installed, proceeding..."
 fi
-
 if [ "$operating_system" = "Debian GNU/Linux" ]
 then
 	[ $gallium_nine ] && apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa
@@ -507,8 +544,6 @@ else
 	sudo apt autoremove -y
 	sudo apt autoclean
 fi
-
-
 # no more apt-install
 # Java fix-me block
 echo "Now probing the Java status of this OS..."
@@ -591,8 +626,6 @@ else
 	# /end Download & install java 10 open jdk
 fi
 # /end Java fix-me block
-
-
 # make faf .desktop runner
 [ ! -d $user_path/.local/share/icons ] && mkdir -p .local/share/icons
 if [ ! -f $user_path/.local/share/icons/faf.png ]
@@ -617,7 +650,6 @@ then
 fi
 cd $user_path
 # /end make faf .desktop runner
-
 # Download & install FAF client
 echo "now moving on to installing Downlord's FAF..."
 if [ -d $user_path/faf ]
@@ -640,8 +672,6 @@ else
 fi
 cd $user_path
 # /end Download & install FAF client
-
-
 # wait for user to log in
 echo "please switch to opened FAF client. Waiting on user to log in"
 echo ""
@@ -665,13 +695,14 @@ then
 else
 	steamapps="steamapps"
 fi
-if ! grep -q '"path"' $user_path/.faforever/client.prefs > /dev/null
-then
-	sed -i '12i"path": "'$user_path'/.steam/steam/'$steamapps'/common/Supreme Commander Forged Alliance",' $user_path/.faforever/client.prefs
-	sed -i '13i"installationPath": "'$user_path'/.steam/steam/'$steamapps'/common/Supreme Commander Forged Alliance",' $user_path/.faforever/client.prefs
-fi
-! grep -q '"preferencesFile": "'$user_path'/.steam/steam/'$steamapps'/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs",' $user_path/.faforever/client.prefs > /dev/null && sed -i 's_"preferencesFile".*_"preferencesFile": "'$user_path'/.steam/steam/'$steamapps'/compatdata/9420/pfx/drive\_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs",_' $user_path/.faforever/client.prefs
-! grep -q '"executableDecorator": "'$user_path'/faf/",' $user_path/.faforever/client.prefs > /dev/null && sed -i 's_"executableDecorator".*_"executableDecorator": "'$user_path'/faf/run \\"%s\\""_' $user_path/.faforever/client.prefs
+jq --arg user_path "$user_path" --arg steamapps "$steamapps" '
+    .forgedAlliance += {
+        installationPath: ($user_path + "/.steam/steam/" + $steamapps + "/common/Supreme Commander Forged Alliance"),
+        path: ($user_path + "/.steam/steam/" + $steamapps + "/common/Supreme Commander Forged Alliance"),
+        preferencesFile: ($user_path + "/.steam/steam/" + $steamapps + "/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"),
+        executableDecorator: ($user_path + "/faf/run \"%s\"")
+    }' $user_path/.faforever/client.prefs > $user_path/.faforever/client.prefs.tmp
+mv $user_path/.faforever/client.prefs.tmp $user_path/.faforever/client.prefs
 echo "done editting!"
 gtk-launch faforever
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
