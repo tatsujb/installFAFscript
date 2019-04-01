@@ -1,5 +1,5 @@
 #!/bin/bash
-  faf_sh_version=2.1
+  faf_sh_version=2.2
   
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -400,7 +400,9 @@ echo "[$(date --rfc-3339=seconds)] T2 starting Steam..." >> '$user_path'/faf.sh-
 steam -login '$steam_user_name' '$steam_password';
 echo "starting Forged Alliance Download...";
 echo "[$(date --rfc-3339=seconds)] T2 starting Forged Alliance Download..." >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit;
+while [[ ( ! -d '$user_path'/.steam/steam/steamapps/common/Supreme* ) && ( ! -d '$user_path'/.steam/steam/SteamApps/common/Supreme* ) ]];
+do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit;
+done;
 echo "steamCMD terminated (in a good way), starting FA to finalize install";
 echo "[$(date --rfc-3339=seconds)] T2 steamCMD terminated (in a good way), starting FA to finalize install" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 steam -login '$steam_user_name' '$steam_password' -applaunch 9420 -shutdown;
@@ -545,54 +547,13 @@ else
 	sudo apt autoclean
 fi
 # no more apt-install
-# Java fix-me block
+# Java install block
 echo "Now probing the Java status of this OS..."
 echo "[$(date --rfc-3339=seconds)] T1 Now probing the Java status of this OS..." >> $user_path/faf.sh-$faf_sh_version.log
-if [[ $(command -v java) ]] || [[ $(type -p java) ]] || [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]]
+if [ -d /usr/lib/jvm/jdk-10.0.2 ]
 then
-	echo "UH-OH, Java is already installed!"
-	echo "This is suboptimal, crossing fingers for correct version Java version (E.G. version number 10)..."
+	echo "Java is already installed, moving on"
 	echo "[$(date --rfc-3339=seconds)] T1 Java already installed!" >> $user_path/faf.sh-$faf_sh_version.log
-	if [ $(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | cut -f1 -d'.') == "10" ]
-	then
-    echo "Huzzah! you have the correct version of Java, here's hoping for the best!"
-    echo "Checking, if .bashrc config is also correct..."
-    echo "[$(date --rfc-3339=seconds)] T1 specifically Java 10." >> $user_path/faf.sh-$faf_sh_version.log
-    if grep -q "export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2" $user_path/.bashrc > /dev/null
-    then
-    	echo "Huzzah! Java looks all set, let's move on..."
-    	echo "[$(date --rfc-3339=seconds)] T1 satisfied with Java config." >> $user_path/faf.sh-$faf_sh_version.log
-    	else
-        	echo "Hmmm... we're not looking to hot on .bashrc, let's see if we can fix that..."
-    	echo "[$(date --rfc-3339=seconds)] T1 but not correct config." >> $user_path/faf.sh-$faf_sh_version.log
-        	if (whiptail --title "Entered : \"Java 10 present but .bashrc not correctly configured use-case\"" --yesno "Attempt .bashrc automated correct? \n\"No\" will close this script \n\"Yes\" will automatically edit bashrc \n(keep in mind this script was written by a donkey...)" 10 100)
-    	then
-   	 echo "OK! \".bashrc\" edited!"
-   	 echo "assuming Java is all set, let's move on..."
-   	 echo "[$(date --rfc-3339=seconds)] T1 corrected Java config." >> $user_path/faf.sh-$faf_sh_version.log
-    	else
-   	 echo "You're probably right to choose this..."
-   	 echo "please edit .bashrc yourself or remove Java 10 and start over."
-   	 echo "exiting upon demand..."
-   	 echo "[$(date --rfc-3339=seconds)] T1 Abandoned on user demand, Java was ill-configured" >> $user_path/faf.sh-$faf_sh_version.log
-   	 exit 1
-    	fi      	 
-    	fi
-	else
-    if [ ! -f /usr/lib/jvm ]
-    then
-    	echo "your Path is defined but Java is not in /usr/lib/jvm "
-        	echo "[$(date --rfc-3339=seconds)] T1 potential unclean uninstall of Java, java detected set yet /usr/lib/jvm does not even exist" >> $user_path/faf.sh-$faf_sh_version.log
-    fi
-    	echo "You have a version of Java that is not Java 10"
-    	echo "This is problematic as this case is not yet handled by this script (though it could easily be!)"
-    	echo "Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
-    	echo "The easliest sollution for you to use this script as-is, is for you to purge all Java versions from your system (be sure to remove references in /etc/environment),"
-    	echo "then, re-run this script"
-    	echo "FAF-stack not installed, exiting..."
-    echo "[$(date --rfc-3339=seconds)] T1 Incorrect Java version, exiting!" >> $user_path/faf.sh-$faf_sh_version.log
-    	exit 1
-	fi
 else
 	# Download & install java 10 open jdk
 	echo "Java 10 installation procedure..."
@@ -625,7 +586,7 @@ else
 	! grep -q 'INSTALL4J_JAVA_HOME' $user_path/.bashrc > /dev/null && echo "export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2" >> $user_path/.bashrc
 	# /end Download & install java 10 open jdk
 fi
-# /end Java fix-me block
+# /end Java install block
 # make faf .desktop runner
 [ ! -d $user_path/.local/share/icons ] && mkdir -p .local/share/icons
 if [ ! -f $user_path/.local/share/icons/faf.png ]
