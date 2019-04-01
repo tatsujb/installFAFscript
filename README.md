@@ -1,4 +1,4 @@
-
+###### licensed under GPL-3.0-or-later
 [![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/55295910-de770f80-5412-11e9-8950-f22f6176e406.png)](https://www.youtube.com/watch?v=c5K7QmK-Xas)
 
 
