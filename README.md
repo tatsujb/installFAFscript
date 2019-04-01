@@ -1,5 +1,5 @@
 ###### licensed under GPL-3.0-or-later
-[![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/55295910-de770f80-5412-11e9-8950-f22f6176e406.png)](https://www.youtube.com/watch?v=c5K7QmK-Xas)
+[![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/55295910-de770f80-5412-11e9-8950-f22f6176e406.png)](https://www.youtube.com/watch?v=BEWUEoQ8Q4k)
 
 
 This is a shell script that installs and configures [FA](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") + [FAF](https://faforever.com "Forged Alliace Forever") multiplayer client on linux (and soon any OS that Forged Alliance can also run on).
@@ -14,7 +14,7 @@ Distro icon should be clickable for a video-example (for the moment only had the
 Version | Distro | distro+DE |  | Comment
 --- | --- | --- | --- | ---
 10 | ![Windows](https://user-images.githubusercontent.com/5132359/55296434-a4f5d280-5419-11e9-982d-c1977de61c16.png) | Windows (windows) | ? | just go here : www.faforever.com
-18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=c5K7QmK-Xas) | ubuntu (gnome3) | :heavy_check_mark: | base of script
+18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=BEWUEoQ8Q4k) | ubuntu (gnome3) | :heavy_check_mark: | base of script
 18.10 | ![xubuntu](https://user-images.githubusercontent.com/5132359/55296491-77f5ef80-541a-11e9-9909-58bee75404ec.png) | Xubuntu (xfce) | ? | should work. untested.
 19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | Mint (Cinnamon) | :heavy_check_mark: | likely closest behavior to stock ubuntu. nothing needed to change from base, worked out-of-the-box.
 18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (Plasma) | :heavy_check_mark: | two adaptations were made for kubuntu to work: detecting plasma + ubuntu = (kubuntu if case). Also gnome-terminal was traded out in favor of konsole.
