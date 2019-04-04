@@ -64,8 +64,7 @@ you'll be asked in order :
 
 ### 4rth
 
-(be fast here)
-at a certain point steam starts up and you'll need to enter Steam Guard.
+At a certain point steam starts up and you'll need to enter Steam Guard.
 
 1. right click on "Supreme Commander - Forged Alliance" in your games Library" -> "SET LAUNCH OPTIONS..." and enter the contents of "the contents of this file are to be pasted in the forged alliance properties launch options" situated in your home folder, just in case, here they are (gallium-nine example) : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%`
 (vanilla proton example) : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%`
@@ -120,7 +119,7 @@ GL HF!
 
 ## Not working ?
 
-Feedback will help me fix things. This script creates a very minimal log file called "faf_sh-\*.log" in your home. Paste it's contents as part of an issue/bug report. your first and foremost issue is probably the linux distro flavor, you can check what release is supported as of now [here](https://github.com/tatsujb/installFAFscript#run-successes-by-distro- "distro compatibility"), but a couplesyntax edits should make my script work for you.
+Feedback will help me fix things. This script creates a very minimal log file called "faf_sh-\*.log" in your home. Paste it's contents as part of an issue/bug report. your first and foremost issue is probably the linux distro flavor, you can check what release is supported as of now [here](https://github.com/tatsujb/installFAFscript#run-successes-by-distro- "distro compatibility"), but a couple syntax edits should make my script work for you.
 
 ### known issues :
 
