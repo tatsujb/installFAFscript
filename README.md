@@ -207,7 +207,6 @@ here are a couple safe bets however, run this in your terminal:
 ```
 rm ~/the\ contents\ of\ this*
 rm ~/faf_sh-*.log
-rm ~/run
 rm ~/.install4j
 rm -rf ~/My\ Games
 rm -rf ~/faf
@@ -219,7 +218,19 @@ source ~/.bashrc
 ```
 now all that remains is :
 
-1. steam
+1. Forged Alliance if you installed it to default dir :
+```
+rm -rf ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
+```
+2. keep steam but remove my steam extras such as Gallium9Proton and steamCMD and their dependencies : 
+```
+rm -rf ~/.steam/Proton
+rm -rf ~/.steam/compatibilitytools.d
+sudo apt purge -y steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1 
+sudo apt -y autoremove
+```
+
+3. OPTIONAL : Uninstall the whole of steam
 if steam wasn't on your system before you ran this script and you are fine with seeing it and Supreme Commander Forged Alliance as well as steamCMD and eventual dependencies go then you can run the following :
 ```
 rm ~/.steampath
@@ -227,22 +238,7 @@ rm ~/.steampid
 rm -rf ~/.steam
 rm -rf ~/Steam
 echo steam steam/purge note '' | sudo debconf-set-selections
-sudo apt purge -y steam steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1
-sudo apt -y autoremove
-```
-
-2. JUST supreme commander, NOT steam (if you ran n°1 ignore this) :
-```
-rm -rf ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
-```
-
-...will do the trick.
-
-3. keep steam but remove my steam extras such as Gallium9Proton and steamCMD and their dependencies (if you ran n°1 ignore this) : 
-```
-rm -rf ~/.steam/Proton
-rm -rf ~/.steam/compatibilitytools.d
-sudo apt purge -y steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1
+sudo apt purge -y steam
 sudo apt -y autoremove
 ```
 
@@ -250,7 +246,6 @@ sudo apt -y autoremove
 ```
 grep -v 'INSTALL4J_JAVA_HOME' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 source ~/.bashrc
-rm -rf ~/.java
 sudo rm -rf /usr/lib/jvm/jdk-10.0.2/
 ```
 
