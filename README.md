@@ -224,7 +224,6 @@ rm -rf ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
 ```
 2. keep steam but remove my steam extras such as Gallium9Proton and steamCMD and their dependencies : 
 ```
-rm -rf ~/.steam/Proton
 rm -rf ~/.steam/compatibilitytools.d
 sudo apt purge -y steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1 
 sudo apt -y autoremove
