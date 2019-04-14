@@ -200,9 +200,7 @@ In the case of this script, we will have recourse to some supplementary items in
 
 # Un-installing :
 
-this will very much depend on how much of what you already had installed before running this script that this script has in common.
-
-here are a couple safe bets however, run this in your terminal:
+If you are in the use-case of re-running the script this is almost entirely unecessary with the current version of the script, however here are some commands you can run if you really want to clean up before or after running this script or to uninstall for good :
 
 ```
 rm ~/the\ contents\ of\ this*
