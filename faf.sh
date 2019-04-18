@@ -206,7 +206,6 @@ fi
 if [ $(command -v winetricks) ]
 then
     purge_winetricks=true
-    to_be_installed="$to_be_installed  "
 else
     purge_winetricks=false
 fi
