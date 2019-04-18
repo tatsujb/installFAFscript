@@ -1,5 +1,5 @@
 ###### licensed under GPL-3.0-or-later
-[![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/55295910-de770f80-5412-11e9-8950-f22f6176e406.png)](https://www.youtube.com/watch?v=BEWUEoQ8Q4k)
+[![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/55295910-de770f80-5412-11e9-8950-f22f6176e406.png)](https://www.youtube.com/watch?v=zQkiy8lK20o)
 
 
 This is a shell script that installs and configures [FA](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") + [FAF](https://faforever.com "Forged Alliace Forever") multiplayer client on linux (and soon any OS that Forged Alliance can also run on).
@@ -14,18 +14,22 @@ Distro icon should be clickable for a video-example (for the moment only had the
 Version | Distro | distro+DE |  | Comment
 --- | --- | --- | --- | ---
 10 | ![Windows](https://user-images.githubusercontent.com/5132359/55296434-a4f5d280-5419-11e9-982d-c1977de61c16.png) | Windows (windows) | ? | just go here : www.faforever.com
-19.04, 18.10, 18.04.2  | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=BEWUEoQ8Q4k) | ubuntu (gnome3) | :heavy_check_mark: | base of script
+19.04, 18.10, 18.04.2  | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=zQkiy8lK20o) | ubuntu (gnome3) | :heavy_check_mark: | base of script
 18.10 | ![xubuntu](https://user-images.githubusercontent.com/5132359/55296491-77f5ef80-541a-11e9-9909-58bee75404ec.png) | Xubuntu (xfce) | ? | should work. untested.
 19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | Mint (Cinnamon) | :heavy_check_mark: | likely closest behavior to stock ubuntu. nothing needed to change from base, worked out-of-the-box.
 18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (Plasma) | :heavy_check_mark: | two adaptations were made for kubuntu to work: detecting plasma + ubuntu = (kubuntu if case). Also gnome-terminal was traded out in favor of konsole.
 12.4 | ![zorin](https://user-images.githubusercontent.com/5132359/54295562-92734080-45b3-11e9-95ed-627f2931ec94.png) | Zorin (zorin) | :heavy_check_mark:  | debconf-set-selections for steam is for some reason borked on zorin, trying to auto-accept the eula will result in the opposite. You'll have two eula accepting manual steps added to your process. really minor.
 18.04 |![lubuntu](https://user-images.githubusercontent.com/5132359/55295985-b805a400-5413-11e9-8fca-315db5462eb6.png) | Lubuntu (LXDE) | ? | should work. untested.
-5.0 | ![elementary-s](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | Elementary (Pantheon) | :heavy_check_mark: | used xterm instead of gnome-terminal. Also I didn't know how to shut down steam, there was no tray icon, I used htop 
+5.0 | ![elementary-os](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | Elementary (Pantheon) | :heavy_check_mark: | used xterm instead of gnome-terminal. Also I didn't know how to shut down steam, there was no tray icon, I used htop 
+2019.04.01 | ![archlinux](https://user-images.githubusercontent.com/5132359/56390390-38a60c00-622c-11e9-8314-653787a84ab7.png) | Arch (gnome3) | ? | should work. untested.
 9.8 | ![debian](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | Debian (gnome3) | :heavy_multiplication_x: | run as root, do not sudo ./faf.sh, simply run logged in as root. don't worry, the script will place files in your user's home not root's home.
-29 | ![Fedora](https://user-images.githubusercontent.com/5132359/54399527-2978ef00-46bf-11e9-8418-0031c7e991f7.png) | Fedora (gnome3) | :heavy_multiplication_x: | working on it...
-18.0.4 | ![manjaro](https://user-images.githubusercontent.com/5132359/54216185-76a36800-44e9-11e9-9e32-52d6a4071643.png) | Manjaro (Plasma) | :heavy_multiplication_x: | 
+29 | ![Fedora](https://user-images.githubusercontent.com/5132359/54399527-2978ef00-46bf-11e9-8418-0031c7e991f7.png) | Fedora (gnome3) | ? | should work. untested.
+18.0.4 | ![manjaro](https://user-images.githubusercontent.com/5132359/54216185-76a36800-44e9-11e9-9e32-52d6a4071643.png) | Manjaro (Plasma) | ? | should work. untested.
+6.1 | ![mageia](https://user-images.githubusercontent.com/5132359/56390795-26789d80-622d-11e9-9046-763803153305.png) | Mageia (Plasma) | ? | should work. untested.
 18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | CenT OS (gnome3) | :heavy_multiplication_x: | 
 10.14 | ![apple](https://user-images.githubusercontent.com/5132359/54368435-6d92d200-4674-11e9-922f-9aebabfd7ca2.png) | Apple (Aqua) | :heavy_multiplication_x: | started work...
+
+
 
 # Install (read entirely before running)
 
