@@ -35,7 +35,7 @@ Version | Distro | distro+DE |  | Comment
 - your steam games are public (they no longer are by default) so if your account is relatively new and you haven't done this yet follow this guide first :  https://youtu.be/ElH4aetA5Hc
 - 11.7GB of free space
 
-Do not run script as root! (is Debian it's the opposite, run as root)
+Do not run script as root! (with Debian it's the opposite, run as root)
 
 ### 1st
 
@@ -71,9 +71,9 @@ if you select no you have five choices :
  
 if you select yes you are then asked whether you want to install FA to default dir and drive (SDA), at your discretion you may choose no and you will be prompted with a Gui to pick the folder.
 
-### 5th
+### 5th (I chose "yes I do not have FA installed", if not skip this step) 
 
-After you've made your choices (let's assume you are in the use-case where you asked FA to be installed, if not sckip this step), a new terminal tab starts up that starts by launching steam.
+After you've made your choices a new terminal tab opens up that begins by launching steam.
 
 At a certain point steam starts up and you'll need to enter Steam Guard.
 
@@ -86,7 +86,7 @@ Steam will ask to restart.
 When steam restarts don't login just close both the login and steam guard window, this will allow the rest of the script to continue. (if you accidentally logged in at this step, that's fine, just use the tray area icon to close steam, when steam is closed the script will continue)
 
 Then it downloads Forged Alliance. this will take a while.
-Once it's done steam starts again in order to finalize installation (non root hard drive installation is not supported. (E.G.: to a secondary storage HHD, for now I only support installing to SDA.)) and then start Forged Alliance.
+Once it's done steam starts again in order to finalize installation and then start Forged Alliance.
 
 accept terms.
 
