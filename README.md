@@ -14,7 +14,7 @@ Distro icon should be clickable for a video-example (for the moment only had the
 Version | Distro | distro+DE |  | Comment
 --- | --- | --- | --- | ---
 10 | ![Windows](https://user-images.githubusercontent.com/5132359/55296434-a4f5d280-5419-11e9-982d-c1977de61c16.png) | Windows (windows) | ? | just go here : www.faforever.com
-18.04.2, 18.10 | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=BEWUEoQ8Q4k) | ubuntu (gnome3) | :heavy_check_mark: | base of script
+19.04, 18.10, 18.04.2  | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=BEWUEoQ8Q4k) | ubuntu (gnome3) | :heavy_check_mark: | base of script
 18.10 | ![xubuntu](https://user-images.githubusercontent.com/5132359/55296491-77f5ef80-541a-11e9-9909-58bee75404ec.png) | Xubuntu (xfce) | ? | should work. untested.
 19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | Mint (Cinnamon) | :heavy_check_mark: | likely closest behavior to stock ubuntu. nothing needed to change from base, worked out-of-the-box.
 18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (Plasma) | :heavy_check_mark: | two adaptations were made for kubuntu to work: detecting plasma + ubuntu = (kubuntu if case). Also gnome-terminal was traded out in favor of konsole.
@@ -90,7 +90,7 @@ Once it's done steam starts again in order to finalize installation and then sta
 
 accept terms.
 
-Forged Alliance should start, you can set a profile, then set your prefered resolution, then quit the game. (use steam's notification-area icon to close steam for good, to allow the script to continue)
+Forged Alliance should start, you can set a profile, then set your prefered resolution, then quit the game. do not close steam, you need an open steam instance to run FAF nowadays.
 
 ### 6th
 
