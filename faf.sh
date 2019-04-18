@@ -548,9 +548,8 @@ else
     while [ -z "$steam_user_name" ]
     do
         echo "steam user name :"
-        read -s steam_user_name
+        read steam_user_name
     done
-    echo ""
     while [ -z "$steam_password" ]
     do
         echo "steam password :"
