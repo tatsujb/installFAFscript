@@ -1,6 +1,6 @@
 #!/bin/bash
-  faf_sh_version=2.2
-  
+  faf_sh_version=2.3
+ 
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -13,44 +13,31 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+ 
 real_user=$(du /home 2>/dev/null | sort -n -r | head -n 2 | tail -n +2 | cut -d/ -f3)
 user_path="/home/"$real_user
 cd $user_path
-
+ 
 echo "_______________________________________________________________________________________________________" >> $user_path/faf.sh-$faf_sh_version.log
 echo "-------------------------------------------------------------------------------------------------------" >> $user_path/faf.sh-$faf_sh_version.log
 # DETERMINE OS BASE :
 unameOut="$(uname -s)"
 case "${unameOut}" in
-	Linux*)
+    Linux*)
 echo "[$(date --rfc-3339=seconds)] T1 New log file. fafSTACK version "$faf_sh_version" running : "$unameOut  >> $user_path/faf.sh-$faf_sh_version.log;;
-	Darwin*)
+    Darwin*)
 echo "Mac / Apple Macintosh is not supported yet though it could technically be; as evidenced by previous examples of people running FA and even FAF on mac. Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
 echo "[$(date --rfc-3339=seconds)] T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MAC UNSUPPORTED. "$unameOut  >> $user_path/faf.sh-$faf_sh_version.log
 exit 1;;
-	CYGWIN*)
+    CYGWIN*)
 echo "Hello, you can go straight to : www.faforever.com and click on \"Download Client\". This script exists in order to help linux users achieve the same thing you can do out-of-the-box on your operating system. You have not the remotest use for this script :) be free, wild bird!"
 echo "[$(date --rfc-3339=seconds)] T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. WINDOWS UNSUPPORTED. "$unameOut  >> $user_path/faf.sh-$faf_sh_version.log
 exit 1;;
-	MINGW*)
+    MINGW*)
 echo "Hello, are can on MinGW you cannot run Forged Alliance, this script is of no use to you."
 echo "[$(date --rfc-3339=seconds)] T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MINGW UNSUPPORTED. "$unameOut  >> $user_path/faf.sh-$faf_sh_version.log
 exit 1
 esac
-
-
-function install_basics_function
-{
-if [ "$operating_system" = "Debian GNU/Linux" ];
-then
-	apt install whiptail procps -y; # here, in debian, user is already supposed to be running script as root. suggestions welcome
-else
-    sudo echo "[$(date --rfc-3339=seconds)] sudo priveledges entrusted to script" >> ~/'faf.sh-'$faf_sh_version'.log' # suggestions welcome regarding entrusting sudo to a script
-    sudo apt install whiptail procps -y;
-fi;
-}
-
 # DETERMINE LINUX DISTRO AND RELEASE :
 if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd (Ubuntu 18.04+)
@@ -59,111 +46,38 @@ if [ -f /etc/os-release ]; then
     os_version=$VERSION_ID
     is_plasma="$(echo $XDG_DATA_DIRS | grep -Eo 'plasma')"
     if [ \( "$is_plasma" == "plasma" \) -o \( "$VERSION_ID" == "Ubuntu" \) ]
-	then
-		operating_system=Kubuntu
+    then
+        operating_system=Kubuntu
     fi
     if [ -z "$os_version" ]
     then
         os_version=$(lsb_release -sr)
     fi
-    install_basics_function
 elif type lsb_release >/dev/null 2>&1; then
-	# linuxbase.org (older Debian / Ubuntu should be here)
-	operating_system=$(lsb_release -si)
-	os_version=$(lsb_release -sr)
-	install_basics_function
-	if (whiptail --title "Distribution may be a little old ('$os_version') and is, at present, untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n        	Abort?     	\"Yes\" will stop the scipt,      	\"No\" will pursue" 10 100)
-	then
-    echo "You're probably right to choose this..."
-    echo "exiting upon demand..."
-    echo "[$(date --rfc-3339=seconds)] T1 Abandoned on user demand, OS version too experimental" >> $user_path/faf.sh-$faf_sh_version.log
-    exit 1
-	else
-    echo "OK! fingers crossed!"
-    echo "continuing..."
-    echo "[$(date --rfc-3339=seconds)] T1 wrong distribution, user-chosen continue." >> $user_path/faf.sh-$faf_sh_version.log
-	fi
+    # linuxbase.org (older Debian / Ubuntu should be here)
+    operating_system=$(lsb_release -si)
+    os_version=$(lsb_release -sr)
 elif [ -f /etc/lsb-release ]; then
     # For some versions of Debian/Ubuntu without lsb_release command
     . /etc/lsb-release
     operating_system=$DISTRIB_ID
     os_version=$DISTRIB_RELEASE
-    install_basics_function
-    if (whiptail --title "Distribution $operating_system $os_version is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n        	Abort?     	\"Yes\" will stop the scipt,      	\"No\" will pursue" 10 100)
-    then
-	echo "You're probably right to choose this..."
-	echo "exiting upon demand..."
-	echo "[$(date --rfc-3339=seconds)] T1 Abandoned on user demand, OS version too experimental" >> $user_path/faf.sh-$faf_sh_version.log
-	exit 1
-    else
-	echo "OK! fingers crossed!"
-	echo "continuing..."
-	echo "[$(date --rfc-3339=seconds)] T1 wrong distribution, user-chosen continue." >> $user_path/faf.sh-$faf_sh_version.log
-    fi
 elif [ -f /etc/debian_version ]; then
     # Older Debian/Ubuntu/etc.
     operating_system=oldDebian
     os_version=$(cat /etc/debian_version)
-    install_basics_function
-    if (whiptail --title "Distribution $operating_system $os_version is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n        	Abort?     	\"Yes\" will stop the scipt,      	\"No\" will pursue" 10 100)
-    then
-	echo "You're probably right to choose this..."
-	echo "exiting upon demand..."
-	echo "[$(date --rfc-3339=seconds)] T1 Abandoned on user demand, OS version too experimental" >> $user_path/faf.sh-$faf_sh_version.log
-	exit 1
-    else
-	echo "OK! fingers crossed!"
-	echo "continuing..."
-	echo "[$(date --rfc-3339=seconds)] T1 wrong distribution, user-chosen continue." >> $user_path/faf.sh-$faf_sh_version.log
-    fi
 elif [ -f /etc/SuSe-release ]; then
     # Older SuSE/etc.
     operating_system=OpenSuSE
     os_version="unknown version but likely very old"
-    install_basics_function
-    if (whiptail --title "Distribution $operating_system $os_version is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n        	Abort?     	\"Yes\" will stop the scipt,      	\"No\" will pursue" 10 100)
-    then
-	echo "You're probably right to choose this..."
-	echo "exiting upon demand..."
-	echo "[$(date --rfc-3339=seconds)] T1 Abandoned on user demand, OS version too experimental" >> $user_path/faf.sh-$faf_sh_version.log
-	exit 1
-    else
-	echo "OK! fingers crossed!"
-	echo "continuing..."
-	echo "[$(date --rfc-3339=seconds)] T1 wrong distribution, user-chosen continue." >> $user_path/faf.sh-$faf_sh_version.log
-    fi
 elif [ -f /etc/redhat-release ]; then
     # Older Red Hat, CentOS, etc.
     operating_system=oldRedHatorCentos
     os_version="unknown version but likely very old"
-    install_basics_function
-    if (whiptail --title "Distribution $operating_system $os_version is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n        	Abort?     	\"Yes\" will stop the scipt,      	\"No\" will pursue" 10 100)
-    then
-	echo "You're probably right to choose this..."
-	echo "exiting upon demand..."
-	echo "[$(date --rfc-3339=seconds)] T1 Abandoned on user demand, OS version too experimental" >> $user_path/faf.sh-$faf_sh_version.log
-	exit 1
-    else
-	echo "OK! fingers crossed!"
-	echo "continuing..."
-	echo "[$(date --rfc-3339=seconds)] T1 wrong distribution, user-chosen continue." >> $user_path/faf.sh-$faf_sh_version.log
-    fi
 else
     # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
     operating_system=$(uname -s)
     os_version=$(uname -r)
-    install_basics_function
-    if (whiptail --title "Distribution $operating_system $os_version is at present untested, Abort?" --yesno "Pursuing means you believe you know what you are doing and have pre-emptively read the contents of this .sh and are endowed with the needed skill to repair your OS, should things go wrong.\n\n        	Abort?     	\"Yes\" will stop the scipt,      	\"No\" will pursue" 10 100)
-    then
-	echo "You're probably right to choose this..."
-	echo "exiting upon demand..."
-	echo "[$(date --rfc-3339=seconds)] T1 Abandoned on user demand, OS version too experimental" >> $user_path/faf.sh-$faf_sh_version.log
-	exit 1
-    else
-	echo "OK! fingers crossed!"
- 	echo "continuing..."
-	echo "[$(date --rfc-3339=seconds)] T1 wrong distribution, user-chosen continue." >> $user_path/faf.sh-$faf_sh_version.log
-    fi
 fi
 
 echo "Distribution name + version + kernel version + architecture : "$operating_system" "$os_version" "$(uname -rm) >> $user_path/faf.sh-$faf_sh_version.log
@@ -176,495 +90,659 @@ dfh_ouput=$(df -h --total | grep -v 'loop')
 echo "$dfh_ouput" >> $user_path/faf.sh-$faf_sh_version.log
 echo "_______________________________________________________________________________________________________" >> $user_path/faf.sh-$faf_sh_version.log
 echo "" >> $user_path/faf.sh-$faf_sh_version.log
-while [ -z "$steam_user_name" ]
-do
-	echo "steam user name :"
-	read steam_user_name
-done
-while [ -z "$steam_password" ]
-do
-	echo "steam password :"
-	read -s steam_password
-done
-echo "[$(date --rfc-3339=seconds)] T1 Steam credentials entrusted to scritp" >> $user_path/faf.sh-$faf_sh_version.log # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-
-if (whiptail --title "Use Gallium Nine Proton instead of vanilla Proton?" --yesno "If you don't know what Gallium Nine is or don't care, choose \"No\"." 10 100)
+# real start of script
+to_be_installed=""
+if [ -f /bin/kill ]
 then
-	gallium_nine=true
-	echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > $user_path/"the contents of this file are to be pasted in the forged alliance properties launch options"
-	echo "[$(date --rfc-3339=seconds)] T1 Gallium Nine chosen" >> $user_path/faf.sh-$faf_sh_version.log
+    echo "[$(date --rfc-3339=seconds)] T1 procps is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 else
-	echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > $user_path/"the contents of this file are to be pasted in the forged alliance properties launch options"
-	gallium_nine=false
-	echo "[$(date --rfc-3339=seconds)] T1 Vanilla Proton chosen" >> $user_path/faf.sh-$faf_sh_version.log
+    echo "[$(date --rfc-3339=seconds)] T1 procps was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed procps"
+
 fi
-
-
-# sources editting stack for debian
-if [ "$operating_system" = "Debian GNU/Linux" ]
-then	
-	if grep -q "debian.org/debian/ stretch main contrib non-free" /etc/apt/sources.list > /dev/null
-	then
-		echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : stretch already correct" >> $user_path/$user_path/faf.sh-$faf_sh_version.log
-	else 
-		echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : stretch edited" >> $user_path/faf.sh-$faf_sh_version.log
-		sed -i "s_debian.org/debian/ stretch main contrib_debian.org/debian/ stretch main contrib non-free_" /etc/apt/sources.list
-	fi
-
-	if grep -q "http://security.debian.org/debian-security stretch/updates main contrib non-free" /etc/apt/sources.list > /dev/null
-	then
-		echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : stretch/updates already correct" >> $user_path/faf.sh-$faf_sh_version.log
-	else
-		echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : stretch/updates edited" >> $user_path/faf.sh-$faf_sh_version.log
-		sed -i "s_http://security.debian.org/debian-security stretch/updates main contrib_http://security.debian.org/debian-security stretch/updates main contrib non-free_" /etc/apt/sources.list
-	fi
-
-	if grep -q "debian.org/debian/ stretch-updates main contrib non-free" /etc/apt/sources.list > /dev/null
-	then
-		echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : stretch-updates already correct" >> $user_path/faf.sh-$faf_sh_version.log
-	else
-		echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : stretch-updates edited" >> $user_path/faf.sh-$faf_sh_version.log
-		sed -i "s_debian.org/debian/ stretch-updates main contrib_debian.org/debian/ stretch-updates main contrib non-free_" /etc/apt/sources.list
-	fi
-
-	if grep -q "deb http://ftp.*.debian.org/debian/ stretch-proposed-updates main contrib non-free" /etc/apt/sources.list > /dev/null
-	then
-		echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : proposed already present" >> $user_path/faf.sh-$faf_sh_version.log
-	else
-		donwload_country=$(grep "deb http://ftp." /etc/apt/sources.list | head -1 | cut -d. -f2)
-		echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : added proposed" >> $user_path/faf.sh-$faf_sh_version.log
-		echo "deb http://ftp.$donwload_country.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
-	fi
-# sources editting stack for other (ubuntu-based)
-else
-	if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
-	then
-		echo "[$(date --rfc-3339=seconds)] T1 enabled partners" >> ~/'faf.sh-'$faf_sh_version'.log'
-		sudo sed -i 's/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g' /etc/apt/sources.list
-	else
-		echo "[$(date --rfc-3339=seconds)] T1 did not enable partners, hoping it was already enabled." >> ~/'faf.sh-'$faf_sh_version'.log'
-	fi
-fi
-
-to_be_installed=0
-if [ $(command -v steam) ]
+if ! dpkg-query -W -f='${Status}' zenity | grep "ok installed"
 then
-	echo "steam is already installed, proceeding..."
-	echo "[$(date --rfc-3339=seconds)] T1 steam is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
+    echo "[$(date --rfc-3339=seconds)] T1 zenity was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed zenity"
 else
-	echo "[$(date --rfc-3339=seconds)] T1 steam was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
-	if [ "$operating_system" != "Zorin OS" ]
-	then
-		if [ "$operating_system" = "Debian GNU/Linux" ]
-		then
-			echo steam steam/question select "I AGREE" | debconf-set-selections
-			echo steam steam/license note '' | debconf-set-selections
-		else
-			echo steam steam/question select "I AGREE" | sudo debconf-set-selections
-			echo steam steam/license note '' | sudo debconf-set-selections
-		fi
-	fi
-	if [ "$operating_system" = "Debian GNU/Linux" ]
-	then
-		usermod -a -G video,audio $real_user
-    		dpkg --add-architecture i386
-	fi
-	to_be_installed=$((to_be_installed+1))
+    echo "[$(date --rfc-3339=seconds)] T1 zenity is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 fi
-if [ $(command -v curl) ]
+if [ $(command -v whiptail) ]
 then
-	echo "[$(date --rfc-3339=seconds)] T1 curl is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
-	echo "curl is already installed, proceeding..."
+    echo "[$(date --rfc-3339=seconds)] T1 whiptail is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 else
-	echo "[$(date --rfc-3339=seconds)] T1 curl was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
-	to_be_installed=$((to_be_installed+2))
+    echo "[$(date --rfc-3339=seconds)] T1 whiptail was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed whiptail"
 fi
 if [ $(command -v pv) ]
 then
-	echo "[$(date --rfc-3339=seconds)] T1 pv is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
-	echo "pv is already installed, proceeding..."
+    echo "[$(date --rfc-3339=seconds)] T1 pv is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 else
-	echo "[$(date --rfc-3339=seconds)] T1 pv was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
-	to_be_installed=$((to_be_installed+4))
+    echo "[$(date --rfc-3339=seconds)] T1 pv was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed pv"
 fi
-if [ $(command -v jq) ]
+if ! dpkg-query -W -f='${Status}' python3-pip | grep "ok installed"
 then
-	echo "[$(date --rfc-3339=seconds)] T1 jq is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
-	echo "jq is already installed, proceeding..."
+    echo "[$(date --rfc-3339=seconds)] T1 python3-pip was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed python3-pip"
 else
-	echo "[$(date --rfc-3339=seconds)] T1 jq was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
-	to_be_installed=$((to_be_installed+8))
+    echo "[$(date --rfc-3339=seconds)] T1 python3-pip is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 fi
-if [ "$operating_system" = "Debian GNU/Linux" ]
+if ! dpkg-query -W -f='${Status}' python3-setuptools | grep "ok installed"
 then
-	apt update -y
-	apt -y full-upgrade
-	case "${to_be_installed}" in
-		0)
-		echo "nothing to install";;
-		1)
-		apt install -y steam;;
-		2)
-		apt install -y curl;;
-		3)
-		apt install -y curl steam;;
-		4)
-		apt install -y pv;;
-		5)
-		apt install -y pv steam;;
-		6)
-		apt install -y curl pv;;
-		7)
-		apt install -y curl pv steam;;
-		8)
-		apt install -y jq;;
-		9)
-		apt install -y jq steam;;
-		10)
-		apt install -y curl jq;;
-		11)
-		apt install -y curl jq steam;;
-		12)
-		apt install -y pv jq;;
-		13)
-		apt install -y pv jq steam;;
-		14)
-		apt install -y curl jq pv;;
-		15)
-		apt install -y jq curl pv steam
-	esac
+    echo "[$(date --rfc-3339=seconds)] T1 python3-setuptools was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed python3-setuptools"
 else
-	sudo apt update -y
-	sudo apt -y full-upgrade
-	case "${to_be_installed}" in
-		0)
-		echo "nothing to install";;
-		1)
-		sudo apt install -y steam;;
-		2)
-		sudo apt install -y curl;;
-		3)
-		sudo apt install -y curl steam;;
-		4)
-		sudo apt install -y pv;;
-		5)
-		sudo apt install -y pv steam;;
-		6)
-		sudo apt install -y curl pv;;
-		7)
-		sudo apt install -y curl pv steam;;
-		8)
-		sudo apt install -y jq;;
-		9)
-		sudo apt install -y jq steam;;
-		10)
-		sudo apt install -y curl jq;;
-		11)
-		sudo apt install -y curl jq steam;;
-		12)
-		sudo apt install -y pv jq;;
-		13)
-		sudo apt install -y pv jq steam;;
-		14)
-		sudo apt install -y curl jq pv;;
-		15)
-		sudo apt install -y jq curl pv steam
-	esac
+    echo "[$(date --rfc-3339=seconds)] T1 python3-setuptools is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 fi
-#########################################################################################################################
-#                                                                                                                   	#
-# WIP! have not figured out a way to toggle proton-> [on] & set set launch options via command line, right now      	#
-# you have to do it yourself when steam starts up while the script is running                                       	#
-#                                                                                                                   	#
-#########################################################################################################################
-middlescript='[ '$gallium_nine' ] && echo "installing gallium/proton and running steam...";
-echo "expecting you to type in Forged Alliances Launch options";
-echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
-echo "once thats done edit steam settings in order to enable Proton for all games";
-[ '$gallium_nine' ] && echo "it should have Gallium pre-selected already, this is what you want, just tick the box next to it.";
-echo "";
-echo "";
-echo "[$(date --rfc-3339=seconds)] T2 running steam" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-if '$gallium_nine' ;
-then mkdir -p '$user_path'/.steam/compatibilitytools.d;
-proton_version=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep "tag_name" | head -n 1 | cut -f4,4 -d"\"");
-proton_temp_value=$(curl -v --silent https://api.github.com/repos/popsUlfr/Proton/releases 2>&1 | grep "target_commitish" | head -n 1 | cut -f4,4 -d"\"" | sed "s/[^_]\+/\L\u&/g");
-proton_version_number=${proton_temp_value/_G/-6_G};
-proton_name=$proton_version_number"_"${proton_version##*-};
-wget https://github.com/popsUlfr/Proton/releases/download/$proton_version/$proton_name.tar.xz;
-pv $proton_name.tar.xz | tar xp -J -C '$user_path'/.steam/compatibilitytools.d;
-rm $proton_name.tar.xz;
-fi;
-echo "starting Steam...";
-echo "[$(date --rfc-3339=seconds)] T2 starting Steam..." >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-steam -login '$steam_user_name' '$steam_password';
-echo "starting Forged Alliance Download...";
-echo "[$(date --rfc-3339=seconds)] T2 starting Forged Alliance Download..." >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-while [ \( ! -d ~/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d ~/.steam/steam/SteamApps/common/Supreme* \) ];
-do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +app_update 9420 validate +quit;
-done;
-echo "steamCMD terminated (in a good way), starting FA to finalize install";
-echo "[$(date --rfc-3339=seconds)] T2 steamCMD terminated (in a good way), starting FA to finalize install" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-steam -login '$steam_user_name' '$steam_password' -applaunch 9420 -shutdown;
-echo "FA install done. Waiting in case it isnt";
-cp -f /tmp/proton_'$real_user'/run '$user_path'/faf/
-echo "making map & mods symbolic links";
-echo "[$(date --rfc-3339=seconds)] T2 making map & mods symbolic links" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-if [ -d '$user_path'/.steam/steam/steamapps ] ;
-then steamapps="steamapps";
-echo "[$(date --rfc-3339=seconds)] T2 steamapps found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-if [ -d '$user_path'/.steam/steam/steamapps/common/Supreme* ] ;
-then echo "[$(date --rfc-3339=seconds)] T2 Supreme Commander folder found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-cd '$user_path'/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance;
-ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
-ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
-else echo "[$(date --rfc-3339=seconds)] T2 Supreme Commander folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-fi;
-if [ -d '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ] ;
-then echo "[$(date --rfc-3339=seconds)] T2 steamuser profile folder found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-cd '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser;
-rm -rf My\ Documents;
-mkdir My\ Documents;
-cd My\ Documents;
-ln -s '$user_path'/My\ Games/ My\ Games;
-else echo "[$(date --rfc-3339=seconds)] T2 steamuser profile folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-fi;
-elif [ -d '$user_path'/.steam/steam/SteamApps ];
-then steamapps="SteamApps";
-echo "[$(date --rfc-3339=seconds)] T2 SteamApps found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-if [ -d '$user_path'/.steam/steam/SteamApps/common/Supreme* ] ;
-then echo "[$(date --rfc-3339=seconds)] T2 Supreme Commander folder found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-cd '$user_path'/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance;
-ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
-ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
-else echo "[$(date --rfc-3339=seconds)] T2 Supreme Commander folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-fi;
-if [ -d '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ] ;
-then echo "[$(date --rfc-3339=seconds)] T2 steamuser profile folder found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-cd '$user_path'.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser;
-rm -rf My\ Documents;
-mkdir My\ Documents;
-cd My\ Documents;
-ln -s '$user_path'/My\ Games/ My\ Games;
-else echo "[$(date --rfc-3339=seconds)] T2 steamuser profile folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-fi;
-else echo "[$(date --rfc-3339=seconds)] T2 neither cammel case (SteamApps), nor lowercase (steamapps) found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-echo "UNACCEPTABLEEEEEEEEEEEEEEEE";
-exit 1;
-fi;
-if '$gallium_nine' ;
-then cp -rf '$user_path'/.steam/compatibilitytools.d/$proton_name '$user_path'/.steam/compatibilitytools.d/Proton;
-mv '$user_path'/.steam/compatibilitytools.d/Proton '$user_path'/.steam/steam/$steamapps/common;
-else cp -rf '$user_path'/.steam/steam/$steamapps/common/Proton* '$user_path'/.steam/steam/$steamapps/common/Proton;
-fi;
-[ \( -d '$user_path'/.steam/steam/steamapps/common/Proton \) -o \( -d '$user_path'/.steam/steam/SteamApps/common/Proton \) ] && echo "[$(date --rfc-3339=seconds)] T2 PROTON folder found" >> '$user_path'/faf.sh-'$faf_sh_version'.log || echo "[$(date --rfc-3339=seconds)] T2 Proton folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-cd '$user_path';
-source .bashrc;
-eval "$(cat .bashrc | tail -n +10)";
-echo "Finished thread two (install & run steam, steamcmd, FA) without issue, starting (FAF)...";
-echo "[$(date --rfc-3339=seconds)] T2 Finished thread two (install & run steam, steamcmd, FA) without issue, starting (FAF)..." >> '$user_path'/faf.sh-'$faf_sh_version'.log;'
-gnomeTerminalFirstConsoleVar='gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c '"'"''
-konsoleFirstConsoleVar='konsole -e /bin/bash --rcfile <(echo '"'"''
-xtermFirstConsoleVar='xterm -T "install & run steam, steamcmd, FA" -e '"'"''
-gnomeTerminalSecondConsoleVar='gnome-terminal --tab --title="(FAF)" -- bash -c "cd ~/faf; ./downlords-faf-client";'"'"''
-konsoleSecondConsoleVar='konsole -e /bin/bash --rcfile <(echo "cd ~/faf; ./downlords-faf-client; exit 0") &'"'"') &'
-xtermSecondConsoleVar='	xterm -T "(FAF)" -e "cd ~/faf; ./downlords-faf-client";'"'"' &'
-# this "eval" solution doesn't seem like it will be robust enough to work on any os. suggestions welcome
-if [ "$operating_system" = "Kubuntu" ]
+if ! dpkg-query -W -f='${Status}' python3-venv | grep "ok installed"
 then
-	eval "$konsoleFirstConsoleVar $middlescript $konsoleSecondConsoleVar"
-elif [ "$operating_system" = "elementary OS" ]
-then
-	eval "$xtermFirstConsoleVar $middlescript $xtermSecondConsoleVar"
+    echo "[$(date --rfc-3339=seconds)] T1 python3-venv was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed python3-venv"
 else
-	eval "$gnomeTerminalFirstConsoleVar $middlescript $gnomeTerminalSecondConsoleVar"
+    echo "[$(date --rfc-3339=seconds)] T1 python3-venv is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 fi
-# source $user_path/.bashrc be it in main thread or in tab, has no effect the user will have to run it himself.
-# end of second thread
-# finalising apt-install
-echo "[$(date --rfc-3339=seconds)] T1 start of second thread did not crash first thread" >> $user_path/faf.sh-$faf_sh_version.log
+if [ $(command -v curl) ]
+then
+    echo "[$(date --rfc-3339=seconds)] T1 curl is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
+else
+    echo "[$(date --rfc-3339=seconds)] T1 curl was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed curl"
+fi
 if ! dpkg-query -W -f='${Status}' lib32gcc1 | grep "ok installed"
 then
-	echo "[$(date --rfc-3339=seconds)] T1 lib32gcc1 was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
-	if [ "$operating_system" = "Debian GNU/Linux" ]
-	then
-		apt install -y lib32gcc1
-	else
-		sudo apt install -y lib32gcc1
-	fi
+    echo "[$(date --rfc-3339=seconds)] T1 lib32gcc1 was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed lib32gcc1"
 else
-	echo "[$(date --rfc-3339=seconds)] T1 lib32gcc1 is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
-	echo "lib32gcc1 is already installed, proceeding..."
-fi
-if [ $(command -v steamcmd) ]
-then
-	echo "[$(date --rfc-3339=seconds)] T1 steam CMD is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
-	echo "steam CMD is already installed, proceeding..."
-else
-	echo "[$(date --rfc-3339=seconds)] T1 steam CMD was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
-	if [ "$operating_system" != "Zorin OS" ]
-	then
-		if [ "$operating_system" = "Debian GNU/Linux" ]
-		then
-			echo steamcmd steam/question select "I AGREE" | debconf-set-selections
-			echo steamcmd steam/license note '' | debconf-set-selections
-		else
-			echo steamcmd steam/question select "I AGREE" | sudo debconf-set-selections
-			echo steamcmd steam/license note '' | sudo debconf-set-selections
-		fi
-	fi
-	useradd -m steam
-	cd /home/steam
-	if [ "$operating_system" = "Debian GNU/Linux" ]
-	then
-		apt install -y steamcmd
-	else
-		sudo apt install -y steamcmd
-	fi
-	cd $user_path
+    echo "[$(date --rfc-3339=seconds)] T1 lib32gcc1 is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 fi
 if ! dpkg-query -W -f='${Status}' libnss3-tools | grep "ok installed"
 then
-	echo "[$(date --rfc-3339=seconds)] T1 libnss3 was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
-	if [ "$operating_system" = "Debian GNU/Linux" ]
-	then
-		apt install -y libnss3-tools
-	else
-		sudo apt install -y libnss3-tools
-	fi
+    echo "[$(date --rfc-3339=seconds)] T1 libnss3 was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed libnss3-tools"
 else
-	echo "[$(date --rfc-3339=seconds)] T1 libnss3 is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
-	echo "libnss3 is already installed, proceeding..."
+    echo "[$(date --rfc-3339=seconds)] T1 libnss3 is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 fi
-if [ "$operating_system" = "Debian GNU/Linux" ]
+if ! dpkg-query -W -f='${Status}' libd3dadapter9-mesa | grep "ok installed"
 then
-	[ $gallium_nine ] && apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa
-	apt autoremove -y
-	apt autoclean
+    echo "[$(date --rfc-3339=seconds)] T1 libd3dadapter9-mesa was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed libd3dadapter9-mesa libd3dadapter9-mesa:i386"
 else
-	[ $gallium_nine ] && sudo apt install -y libd3dadapter9-mesa:i386 libd3dadapter9-mesa
-	sudo apt autoremove -y
-	sudo apt autoclean
+    echo "[$(date --rfc-3339=seconds)] T1 libd3dadapter9-mesa is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
 fi
-# no more apt-install
+if [ $(command -v jq) ]
+then
+    echo "[$(date --rfc-3339=seconds)] T1 jq is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
+else
+    echo "[$(date --rfc-3339=seconds)] T1 jq was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed jq"
+fi
+if [ $(command -v steam) ];
+then
+    echo "[$(date --rfc-3339=seconds)] T1 steam is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
+else
+    echo "[$(date --rfc-3339=seconds)] T1 steam was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    [ "$operating_system" = "Debian GNU/Linux" ] && usermod -a -G video,audio $real_user
+    [ "$operating_system" = "Debian GNU/Linux" ] && dpkg --add-architecture i386
+    to_be_installed="$to_be_installed steam"
+fi
+if [ $(command -v steamcmd) ]
+then
+    echo "[$(date --rfc-3339=seconds)] T1 steam CMD is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
+else
+    echo "[$(date --rfc-3339=seconds)] T1 steam CMD was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    if [ "'$operating_system'" = "Debian GNU/Linux" ]
+    then
+        if getent passwd steam > /dev/null 2>&1
+        then
+	    echo "steam home already exists"
+        else
+	    useradd -m steam
+            ln -s /usr/games/steamcmd /home/steam/steamcmd
+        fi
+    fi
+    to_be_installed="$to_be_installed steamcmd"
+fi
+if [ $(command -v winetricks) ]
+then
+    purge_winetricks=true
+    to_be_installed="$to_be_installed  "
+else
+    purge_winetricks=false
+fi
+# end eval missing dependencies
+
+# Isolating all sudo commands into a seperate window
+sudo_script='if [ "'$operating_system'" != "Debian GNU/Linux" ];
+then echo "If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies.";
+echo "Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run.";
+echo "At your own discretion, you may copy them, exit the script by closing all the terminal windows and execute them yourself.";
+echo "Upon re-runing the script this window should not appear and you should not be prompted for sudo priveledges.";
+echo "";
+echo "However, if you trust the script, you may simply type in your admin password and this script will continue.";
+echo "";
+echo "Pending obtaning sudo priveledges, this windows will run the following :";
+echo "";
+echo "sudo apt update -y &&";
+echo "sudo apt full-upgrade -y &&";
+if '$purge_winetricks';
+then echo "sudo purge winetricks -y";
+fi;
+echo "sudo apt install -y'$to_be_installed' &&";
+echo "sudo apt autoremove -y &&";
+echo "sudo apt autoclean";
+echo "wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks";
+echo "chmod +x winetricks";
+echo "wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks.bash-completion";
+echo "sudo mv winetricks /usr/bin";
+echo "sudo mv winetricks.bash-completion /usr/share/bash-completion/completions/winetricks";
+echo "";
+fi;
+[ "'$operating_system'" != "Debian GNU/Linux" ] && sudo echo "";
+if [ ! $(command -v steam) ];
+then if [ "'$operating_system'" != "Zorin OS" ];
+then [ "'$operating_system'" = "Debian GNU/Linux" ] && echo steam steam/question select "I AGREE" | debconf-set-selections || echo steam steam/question select "I AGREE" | sudo debconf-set-selections;
+[ "'$operating_system'" = "Debian GNU/Linux" ] && echo steam steam/license note '' | debconf-set-selections || echo steam steam/license note '' | sudo debconf-set-selections;
+fi;
+fi;
+if [ ! $(command -v steamcmd) ];
+then if [ "'$operating_system'" != "Zorin OS" ];
+then [ "'$operating_system'" = "Debian GNU/Linux" ] && echo steamcmd steam/question select "I AGREE" | debconf-set-selections || echo steamcmd steam/question select "I AGREE" | sudo debconf-set-selections;
+[ "'$operating_system'" = "Debian GNU/Linux" ] && echo steamcmd steam/license note '' | debconf-set-selections || echo steamcmd steam/license note '' | sudo debconf-set-selections;
+fi;
+fi;
+if [ "'$operating_system'" = "Debian GNU/Linux" ];
+then if grep -q "debian.org/debian/ stretch main contrib non-free" /etc/apt/sources.list > /dev/null;
+then echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch already correct" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch edited" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+sed -i "s_debian.org/debian/ stretch main contrib_debian.org/debian/ stretch main contrib non-free_" /etc/apt/sources.list;
+fi;
+if grep -q "http://security.debian.org/debian-security stretch/updates main contrib non-free" /etc/apt/sources.list > /dev/null;
+then echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch/updates already correct" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch/updates edited" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+sed -i "s_http://security.debian.org/debian-security stretch/updates main contrib_http://security.debian.org/debian-security stretch/updates main contrib non-free_" /etc/apt/sources.list;
+fi;
+if grep -q "debian.org/debian/ stretch-updates main contrib non-free" /etc/apt/sources.list > /dev/null;
+then echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch-updates already correct" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch-updates edited" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+sed -i "s_debian.org/debian/ stretch-updates main contrib_debian.org/debian/ stretch-updates main contrib non-free_" /etc/apt/sources.list;
+fi;
+if grep -q "deb http://ftp.*.debian.org/debian/ stretch-proposed-updates main contrib non-free" /etc/apt/sources.list > /dev/null;
+then echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : proposed already present" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else donwload_country=$(grep "deb http://ftp." /etc/apt/sources.list | head -1 | cut -d. -f2);
+echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : added proposed" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+echo "deb http://ftp.$donwload_country.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list;
+fi;
+else if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list;
+then echo "[$(date --rfc-3339=seconds)] T2 enabled partners" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+sudo sed -i "s/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g" /etc/apt/sources.list;
+else echo "[$(date --rfc-3339=seconds)] T2 did not enable partners, hoping it was already enabled." >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+fi;
+fi;
+wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks;
+chmod +x winetricks;
+wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks.bash-completion;
+[ "'$operating_system'" = "Debian GNU/Linux" ] && mv winetricks /usr/bin || sudo mv winetricks /usr/bin;
+[ "'$operating_system'" = "Debian GNU/Linux" ] && mv winetricks.bash-completion /usr/share/bash-completion/completions/winetricks || sudo mv winetricks.bash-completion /usr/share/bash-completion/completions/winetricks;
+if [ "'$operating_system'" = "Debian GNU/Linux" ];
+then apt update -y;
+apt full-upgrade -y;
+if '$purge_winetricks';
+then apt purge winetricks -y;
+fi;
+apt install -y'$to_be_installed';
+apt autoremove -y;
+apt autoclean;
+elif [ "'$operating_system'" = "Arch" ];
+then sudo pacman -Syu;
+sudo pacman -Syy;
+sudo pacman -Scc;
+sudo pacman -Suu;
+if '$purge_winetricks';
+then sudo pacman -R winetricks;
+fi;
+sudo pacman -S '$to_be_installed';
+elif [ "'$operating_system'" = "Manjaro" ];
+then sudo pacman -Syu;
+sudo pacman -Syy;
+sudo pacman -Scc;
+sudo pacman -Suu;
+if '$purge_winetricks';
+then sudo pacman -R winetricks;
+fi;
+sudo pacman -S '$to_be_installed';
+elif [ "'$operating_system'" = "Fedora" ];
+then sudo dnf distro-sync;
+if '$purge_winetricks';
+then sudo dnf remove winetricks -y;
+fi;
+sudo dnf install -y'$to_be_installed';
+sudo dnf clean all;
+sudo dnf autoremove;
+elif [ "'$operating_system'" = "Mageia" ];
+then sudo dnf distro-sync;
+if '$purge_winetricks';
+then sudo dnf remove winetricks -y;
+fi;
+sudo dnf install -y'$to_be_installed';
+sudo dnf clean all;
+sudo dnf autoremove;
+elif [ "'$operating_system'" = "CentOS" ];
+then sudo yum upgrade;
+if '$purge_winetricks';
+then sudo yum remove winetricks -y;
+fi;
+sudo yum install -y'$to_be_installed';
+sudo yum clean all;
+elif [ "'$operating_system'" = "Ubuntu" ];
+then sudo apt update -y;
+sudo apt full-upgrade -y;
+if '$purge_winetricks';
+then sudo apt purge winetricks -y;
+fi;
+sudo apt install -y'$to_be_installed';
+sudo apt autoremove -y;
+sudo apt autoclean;
+else sudo apt update -y;
+sudo apt full-upgrade -y;
+if '$purge_winetricks';
+then sudo apt purge winetricks -y;
+fi;
+sudo apt install -y'$to_be_installed';
+sudo apt autoremove -y;
+sudo apt autoclean;
+fi;'"'"''
+# dnf is used in Fedora, and RHEL 8 and later;
+# yum is used in RHEL up to version 7, CentOS up to version 7, and probably other RPM-based distributions;
+# for OpenSuSe it'll be zypper
+# pacman / yahourt for arch
+# https://wiki.archlinux.org/index.php/Pacman/Rosetta
+
+# opening and closings
+debian_opening_sudo_script='gnome-terminal --tab --active --title="install dependencies..." -- bash -c '"'"''
+gnome_opening_sudo_script='gnome-terminal --tab --active --title="externalized sudo" -- bash -c '"'"''
+konsole_opening_sudo_script='konsole -e /bin/bash --rcfile <(echo '"'"''
+io_opening_sudo_script='io.elementary.terminal -e '"'"''
+xterm_opening_sudo_script='xterm -T "externalized sudo" -e '"'"''
+
+gnome_opening_faf_script='gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c '"'"''
+konsole_opening_faf_script='konsole -e /bin/bash --rcfile <(echo '"'"''
+io_opening_faf_script='io.elementary.terminal -e "bash -c '"'"'curl  wttr.in/bydgoszcz'"'"';'"'"'sleep 3'"'"''
+xterm_opening_faf_script='xterm -T "install & run steam, steamcmd, FA" -e '"'"''
+
+gnome_closing_faf_script='gnome-terminal --tab --title="(FAF)" -- bash -c "cd faf; ./downlords-faf-client";'"'"''
+konsole_closing_faf_script='konsole -e /bin/bash --rcfile <(echo "cd faf; ./downlords-faf-client; exit 0") &'"'"') &'
+io_closing_faf_script=' io.elementary.terminal -e "cd faf; ./downlords-faf-client";'"'"''
+xterm_closing_faf_script=' xterm -T "(FAF)" -e "cd faf; ./downlords-faf-client";'"'"' &'
+# end opening and closings
+
+echo ""
+if [ "$to_be_installed" = "" ]
+then
+    echo "all dependencies met :)"
+    echo "[$(date --rfc-3339=seconds)] T1 all dependencies met" >> $user_path/faf.sh-$faf_sh_version.log
+else
+    echo "[$(date --rfc-3339=seconds)] T1 installing $to_be_installed..." >> $user_path/faf.sh-$faf_sh_version.log
+    # OS splitter
+    if [ "$operating_system" = "Ubuntu" ]
+    then
+        eval "$gnome_opening_sudo_script $sudo_script"
+    elif [ "$operating_system" = "Kubuntu" ]
+    then
+        eval "$konsole_opening_sudo_script $sudo_script"
+    elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
+    then
+        eval "$xterm_opening_sudo_script $sudo_script"
+    elif [ "$operating_system" = "Debian GNU/Linux" ]
+    then
+        eval "$debian_opening_sudo_script $sudo_script"
+    else
+        eval "$xterm_opening_sudo_script $sudo_script"
+    fi
+fi
+echo "[$(date --rfc-3339=seconds)] T1 start of second thread did not crash first thread" >> $user_path/faf.sh-$faf_sh_version.log
+# end of OS Splitter
+
+function install_faf_function
+{
+# Download & install FAF client
+echo "now moving on to installing Downlord's FAF..."
+if [ ! -d faf ]
+then
+    echo "[$(date --rfc-3339=seconds)] T1 installing DOWNLORD" >> $user_path/faf.sh-$faf_sh_version.log
+    mkdir faf
+    cd faf
+    rm -rf *
+    faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
+    faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
+    wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
+    pv _dfc_unix_$faf_version.tar.gz | tar xzp -C $user_path/faf
+    mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
+    rm -rf downlords-faf-client-${faf_version_number:1}
+    rm _dfc_unix_$faf_version.tar.gz
+    chmod +x downlords-faf-client
+    chmod +x lib/faf-uid
+fi
+cd $user_path
+# /end Download & install FAF client
 # Java install block
-echo "Now probing the Java status of this OS..."
-echo "[$(date --rfc-3339=seconds)] T1 Now probing the Java status of this OS..." >> $user_path/faf.sh-$faf_sh_version.log
-if [ -d /usr/lib/jvm/jdk-10.0.2 ]
+echo "Now seeing if Java was already installed by this script..."
+echo "[$(date --rfc-3339=seconds)] T1 Now seeing if Java was already installed by this script..." >> $user_path/faf.sh-$faf_sh_version.log
+if [ -d $user_path/faf/jdk-10.0.2 ]
 then
-	echo "Java is already installed, moving on"
-	echo "[$(date --rfc-3339=seconds)] T1 Java already installed!" >> $user_path/faf.sh-$faf_sh_version.log
+    echo "Java is already installed, moving on"
+    echo "[$(date --rfc-3339=seconds)] T1 Java already installed!" >> $user_path/faf.sh-$faf_sh_version.log
 else
-	# Download & install java 10 open jdk
-	echo "Java 10 installation procedure..."
-	echo "[$(date --rfc-3339=seconds)] T1 Java 10 installing..." >> $user_path/faf.sh-$faf_sh_version.log
-	wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
-	if [ "$operating_system" = "Debian GNU/Linux" ]
-	then
-		mkdir -p /usr/lib/jvm
-		cd /usr/lib/jvm
-		pv $user_path/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C /usr/lib/jvm
-		cd $user_path
-		rm openjdk-10.0.2_linux-x64_bin.tar.gz
-		update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk-10.0.2/bin/java" 0
-		update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac" 0
-		update-alternatives --set java /usr/lib/jvm/jdk-10.0.2/bin/java
-		update-alternatives --set javac /usr/lib/jvm/jdk-10.0.2/bin/javac
-	else
-		sudo mkdir -p /usr/lib/jvm
-		cd /usr/lib/jvm
-		sudo pv ~/openjdk-10.0.2_linux-x64_bin.tar.gz | sudo tar xzp -C /usr/lib/jvm
-		cd
-		rm openjdk-10.0.2_linux-x64_bin.tar.gz
-		sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk-10.0.2/bin/java" 0
-		sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk-10.0.2/bin/javac" 0
-		sudo update-alternatives --set java /usr/lib/jvm/jdk-10.0.2/bin/java
-		sudo update-alternatives --set javac /usr/lib/jvm/jdk-10.0.2/bin/javac
-	fi
-	echo "" >> $user_path/.bashrc
-	echo "" >> $user_path/.bashrc
-	! grep -q 'INSTALL4J_JAVA_HOME' $user_path/.bashrc > /dev/null && echo "export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2" >> $user_path/.bashrc
-	# /end Download & install java 10 open jdk
+    # Download & install java 10 open jdk
+    echo "Java 10 installation procedure..."
+    echo "[$(date --rfc-3339=seconds)] T1 Java 10 installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
+    pv $user_path/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C $user_path/faf
+    rm openjdk-10.0.2_linux-x64_bin.tar.gz
+    echo "" >> $user_path/.bashrc
+    echo "" >> $user_path/.bashrc
+    ! grep -q 'INSTALL4J_JAVA_HOME' $user_path/.bashrc > /dev/null && echo "export INSTALL4J_JAVA_HOME=$user_path/faf/jdk-10.0.2" >> $user_path/.bashrc
+    # /end Download & install java 10 open jdk
 fi
 # /end Java install block
 # make faf .desktop runner
 [ ! -d $user_path/.local/share/icons ] && mkdir -p .local/share/icons
 if [ ! -f $user_path/.local/share/icons/faf.png ]
 then
-	echo "[$(date --rfc-3339=seconds)] T1 getting desktop launcher icon" >> $user_path/faf.sh-$faf_sh_version.log
-	cd $user_path/.local/share/icons
-	wget https://github.com/tatsujb/FAFICON/raw/master/faf.png
+    echo "[$(date --rfc-3339=seconds)] T1 getting desktop launcher icon" >> $user_path/faf.sh-$faf_sh_version.log
+    cd $user_path/.local/share/icons
+    wget https://github.com/tatsujb/FAFICON/raw/master/faf.png
 fi
 if [ ! -f $user_path/.local/share/applications/faforever.desktop ]
 then
-	echo "[$(date --rfc-3339=seconds)] T1 making desktop launcher" >> $user_path/faf.sh-$faf_sh_version.log
-	cd $user_path/.local/share/applications
-	echo '#!/usr/bin/env xdg-open' >> faforever.desktop
-	echo "[Desktop Entry]" >> faforever.desktop
-	echo "Version=$faf_version" >> faforever.desktop
-	echo "Type=Application" >> faforever.desktop
-	echo 'Exec=bash -c "cd '$user_path'/faf;export INSTALL4J_JAVA_HOME=/usr/lib/jvm/jdk-10.0.2; ./downlords-faf-client"' >> faforever.desktop
-	echo "Name=FAF" >> faforever.desktop
-	echo "Comment=Forged Alliance Forever Client" >> faforever.desktop
-	echo "Icon=$user_path/.local/share/icons/faf.png" >> faforever.desktop
-	chmod +x faforever.desktop
+    echo "[$(date --rfc-3339=seconds)] T1 making desktop launcher" >> $user_path/faf.sh-$faf_sh_version.log
+    cd $user_path/.local/share/applications
+    echo '#!/usr/bin/env xdg-open' >> faforever.desktop
+    echo "[Desktop Entry]" >> faforever.desktop
+    echo "Version=$faf_version" >> faforever.desktop
+    echo "Type=Application" >> faforever.desktop
+    echo 'Exec=bash -c "cd '$user_path'/faf;export INSTALL4J_JAVA_HOME='$user_path'/faf/jdk-10.0.2; ./downlords-faf-client"' >> faforever.desktop
+    echo "Name=FAF" >> faforever.desktop
+    echo "Comment=Forged Alliance Forever Client" >> faforever.desktop
+    echo "Icon=$user_path/.local/share/icons/faf.png" >> faforever.desktop
+    chmod +x faforever.desktop
 fi
 cd $user_path
 # /end make faf .desktop runner
-# Download & install FAF client
-echo "now moving on to installing Downlord's FAF..."
-if [ -d $user_path/faf ]
+}
+ 
+function set_install_dir_function
+{
+    directory=$(zenity --file-selection --directory --title $1)
+    echo "[$(date --rfc-3339=seconds)] T1 folder set to $directory" >> $user_path/faf.sh-$faf_sh_version.log
+} 
+
+function get_user_input_function
+{
+if (whiptail --title "The game Forged Alliance is NOT installed on my system :" --yesno "" 12 85 --fb)
 then
-	rm -rf faf
+    already_fa=false
+    if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $user_path/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
+    then
+        default_dir=true
+        echo "[$(date --rfc-3339=seconds)] T1 default dir chosen" >> $user_path/faf.sh-$faf_sh_version.log
+    else
+        default_dir=false
+        echo "[$(date --rfc-3339=seconds)] T1 non-standart dir chosen" >> $user_path/faf.sh-$faf_sh_version.log
+        set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
+    fi
 else
-	echo "[$(date --rfc-3339=seconds)] T1 installing DOWNLORD" >> $user_path/faf.sh-$faf_sh_version.log
-	mkdir faf
-	cd faf
-	rm -rf *
-	faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
-	faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
-	wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
-	pv _dfc_unix_$faf_version.tar.gz | tar xzp -C ~/faf
-	mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
-	rm -rf downlords-faf-client-${faf_version_number:1}
-	rm _dfc_unix_$faf_version.tar.gz
-	chmod +x downlords-faf-client
-	chmod +x lib/faf-uid
+    echo "[$(date --rfc-3339=seconds)] T1 FA already installed chosen" >> $user_path/faf.sh-$faf_sh_version.log
+    what_to_do=$(whiptail --title "What do you wish to do?" --notags --nocancel --menu "" 12 85 0 "1" "Install another FA somewhere else, then install (FAF)" "2" "Reinstall FA, then install (FAF)" "3" "Use my install of FA and install (FAF)" "4" "FA is configured, I only want (FAF)" "5" "...wait... I messed up!" --fb 3>&1 1>&2 2>&3)
+    case $what_to_do in
+        1)
+            echo "[$(date --rfc-3339=seconds)] T1 resintall FA chosen" >> $user_path/faf.sh-$faf_sh_version.log
+            already_fa=false
+            if (whiptail --title "Second install of Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $user_path/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
+            then
+                default_dir=true
+                echo "[$(date --rfc-3339=seconds)] T1 default dir chosen" >> $user_path/faf.sh-$faf_sh_version.log
+            else
+                default_dir=false
+                echo "[$(date --rfc-3339=seconds)] T1 non-standart dir chosen" >> $user_path/faf.sh-$faf_sh_version.log
+                set_install_dir_function  "choose your desired Forged Alliance installation directory/folder"
+            fi
+        ;;
+        2)
+            del_directory=$(zenity --file-selection --directory --title "select the folder you want to delete (FA)")
+            rm -rf del_directory
+            echo "[$(date --rfc-3339=seconds)] T1 resintall FA chosen" >> $user_path/faf.sh-$faf_sh_version.log
+            already_fa=false
+            if (whiptail --title "ReInstall Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $user_path/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
+            then
+                default_dir=true
+                echo "[$(date --rfc-3339=seconds)] T1 default dir chosen" >> $user_path/faf.sh-$faf_sh_version.log
+            else
+                default_dir=false
+                echo "[$(date --rfc-3339=seconds)] T1 non-standart dir chosen" >> $user_path/faf.sh-$faf_sh_version.log
+                set_install_dir_function  "choose your desired Forged Alliance installation directory/folder"
+            fi
+        ;;
+        3)
+            echo "[$(date --rfc-3339=seconds)] T1 keep but configure FA chosen" >> $user_path/faf.sh-$faf_sh_version.log
+            already_fa=true
+        ;;
+        4)
+            echo "[$(date --rfc-3339=seconds)] T1 keep and dont configure FA chosen" >> $user_path/faf.sh-$faf_sh_version.log
+            install_faf_function
+            echo "installed faf only, as per user demand, nothing else to do, exiting."
+            exit 0
+        ;;
+        5)
+            get_user_input_function
+    esac
 fi
-cd $user_path
-# /end Download & install FAF client
-# wait for user to log in
-echo "please switch to opened FAF client. Waiting on user to log in"
+}
+get_user_input_function
+
+if $already_fa
+then null
+else
+    echo ""
+    echo "[$(date --rfc-3339=seconds)] T1 FA not installed chosen" >> $user_path/faf.sh-$faf_sh_version.log
+    while [ -z "$steam_user_name" ]
+    do
+        echo "steam user name :"
+        read -s steam_user_name
+    done
+    echo ""
+    while [ -z "$steam_password" ]
+    do
+        echo "steam password :"
+        read -s steam_password
+    done
+# NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
+    echo "[$(date --rfc-3339=seconds)] T1 Steam credentials entrusted to scritp" >> $user_path/faf.sh-$faf_sh_version.log
+    echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > $user_path/"the contents of this file are to be pasted in the forged alliance properties launch options"
+fi
 echo ""
-no_login=true
 i=1
 sp="/-\|"
-echo -n "waiting...  "
+no_steam=true
+echo "waiting for dependencies to be present... "
+while $no_steam
+do
+  printf "\b${sp:i++%${#sp}:1}"
+  [[ $(command -v steam) ]] && no_steam=false
+  sleep 1
+done
+# [[ $(dpkg-query -W -f='${Status}' python3-pip 2>/dev/null | grep "ok installed") ]] && no_pipx=false
+echo ""
+# start faf_script
+faf_script='echo "expecting you to type in Forged Alliances Launch options";
+echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
+echo "once thats done edit steam settings in order to enable Proton for all games";
+if '$already_fa';
+then null;
+else echo "";
+echo "";
+echo "";
+echo "[$(date --rfc-3339=seconds)] T3 running steam" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+steam -login '$steam_user_name' '$steam_password';
+if '$default_dir';
+then echo "[$(date --rfc-3339=seconds)] T3 installing FA to default dir" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+while [ \( ! -d '$user_path'/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d '$user_path'/.steam/steam/SteamApps/common/Supreme* \) ];
+do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +app_update 9420 +quit;
+done;
+else echo "[$(date --rfc-3339=seconds)] T3 installing FA to default dir" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+while [ ! -d '$directory'/bin ];
+do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +force_install_dir '$directory' +app_update 9420 +quit;
+done;
+cd '$directory';
+mkdir -p steamapps/common/Supreme\ Commander\ Forged\ Alliance;
+mv * steamapps/common/Supreme\ Commander\ Forged\ Alliance/ 2>/dev/null;
+cd '$user_path';
+fi;
+echo "[$(date --rfc-3339=seconds)] T3 FA installed condition met" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+fi;
+echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+steam -login '$steam_user_name' '$steam_password' -applaunch 9420 -shutdown;
+if '$already_fa';
+then null;
+else echo "[$(date --rfc-3339=seconds)] T3 copying over run file" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+cp -f /tmp/proton_'$real_user'/run '$user_path'/faf/
+fi;
+echo "[$(date --rfc-3339=seconds)] T3 making symbolic links" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+if '$default_dir';
+then if [ -d '$user_path'/.steam/steam/steamapps ];
+then if [ -d '$user_path'/.steam/steam/steamapps/common/Supreme* ];
+then cd '$user_path'/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance;
+ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
+ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
+else echo "[$(date --rfc-3339=seconds)] T3 (steamapps) FA folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+fi;
+if [ -d '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ];
+then cd '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser;
+rm -rf My\ Documents;
+mkdir My\ Documents;
+cd My\ Documents;
+ln -s '$user_path'/My\ Games/ My\ Games;
+else echo "[$(date --rfc-3339=seconds)] T3 (steamapps) FA compatdata folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+fi;
+elif [ -d '$user_path'/.steam/steam/SteamApps ];
+then echo "[$(date --rfc-3339=seconds)] T3 curious case of SteamApps instead of steamapps" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+if [ -d '$user_path'/.steam/steam/SteamApps/common/Supreme* ];
+then cd '$user_path'/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance;
+ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
+ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
+else echo "[$(date --rfc-3339=seconds)] T3 (SteamApps) FA folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+fi;
+if [ -d '$user_path'/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ];
+then cd '$user_path'.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser;
+rm -rf My\ Documents;
+mkdir My\ Documents;
+cd My\ Documents;
+ln -s '$user_path'/My\ Games/ My\ Games;
+else echo "[$(date --rfc-3339=seconds)] T3 (SteamApps) FA compatdata folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+fi;
+else echo "[$(date --rfc-3339=seconds)] T3 neither steamapps nor SteamApps are found. exiting" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+exit 1;
+fi;
+else echo "[$(date --rfc-3339=seconds)] T3 symlinking for non-standart install location" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+cd '$directory'/steamapps/common/Supreme\ Commander\ Forged\ Alliance;
+ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
+ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
+if [ -d '$user_path'/.steam/steam/steamapps ];
+then if [ -d '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ];
+then cd '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser;
+rm -rf My\ Documents;
+mkdir My\ Documents;
+cd My\ Documents;
+ln -s '$user_path'/My\ Games/ My\ Games;
+fi;
+elif [ -d '$user_path'/.steam/steam/SteamApps ];
+then if [ -d '$user_path'/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ];
+then cd '$user_path'.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser;
+rm -rf My\ Documents;
+mkdir My\ Documents;
+cd My\ Documents;
+ln -s '$user_path'/My\ Games/ My\ Games;
+fi;
+fi;
+fi;
+cd '$user_path';
+source .bashrc;
+eval "$(cat .bashrc | tail -n +10)";
+echo "[$(date --rfc-3339=seconds)] T3 starting T4 and exiting T3" >> '$user_path'/faf.sh-'$faf_sh_version'.log;'
+# end faf_script
+
+# OS splitter again
+if [ "$operating_system" = "Ubuntu" ]
+then
+    eval "$gnome_opening_faf_script $faf_script $gnome_closing_faf_script"
+elif [ "$operating_system" = "Kubuntu" ]
+then
+    eval "$konsole_opening_faf_script $faf_script $konsole_closing_faf_script"
+elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
+then
+    eval "$xterm_opening_faf_script $faf_script $xterm_closing_faf_script" #"$io_opening_faf_script $middlescript $io_closing_faf_script"
+elif [ "$operating_system" = "Debian GNU/Linux" ]
+then
+    eval "$gnome_opening_faf_script $faf_script $gnome_closing_faf_script"
+else
+    eval "$xterm_opening_faf_script $faf_script $xterm_closing_faf_script"
+fi
+echo "[$(date --rfc-3339=seconds)] T1 start of second thread did not crash first thread" >> $user_path/faf.sh-$faf_sh_version.log
+# end of OS Splitter
+
+install_faf_function
+ 
+# wait for user to log in
+echo "[$(date --rfc-3339=seconds)] T1 waiting" >> $user_path/faf.sh-$faf_sh_version.log
+echo ""
+echo ""
+no_login=true
+echo -n "Please switch to opened FAF client, waiting on user to log in (if it not open yet simply switch to \"install & run steam, steamcmd, FA\" terminal tab)...  "
 while $no_login
 do
   printf "\b${sp:i++%${#sp}:1}"
   grep --no-messages '"username": "' $user_path/.faforever/client.prefs && no_login=false
   sleep 1
 done
-echo "done looping!"
-sleep 2
+echo ""
+echo "restarting (FAF)"
+echo "[$(date --rfc-3339=seconds)] T1 done waiting" >> $user_path/faf.sh-$faf_sh_version.log
+# sleep 2
 kill -9 $(pgrep java | tail -1)
 # editting client.prefs :
+echo "[$(date --rfc-3339=seconds)] T1 editing client.prefs" >> $user_path/faf.sh-$faf_sh_version.log
 if [ -d '$user_path'/.steam/steam/SteamApps ]
 then
-	steamapps="SteamApps"
+    steamapps="SteamApps"
 else
-	steamapps="steamapps"
+    steamapps="steamapps"
 fi
-jq --arg user_path "$user_path" --arg steamapps "$steamapps" '
+if $default_dir
+then
+    installationPath="$user_path/.steam/steam/$steamapps/common/Supreme Commander Forged Alliance"
+    normalpath="$user_path/.steam/steam/$steamapps/common/Supreme Commander Forged Alliance"
+    preferencesFile="$user_path/.steam/steam/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
+else
+    installationPath="$directory/$steamapps/common/Supreme Commander Forged Alliance"
+    normalpath="$directory/$steamapps/common/Supreme Commander Forged Alliance"
+    preferencesFile="$directory/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
+fi
+jq --arg installationPath "$installationPath" --arg normalpath "$normalpath" --arg preferencesFile "$normalpath"  --arg user_path "$user_path" '
     .forgedAlliance += {
-        installationPath: ($user_path + "/.steam/steam/" + $steamapps + "/common/Supreme Commander Forged Alliance"),
-        path: ($user_path + "/.steam/steam/" + $steamapps + "/common/Supreme Commander Forged Alliance"),
-        preferencesFile: ($user_path + "/.steam/steam/" + $steamapps + "/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"),
+        installationPath: ($installationPath),
+        path: ($normalpath),
+        preferencesFile: ($preferencesFile),
         executableDecorator: ($user_path + "/faf/run \"%s\"")
     }' $user_path/.faforever/client.prefs > $user_path/.faforever/client.prefs.tmp
 mv $user_path/.faforever/client.prefs.tmp $user_path/.faforever/client.prefs
-echo "done editting!"
 gtk-launch faforever
+# gallium-nine block
+#python3 -m pip install --user pipx
+#$user_path/.local/bin/pipx ensurepath
+#eval "$(cat .bashrc | tail -n +10)"
+#pipx install protontricks
+#pipx upgrade protontricks
+#protontricks 9420 galliumnine
+# gallium-nine block end
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
 echo "[$(date --rfc-3339=seconds)] T1 Finished thread one. (proton/downlord/open-jdk/bashrc)" >> $user_path/faf.sh-$faf_sh_version.log
