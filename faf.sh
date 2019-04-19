@@ -402,10 +402,10 @@ else
         eval "$gnome_opening_sudo_script $sudo_script"
     elif [ "$operating_system" = "Kubuntu" ]
     then
-        eval "$konsole_opening_sudo_script $sudo_script"
+        eval "$konsole_opening_sudo_script $sudo_script" &
     elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
     then
-        eval "$xterm_opening_sudo_script $sudo_script"
+        eval "$xterm_opening_sudo_script $sudo_script" &
     elif [ "$operating_system" = "Debian GNU/Linux" ]
     then
         eval "$debian_opening_sudo_script $sudo_script"
