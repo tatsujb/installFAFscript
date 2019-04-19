@@ -369,10 +369,10 @@ konsole_opening_faf_script='konsole -e /bin/bash --rcfile <(echo '"'"''
 io_opening_faf_script='io.elementary.terminal -e "bash -c '"'"'curl  wttr.in/bydgoszcz'"'"';'"'"'sleep 3'"'"''
 xterm_opening_faf_script='xterm -T "install & run steam, steamcmd, FA" -e '"'"''
 
-gnome_closing_faf_script='gnome-terminal --tab --title="(FAF)" -- bash -c "cd faf; ./downlords-faf-client";'"'"''
+gnome_closing_faf_script='gnome-terminal --tab --title="FAF" -- bash -c "cd faf; ./downlords-faf-client";'"'"''
 konsole_closing_faf_script='konsole -e /bin/bash --rcfile <(echo "cd faf; ./downlords-faf-client; exit 0") &'"'"') &'
 io_closing_faf_script='io.elementary.terminal -e "cd faf; ./downlords-faf-client";'"'"''
-xterm_closing_faf_script='xterm -T "(FAF)" -e "cd faf; ./downlords-faf-client";'"'"' &'
+xterm_closing_faf_script='xterm -T "FAF" -e "cd faf; ./downlords-faf-client";'"'"' &'
 # end opening and closings
 
 echo ""
@@ -417,6 +417,8 @@ then
         pv -xzvf faf.tar.gz | tar xzp -C $user_path/faf
         cd faf
         makepkg -si
+	cd
+	ln -s ~ ~/.faforever/user
     fi
 else
     if [ ! -d faf ]
@@ -540,9 +542,9 @@ else
             already_fa=true
             default_dir=false
             set_install_dir_function  "Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
-            while [ ! -d $directory/steamapps/common/Supreme\ Commander\ Forged\ Alliance ]
+            while [ ! -d "$directory/steamapps/common/Supreme Commander Forged Alliance" ]
             do
-            set_install_dir_function "Sorry, that was wrong, Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
+                set_install_dir_function "Sorry, that was wrong, Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
             done
         ;;
         4)
@@ -556,27 +558,26 @@ else
     esac
 fi
 }
+
 get_user_input_function
 
-if $already_fa
-then echo
-else
-    echo ""
-    echo "[$(date --rfc-3339=seconds)] T1 FA not installed chosen" >> $user_path/faf.sh-$faf_sh_version.log
-    while [ -z "$steam_user_name" ]
-    do
-        echo "steam user name :"
-        read steam_user_name
-    done
-    while [ -z "$steam_password" ]
-    do
-        echo "steam password :"
-        read -s steam_password
-    done
+
+echo ""
+echo "[$(date --rfc-3339=seconds)] T1 FA not installed chosen" >> $user_path/faf.sh-$faf_sh_version.log
+while [ -z "$steam_user_name" ]
+do
+    echo "steam user name :"
+    read steam_user_name
+done
+while [ -z "$steam_password" ]
+do
+    echo "steam password :"
+    read -s steam_password
+done
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-    echo "[$(date --rfc-3339=seconds)] T1 Steam credentials entrusted to scritp" >> $user_path/faf.sh-$faf_sh_version.log
-    echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > $user_path/"the contents of this file are to be pasted in the forged alliance properties launch options"
-fi
+echo "[$(date --rfc-3339=seconds)] T1 Steam credentials entrusted to scritp" >> $user_path/faf.sh-$faf_sh_version.log
+echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > $user_path/"the contents of this file are to be pasted in the forged alliance properties launch options"
+
 echo ""
 i=1
 sp="/-\|"
@@ -591,7 +592,7 @@ done
 # [[ $(dpkg-query -W -f='${Status}' python3-pip 2>/dev/null | grep "ok installed") ]] && no_pipx=false
 echo ""
 
-# start faf_script
+# start faf_script '"'"'
 faf_script='echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
 echo "once thats done edit steam settings in order to enable Proton for all games";
@@ -603,13 +604,11 @@ echo "";
 echo "[$(date --rfc-3339=seconds)] T3 running steam" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 steam -login '$steam_user_name' '$steam_password';
 if '$default_dir';
-then origin='$user_path';
-echo "[$(date --rfc-3339=seconds)] T3 installing FA to default dir" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+then echo "[$(date --rfc-3339=seconds)] T3 installing FA to default dir" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 while [ \( ! -d '$user_path'/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d '$user_path'/.steam/steam/SteamApps/common/Supreme* \) ];
 do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +app_update 9420 +quit;
 done;
-else origin='$directory';
-echo "[$(date --rfc-3339=seconds)] T3 installing FA to default dir" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else echo "[$(date --rfc-3339=seconds)] T3 installing FA to default dir" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 while [ ! -d '$directory'/bin ];
 do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +force_install_dir '$directory' +app_update 9420 +quit;
 done;
@@ -622,15 +621,17 @@ echo "[$(date --rfc-3339=seconds)] T3 FA installed condition met" >> '$user_path
 fi;
 echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 eval "steam -login '$steam_user_name' '$steam_password' -applaunch 9420 -shutdown &";
-echo "hi"
 echo "";
+if '$default_dir';
+then origin="'$user_path'/.steam/steam";
+else origin='$directory';
+fi;
 i=1;
 sp="/-\|";
 no_config=true;
-echo "waiting for FA to have config.ini... ";
 while $no_config;
 do printf "\b${sp:i++%${#sp}:1}";
-[[ -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs ]] && no_config=false;
+[[ -f "$origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs" ]] && no_config=false;
 sleep 1;
 done;
 echo "";
@@ -648,7 +649,7 @@ rm -rf Maps;
 rm -rf Mods;
 ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
 ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
-else echo "[$(date --rfc-3339=seconds)] T3 (steamapps) FA folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else echo "[$(date --rfc-3339=seconds)] T3 steamapps FA folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 fi;
 if [ -d '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ];
 then cd '$user_path'/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser;
@@ -656,7 +657,7 @@ rm -rf My\ Documents;
 mkdir My\ Documents;
 cd My\ Documents;
 ln -s '$user_path'/My\ Games/ My\ Games;
-else echo "[$(date --rfc-3339=seconds)] T3 (steamapps) FA compatdata folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else echo "[$(date --rfc-3339=seconds)] T3 steamapps FA compatdata folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 fi;
 elif [ -d '$user_path'/.steam/steam/SteamApps ];
 then echo "[$(date --rfc-3339=seconds)] T3 curious case of SteamApps instead of steamapps" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
@@ -666,7 +667,7 @@ rm -rf Maps;
 rm -rf Mods;
 ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
 ln -s '$user_path'/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
-else echo "[$(date --rfc-3339=seconds)] T3 (SteamApps) FA folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else echo "[$(date --rfc-3339=seconds)] T3 SteamApps FA folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 fi;
 if [ -d '$user_path'/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ];
 then cd '$user_path'.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser;
@@ -674,7 +675,7 @@ rm -rf My\ Documents;
 mkdir My\ Documents;
 cd My\ Documents;
 ln -s '$user_path'/My\ Games/ My\ Games;
-else echo "[$(date --rfc-3339=seconds)] T3 (SteamApps) FA compatdata folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
+else echo "[$(date --rfc-3339=seconds)] T3 SteamApps FA compatdata folder not found" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 fi;
 else echo "[$(date --rfc-3339=seconds)] T3 neither steamapps nor SteamApps are found. exiting" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 exit 1;
