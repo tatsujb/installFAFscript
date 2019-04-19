@@ -631,7 +631,7 @@ sp="/-\|";
 no_config=true;
 while $no_config;
 do printf "\b${sp:i++%${#sp}:1}";
-[[ -f "$origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs" ]] && no_config=false;
+[[ -f "$origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs" ]] && [ ! $(pidof SupremeCommande) ]  && no_config=false;
 sleep 1;
 done;
 echo "";
