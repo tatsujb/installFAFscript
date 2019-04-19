@@ -371,8 +371,8 @@ xterm_opening_faf_script='xterm -T "install & run steam, steamcmd, FA" -e '"'"''
 
 gnome_closing_faf_script='gnome-terminal --tab --title="(FAF)" -- bash -c "cd faf; ./downlords-faf-client";'"'"''
 konsole_closing_faf_script='konsole -e /bin/bash --rcfile <(echo "cd faf; ./downlords-faf-client; exit 0") &'"'"') &'
-io_closing_faf_script=' io.elementary.terminal -e "cd faf; ./downlords-faf-client";'"'"''
-xterm_closing_faf_script=' xterm -T "(FAF)" -e "cd faf; ./downlords-faf-client";'"'"' &'
+io_closing_faf_script='io.elementary.terminal -e "cd faf; ./downlords-faf-client";'"'"''
+xterm_closing_faf_script='xterm -T "(FAF)" -e "cd faf; ./downlords-faf-client";'"'"' &'
 # end opening and closings
 
 echo ""
@@ -406,42 +406,55 @@ function install_faf_function
 {
 # Download & install FAF client
 echo "now moving on to installing Downlord's FAF..."
-if [ ! -d faf ]
+
+if [ \( "'$operating_system'" = "Arch" \) -o \( "'$operating_system'" = "Manjaro" \) ]
 then
-    echo "[$(date --rfc-3339=seconds)] T1 installing DOWNLORD" >> $user_path/faf.sh-$faf_sh_version.log
-    mkdir faf
-    cd faf
-    rm -rf *
-    faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
-    faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
-    wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
-    pv _dfc_unix_$faf_version.tar.gz | tar xzp -C $user_path/faf
-    mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
-    rm -rf downlords-faf-client-${faf_version_number:1}
-    rm _dfc_unix_$faf_version.tar.gz
-    chmod +x downlords-faf-client
-    chmod +x lib/faf-uid
-fi
-cd $user_path
-# /end Download & install FAF client
-# Java install block
-echo "Now seeing if Java was already installed by this script..."
-echo "[$(date --rfc-3339=seconds)] T1 Now seeing if Java was already installed by this script..." >> $user_path/faf.sh-$faf_sh_version.log
-if [ -d $user_path/faf/jdk-10.0.2 ]
-then
-    echo "Java is already installed, moving on"
-    echo "[$(date --rfc-3339=seconds)] T1 Java already installed!" >> $user_path/faf.sh-$faf_sh_version.log
+    if [ ! -d faf ]
+    then
+        mkdir faf
+        cd faf
+        curl https://aur.archlinux.org/cgit/aur.git/snapshot/downlords-faf-client.tar.gz
+        pv -xzvf faf.tar.gz | tar xzp -C $user_path/faf
+        cd faf
+        makepkg -si
+    fi
 else
-    # Download & install java 10 open jdk
-    echo "Java 10 installation procedure..."
-    echo "[$(date --rfc-3339=seconds)] T1 Java 10 installing..." >> $user_path/faf.sh-$faf_sh_version.log
-    wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
-    pv $user_path/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C $user_path/faf
-    rm openjdk-10.0.2_linux-x64_bin.tar.gz
-    echo "" >> $user_path/.bashrc
-    echo "" >> $user_path/.bashrc
-    ! grep -q 'INSTALL4J_JAVA_HOME' $user_path/.bashrc > /dev/null && echo "export INSTALL4J_JAVA_HOME=$user_path/faf/jdk-10.0.2" >> $user_path/.bashrc
-    # /end Download & install java 10 open jdk
+    if [ ! -d faf ]
+    then
+        echo "[$(date --rfc-3339=seconds)] T1 installing DOWNLORD" >> $user_path/faf.sh-$faf_sh_version.log
+        mkdir faf
+        cd faf
+        faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
+        faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
+        wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
+        pv _dfc_unix_$faf_version.tar.gz | tar xzp -C $user_path/faf
+        mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
+        rm -rf downlords-faf-client-${faf_version_number:1}
+        rm _dfc_unix_$faf_version.tar.gz
+        chmod +x downlords-faf-client
+        chmod +x lib/faf-uid
+    fi
+    cd $user_path
+    # /end Download & install FAF client
+    # Java install block
+    echo "Now seeing if Java was already installed by this script..."
+    echo "[$(date --rfc-3339=seconds)] T1 Now seeing if Java was already installed by this script..." >> $user_path/faf.sh-$faf_sh_version.log
+    if [ -d $user_path/faf/jdk-10.0.2 ]
+    then
+        echo "Java is already installed, moving on"
+        echo "[$(date --rfc-3339=seconds)] T1 Java already installed!" >> $user_path/faf.sh-$faf_sh_version.log
+    else
+        # Download & install java 10 open jdk
+        echo "Java 10 installation procedure..."
+        echo "[$(date --rfc-3339=seconds)] T1 Java 10 installing..." >> $user_path/faf.sh-$faf_sh_version.log
+        wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
+        pv $user_path/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C $user_path/faf
+        rm openjdk-10.0.2_linux-x64_bin.tar.gz
+        echo "" >> $user_path/.bashrc
+        echo "" >> $user_path/.bashrc
+        ! grep -q 'INSTALL4J_JAVA_HOME' $user_path/.bashrc > /dev/null && echo "export INSTALL4J_JAVA_HOME=$user_path/faf/jdk-10.0.2" >> $user_path/.bashrc
+        # /end Download & install java 10 open jdk
+    fi
 fi
 # /end Java install block
 # make faf .desktop runner
@@ -472,7 +485,7 @@ cd $user_path
  
 function set_install_dir_function
 {
-    directory=$(zenity --file-selection --directory --title $1)
+    directory=$(zenity --file-selection --directory --title "$1")
     echo "[$(date --rfc-3339=seconds)] T1 folder set to $directory" >> $user_path/faf.sh-$faf_sh_version.log
 } 
 
@@ -504,7 +517,7 @@ else
             else
                 default_dir=false
                 echo "[$(date --rfc-3339=seconds)] T1 non-standart dir chosen" >> $user_path/faf.sh-$faf_sh_version.log
-                set_install_dir_function  "choose your desired Forged Alliance installation directory/folder"
+                set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
             fi
         ;;
         2)
@@ -519,12 +532,18 @@ else
             else
                 default_dir=false
                 echo "[$(date --rfc-3339=seconds)] T1 non-standart dir chosen" >> $user_path/faf.sh-$faf_sh_version.log
-                set_install_dir_function  "choose your desired Forged Alliance installation directory/folder"
+                set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
             fi
         ;;
         3)
             echo "[$(date --rfc-3339=seconds)] T1 keep but configure FA chosen" >> $user_path/faf.sh-$faf_sh_version.log
             already_fa=true
+            default_dir=false
+            set_install_dir_function  "Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
+            while [ ! -d $directory/steamapps/common/Supreme\ Commander\ Forged\ Alliance ]
+            do
+            set_install_dir_function "Sorry, that was wrong, Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
+            done
         ;;
         4)
             echo "[$(date --rfc-3339=seconds)] T1 keep and dont configure FA chosen" >> $user_path/faf.sh-$faf_sh_version.log
@@ -540,7 +559,7 @@ fi
 get_user_input_function
 
 if $already_fa
-then null
+then echo
 else
     echo ""
     echo "[$(date --rfc-3339=seconds)] T1 FA not installed chosen" >> $user_path/faf.sh-$faf_sh_version.log
@@ -577,7 +596,7 @@ faf_script='echo "expecting you to type in Forged Alliances Launch options";
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted";
 echo "once thats done edit steam settings in order to enable Proton for all games";
 if '$already_fa';
-then null;
+then echo;
 else echo "";
 echo "";
 echo "";
@@ -602,7 +621,8 @@ fi;
 echo "[$(date --rfc-3339=seconds)] T3 FA installed condition met" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 fi;
 echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-steam -login '$steam_user_name' '$steam_password' -applaunch 9420 -shutdown &;
+eval "steam -login '$steam_user_name' '$steam_password' -applaunch 9420 -shutdown &";
+echo "hi"
 echo "";
 i=1;
 sp="/-\|";
@@ -615,7 +635,7 @@ sleep 1;
 done;
 echo "";
 if '$already_fa';
-then null;
+then echo;
 else echo "[$(date --rfc-3339=seconds)] T3 copying over run file" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 cp -f /tmp/proton_'$real_user'/run '$user_path'/faf/
 fi;
