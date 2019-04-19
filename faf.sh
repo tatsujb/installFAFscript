@@ -634,7 +634,7 @@ fi;
 echo "[$(date --rfc-3339=seconds)] T3 FA installed condition met" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
 fi;
 echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> '$user_path'/faf.sh-'$faf_sh_version'.log;
-eval "steam -login '$steam_user_name' '$steam_password' -applaunch 9420 -shutdown &";
+eval "steam -login '$steam_user_name' '$steam_password' -applaunch 9420 &";
 echo "";
 if '$default_dir';
 then origin="'$user_path'/.steam/steam";
@@ -788,6 +788,8 @@ jq --arg installationPath "$installationPath" --arg normalpath "$normalpath" --a
         executableDecorator: ($user_path + "/faf/run \"%s\"")
     }' $user_path/.faforever/client.prefs > $user_path/.faforever/client.prefs.tmp
 mv $user_path/.faforever/client.prefs.tmp $user_path/.faforever/client.prefs
+
+gtk-launch steam
 gtk-launch faforever
 # gallium-nine block
 #python3 -m pip install --user pipx
