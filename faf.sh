@@ -100,6 +100,20 @@ else
     to_be_installed="$to_be_installed procps"
 
 fi
+if [ $(command -v xterm) ]
+then
+    echo "[$(date --rfc-3339=seconds)] T1 xterm is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
+else
+    echo "[$(date --rfc-3339=seconds)] T1 xterm was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed xterm"
+fi
+if [ $(command -v whiptail) ]
+then
+    echo "[$(date --rfc-3339=seconds)] T1 whiptail is already installed, proceeding..." >> $user_path/faf.sh-$faf_sh_version.log
+else
+    echo "[$(date --rfc-3339=seconds)] T1 whiptail was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
+    to_be_installed="$to_be_installed whiptail"
+fi
 if ! dpkg-query -W -f='${Status}' zenity | grep "ok installed"
 then
     echo "[$(date --rfc-3339=seconds)] T1 zenity was not yet installed, installing..." >> $user_path/faf.sh-$faf_sh_version.log
