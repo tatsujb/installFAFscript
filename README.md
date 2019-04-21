@@ -109,6 +109,31 @@ if you want to run FAF again do not run faf.sh again (remember, it is a script t
 
 GL HF!
 
+### 7th OPTIONAL run in gallium nine mode :
+
+ - A (if you are already running the nouveau driver, skip to B)
+
+open up your "Software and Updates", go to the "Aditional Drivers" tab select and apply "Nouveau"
+run :
+```
+sudo apt update && sudo apt autoremove -y && sudo apt autoclean
+```
+
+then reboot your computer,
+ - B
+run :
+```
+sudo add-apt-repository ppa:ubuntu-x-swat/updates -y && sudo apt update && sudo apt full-upgrade -y
+python3 -m pip install --user pipx
+~/.local/bin/pipx ensurepath
+eval "$(cat .bashrc | tail -n +10)"
+pipx install protontricks
+pipx upgrade protontricks
+protontricks 9420 galliumnine
+```
+now your game uses gallium nine. graphic should be more on-par with what you experience on windows.
+
+
 ## Axes of improvements
 
 ```diff
@@ -145,7 +170,7 @@ Feedback will help me fix things. This script creates a very minimal log file ca
 
 1. "game already running" this is by far the most common issue. it happens both when trying to restart steam after enabling Proton and after steamCMD download, when steam is attempting to run FA for the first time in order to generate the config.ini file. The solution to this is unclear for me. but sometimes attempting to run the game outisde of the script, sutting down you pc and restarting does this. In this case no need to have the script install FA for you which it now tolerates.
 
-2. "I'm just missing Maps and Mods symlinking!" :
+2. "I'm just missing Maps and Mods symlinking!" (adapt according to your FA install location)
 ```
 cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
 rm Maps
@@ -157,8 +182,6 @@ rm -rf My\ Documents
 mkdir My\ Documents
 cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
-cd ~/faf
-./downlords-faf-client
 ```   
  3. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
 
@@ -232,8 +255,9 @@ rm -rf ~/My\ Games
 rm -rf ~/faf
 rm -rf ~/.faforever
 rm -rf ~/.com.faforever.client.FafClientApplication
-sudo apt purge -y steamcmd libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1
+sudo apt purge -y steamcmd libnss3-tools libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1
 sudo apt -y autoremove
+grep -v 'INSTALL4J_JAVA_HOME' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
 source ~/.bashrc
 ```
 now all that remains is :
@@ -242,14 +266,7 @@ now all that remains is :
 ```
 rm -rf ~/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
 ```
-2. keep steam but remove my steam extras such as Gallium9Proton and steamCMD and their dependencies : 
-```
-rm -rf ~/.steam/compatibilitytools.d
-sudo apt purge -y steamcmd libnss3-tools libd3dadapter9-mesa:i386 libd3dadapter9-mesa lib32gcc1 python3-pip python3-setuptools python3-venv
-sudo apt -y autoremove
-```
-
-3. OPTIONAL : Uninstall the whole of steam
+2 OPTIONAL : Uninstall the whole of steam
 if steam wasn't on your system before you ran this script and you are fine with seeing it and Supreme Commander Forged Alliance as well as steamCMD and eventual dependencies go then you can run the following :
 ```
 rm ~/.steampath
@@ -260,19 +277,17 @@ echo steam steam/purge note '' | sudo debconf-set-selections
 sudo apt purge -y steam
 sudo apt -y autoremove
 ```
-4. OPTIONAL restore old winetricks
+3. OPTIONAL restore old winetricks
 ```
 sudo rm -rf /usr/bin/winetricks
 sudo rm -rf /usr/share/bash-completion/completions/winetricks
 sudo apt install winetricks
 ```
+4. OPTIONAL remove other dependencies 
+```
+sudo apt remove -y python3-pip python3-setuptools python3-venv zenity procps jq pv curl
+```
 
-5. Java 10
-```
-grep -v 'INSTALL4J_JAVA_HOME' ~/.bashrc > ~/.bashrc2; mv ~/.bashrc2 ~/.bashrc
-source ~/.bashrc
-sudo rm -rf /usr/lib/jvm/jdk-10.0.2/
-```
 
 
 
