@@ -83,7 +83,7 @@ At a certain point steam starts up and you'll need to enter Steam Guard.
 
 1. right click on "Supreme Commander - Forged Alliance" in your games Library" -> "SET LAUNCH OPTIONS..." and enter the contents of "the contents of this file are to be pasted in the forged alliance properties launch options" situated in your home folder, just in case, here they are (gallium-nine example) : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%`
 (vanilla proton example) : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%`
-2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" (it will be proton 3.16-9 Beta)
+2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" it will be Proton 4.2-3 by default but please switch it to Proton 3.16-9 Beta then click close.
 
 Steam will ask to restart.
 
