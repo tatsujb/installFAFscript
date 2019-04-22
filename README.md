@@ -137,8 +137,9 @@ now your game uses gallium nine. graphic should be more on-par with what you exp
 ## Axes of improvements
 
 ```diff
-- W.I.P. set proton for FA (or all games) and FA launch options for user, don't ask the user do do it himself.
+- W.I.P. set proton for FA (or all games) and FA launch options for user don't make user do it himself
 ```
+- W.I.P. solution for having to have steam open at all times during FAF play since 19/04/2019...
 - W.I.P. uninstall builtin
 - W.I.P. supporting gallium nine via winetricks & protontricks instead of via deprecated githubfork of proton
 - W.I.P. implement Mageia
