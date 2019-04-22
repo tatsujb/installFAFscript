@@ -83,7 +83,7 @@ At a certain point steam starts up and you'll need to enter Steam Guard.
 
 1. right click on "Supreme Commander - Forged Alliance" in your games Library" -> "SET LAUNCH OPTIONS..." and enter the contents of "the contents of this file are to be pasted in the forged alliance properties launch options" situated in your home folder, just in case, here they are (gallium-nine example) : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%`
 (vanilla proton example) : `PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%`
-2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" (it will be proton 4.2-2 Beta)
+2. go into "Steam" -> "Setting" -> "Steam Play" -> "Enable Steam Play for all other titles" (it will be proton 3.16-9 Beta)
 
 Steam will ask to restart.
 
@@ -164,13 +164,32 @@ now your game uses gallium nine. graphic should be more on-par with what you exp
 
 ## Not working ?
 
-Feedback will help me fix things. This script creates a very minimal log file called "faf_sh-\*.log" in your home. Paste it's contents as part of an issue/bug report. your first and foremost issue is probably the linux distro flavor, you can check what release is supported as of now [here](https://github.com/tatsujb/installFAFscript#run-successes-by-distro- "distro compatibility"), but a couple syntax edits should make my script work for you.
+Feedback will help me fix things. This script creates a very minimal log file called "faf_sh-\*.log" in your home. Create an [Issue](https://github.com/tatsujb/installFAFscript/issues/new "new issue") and paste it's contents in it or as a pastebin link. Your first and foremost issue is probably the linux distro flavor, you can check what release is supported as of now [here](https://github.com/tatsujb/installFAFscript#run-successes-by-distro- "distro compatibility"), but a couple syntax edits should make my script work for you.
 
 ### known issues :
 
-1. "game already running" this is by far the most common issue. it happens both when trying to restart steam after enabling Proton and after steamCMD download, when steam is attempting to run FA for the first time in order to generate the config.ini file. The solution to this is unclear for me. but sometimes attempting to run the game outisde of the script, sutting down you pc and restarting does this. In this case no need to have the script install FA for you which it now tolerates.
+ 1. Script does not continue stuck at "waiting for dependencies to be present... " or other. this is very likely because you are running on a distribution that is not ubuntu that I forgot to test. very stong odds you can fix it yourself by finding where a character such a `'` or `"` was not proprely closed. 90% of the time it's one of the closing variables :
+```
+# opening and closings
+debian_opening_sudo_script='gnome-terminal --tab --active --title="install dependencies..." -- bash -c '"'"''
+gnome_opening_sudo_script='gnome-terminal --tab --active --title="externalized sudo" -- bash -c '"'"''
+konsole_opening_sudo_script='konsole -e /bin/bash --rcfile <(echo '"'"''
+xterm_opening_sudo_script='xterm -T "externalized sudo" -e '"'"''
 
-2. "I'm just missing Maps and Mods symlinking!" (adapt according to your FA install location)
+gnome_opening_faf_script='gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c '"'"''
+konsole_opening_faf_script='konsole -e /bin/bash --rcfile <(echo '"'"''
+xterm_opening_faf_script='xterm -T "install & run steam, steamcmd, FA" -e '"'"''
+
+gnome_closing_faf_script='gnome-terminal --tab --title="FAF" -- bash -c "cd faf; ./downlords-faf-client";'"'"''
+konsole_closing_faf_script='konsole -e /bin/bash --rcfile <(echo "cd faf; ./downlords-faf-client; exit 0") &'"'"') &'
+xterm_closing_faf_script='xterm -T "FAF" -e "cd faf; ./downlords-faf-client";'"'"' &'
+# end opening and closings
+```
+...that are at fault.
+
+ 2. "game already running" this is by far the most common issue. It happens both when trying to restart steam after enabling Proton and after steamCMD download, when steam is attempting to run FA for the first time in order to generate the config.ini file. The solution to this is unclear for me. But sometimes attempting to run the game outside of the script, shutting down you pc and restarting does this. In this case no need to have the script install FA for you which it now tolerates.
+
+ 3. "I'm just missing Maps and Mods symlinking!" (adapt according to your FA install location)
 ```
 cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
 rm Maps
@@ -183,8 +202,13 @@ mkdir My\ Documents
 cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
 ```   
- 3. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
+ 
+ 5. FA does not start. nowadays you cannot run FA via FAF without steam open as well. at least not with my technique. open steam, the problem will dissapear.
+ 
+ 6. "my online games desync!"
+ you are probably running FA with proton 4.2-3 switch it to 3.16-9 Beta, accept steam restart, re-run FA from steam, go to your `\tmp\proton_*` and copy the run file to `~/faf` (overwrite, or delete the old one before copying).
 
+ 7. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
 ### sample :
 ```
 #!/bin/bash
@@ -192,22 +216,22 @@ ln -s ~/My\ Games/ My\ Games
 
 cd "/home/t/.steam/steam/steamapps/common/Supreme Commander Forged Alliance"
 DEF_CMD=("/home/t/.steam/steam/steamapps/common/Supreme Commander Forged Alliance/bin/SupremeCommander.exe")
-PATH="/home/t/.steam/steam/steamapps/common/Proton/dist/bin/:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/bin:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk-10.0.2/bin:/usr/bin/python:/usr/bin/gtags:/snap/bin" \
+PATH="/home/t/.steam/steam/steamapps/common/Proton 3.16 Beta/dist/bin/:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/bin:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/bin:/home/t/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin" \
 	TERM="xterm" \
 	WINEDEBUG="-all" \
-	WINEDLLPATH="/home/t/.steam/steam/steamapps/common/Proton/dist/lib64/wine:/home/t/.steam/steam/steamapps/common/Proton/dist/lib/wine" \
-	LD_LIBRARY_PATH="/home/t/.steam/steam/steamapps/common/Proton/dist/lib64:/home/t/.steam/steam/steamapps/common/Proton/dist/lib:/home/t/.steam/ubuntu12_32/steam-runtime/pinned_libs_32:/home/t/.steam/ubuntu12_32/steam-runtime/pinned_libs_64:/usr/lib/x86_64-linux-gnu/libfakeroot:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu:/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/lib:/usr/lib:/home/t/.steam/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/i386/lib:/home/t/.steam/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/i386/usr/lib:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/lib/x86_64-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/lib:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib:" \
+	WINEDLLPATH="/home/t/.steam/steam/steamapps/common/Proton 3.16 Beta/dist/lib64/wine:/home/t/.steam/steam/steamapps/common/Proton 3.16 Beta/dist/lib/wine" \
+	LD_LIBRARY_PATH="/home/t/.steam/steam/steamapps/common/Proton 3.16 Beta/dist/lib64:/home/t/.steam/steam/steamapps/common/Proton 3.16 Beta/dist/lib:/home/t/.steam/ubuntu12_32/steam-runtime/pinned_libs_32:/home/t/.steam/ubuntu12_32/steam-runtime/pinned_libs_64:/usr/lib/x86_64-linux-gnu/libfakeroot:/lib/i386-linux-gnu:/usr/local/lib:/lib/x86_64-linux-gnu:/lib32:/lib:/home/t/.steam/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/i386/lib:/home/t/.steam/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/i386/usr/lib:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/lib/x86_64-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/lib:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu:/home/t/.steam/ubuntu12_32/steam-runtime/amd64/usr/lib:" \
 	WINEPREFIX="/home/t/.steam/steam/steamapps/compatdata/9420/pfx/" \
 	SteamGameId="9420" \
 	SteamAppId="9420" \
 	WINEDLLOVERRIDES="d3d11=n;d3d10=n;d3d10core=n;d3d10_1=n;dxgi=n" \
 	STEAM_COMPAT_CLIENT_INSTALL_PATH="/home/t/.steam" \
-	"/home/t/.steam/steam/steamapps/common/Proton/dist/bin//wine" "${@:-${DEF_CMD[@]}}"
+	"/home/t/.steam/steam/steamapps/common/Proton 3.16 Beta/dist/bin//wine" "${@:-${DEF_CMD[@]}}"
 ```
 
-possible flaws are `/steam/steamapps/common/Proton/` being a `/compatibilitytools.d/Proton_3.16-6_Gallium_Nine_Extras_0.3.0/` instead or there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `shutdown` at the end of it, also `steamapps` instead of `SteamApps`. Also try `WINEDLLOVERRIDES=""` (nothing inside).
+possible flaws are there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `shutdown` at the end of it, also `steamapps` instead of `SteamApps`. Also try `WINEDLLOVERRIDES=""` (nothing inside).
 
-4. Durring the FA start process from steam, the window for steam pre-check for Forged Alliance takes awhile then opens up too small and you get path assert failures. no panic! Simply close that window, go to your steam icon in the top left of your screen (notification's area) and open steam's library, right click on FA and click "properties", then go into the "local files" tab and click verify integrity of game files. Now try starting FA again. this time it should run. You can continue.
+ 8. Durring the FA start process from steam, the window for steam pre-check for Forged Alliance takes awhile then opens up too small and you get path assert failures. no panic! Simply close that window, go to your steam icon in the top left of your screen (notification's area) and open steam's library, right click on FA and click "properties", then go into the "local files" tab and click verify integrity of game files. Now try starting FA again. this time it should run. You can continue.
 
 
 #### What does faf.sh do?
