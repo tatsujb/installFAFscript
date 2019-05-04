@@ -67,6 +67,8 @@ you are being asked if you do not have FA installed.
 
 if you select no you have five choices :
 
+(quick tip, to reveal hidden folders and files (the ones that start with a period `.`) you can hit "Ctrl"+"H", you'll need to do this if pointing to the `~/.steam/steam` folder)
+
  1. Install FA again (this option is usefull because it allows you to use the normal script just ignoring your current install of FA which you may or may not delete at your discretion)
  2. Reinstall FA (this option is the same except you will be prompted first with a delete folder gui. This Gui does not match the folder, you can choose to delete any non-protected folder)
  3. Use my install of FA
