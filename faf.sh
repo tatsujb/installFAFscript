@@ -390,11 +390,13 @@ function install_faf_function
 {
 # Download & install FAF client
 echo "now moving on to installing Downlord's FAF..."
-
+cd
 if [ \( "'$operating_system'" = "Arch" \) -o \( "'$operating_system'" = "Manjaro" \) ]
 then
-    if [ ! -d faf ]
+    if [ -d faf ]
     then
+        rm -rf faf
+    fi
         mkdir faf
         cd faf
         curl https://aur.archlinux.org/cgit/aur.git/snapshot/downlords-faf-client.tar.gz
@@ -403,24 +405,22 @@ then
         makepkg -si
 	cd
 	ln -s ~/.faforever/user
-    fi
 else
-    if [ ! -d faf ]
+    if [ -d faf ]
     then
+        rm -rf faf
+    fi
         echo "[$(date --rfc-3339=seconds)] T1 installing DOWNLORD" >> ~/faf.sh-$faf_sh_version.log
         mkdir faf
         cd faf
         faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
         faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
-        wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/dfc__unix_$faf_version.tar.gz
-        pv dfc__unix_$faf_version.tar.gz | tar xzp -C ~/faf
+        wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
+        pv _dfc_unix_$faf_version.tar.gz | tar xzp -C ~/faf
         mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
         rm -rf downlords-faf-client-${faf_version_number:1}
-        rm dfc__unix_$faf_version.tar.gz
-        chmod +x downlords-faf-client
-        chmod +x lib/faf-uid
-    fi
-    cd ~
+        rm _dfc_unix_$faf_version.tar.gz
+    cd
     # /end Download & install FAF client
     # Java install block
     echo "Now seeing if Java was already installed by this script..."
