@@ -1,7 +1,7 @@
 [![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/55295910-de770f80-5412-11e9-8950-f22f6176e406.png)](https://www.youtube.com/watch?v=zQkiy8lK20o)
 ###### licensed under GPL-3.0-or-later
 
-##Looking for Contributors! Please apply as a github issue.
+## Looking for Contributors! Please apply as a github issue.
 
 
 This is a shell script that installs and configures [FA](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") + [FAF](https://faforever.com "Forged Alliace Forever") multiplayer client on linux (and soon any OS that Forged Alliance can also run on).
