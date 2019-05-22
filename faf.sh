@@ -1,5 +1,5 @@
 #!/bin/bash
-  faf_sh_version=2.4
+  faf_sh_version=2.5
  
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -370,17 +370,14 @@ then
 else
     echo "[$(date --rfc-3339=seconds)] T1 installing $to_be_installed..." >> ~/faf.sh-$faf_sh_version.log
     # OS splitter
-    if [ \( "'$operating_system'" = "Ubuntu" \) -o \( "'$operating_system'" = "Debian GNU/Linux" \) ]
-    then
-        eval "$gnome_opening_sudo_script $sudo_script"
-    elif [ "$operating_system" = "Kubuntu" ]
+    if [ "$operating_system" = "Kubuntu" ]
     then
         eval "$konsole_opening_sudo_script $sudo_script)" &
     elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
     then
         eval "$xterm_opening_sudo_script $sudo_script" &
     else
-        eval "$xterm_opening_sudo_script $sudo_script"
+        eval "$gnome_opening_sudo_script $sudo_script"
     fi
 fi
 echo "[$(date --rfc-3339=seconds)] T1 start of second thread did not crash first thread" >> ~/faf.sh-$faf_sh_version.log
@@ -696,17 +693,14 @@ echo "[$(date --rfc-3339=seconds)] T3 starting T4 and exiting T3" >> ~/faf.sh-'$
 
 # OS splitter again
 # OS splitter
-if [ \( "'$operating_system'" = "Ubuntu" \) -o \( "'$operating_system'" = "Debian GNU/Linux" \) ]
-then
-    eval "$gnome_opening_faf_script $faf_script $gnome_closing_faf_script"
-elif [ "$operating_system" = "Kubuntu" ]
+if [ "$operating_system" = "Kubuntu" ]
 then
      eval "$konsole_opening_faf_script $faf_script $konsole_closing_faf_script"
 elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
 then
     eval "$xterm_opening_faf_script $faf_script $xterm_closing_faf_script" #"$io_opening_faf_script $middlescript $io_closing_faf_script"
 else
-    eval "$xterm_opening_faf_script $faf_script $xterm_closing_faf_script"
+    eval "$gnome_opening_faf_script $faf_script $gnome_closing_faf_script"
 fi
 echo "[$(date --rfc-3339=seconds)] T1 start of second thread did not crash first thread" >> ~/faf.sh-$faf_sh_version.log
 # end of OS Splitter
