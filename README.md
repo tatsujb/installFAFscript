@@ -209,10 +209,10 @@ ln -s ~/My\ Games/ My\ Games
 ```   
  
  
- 6. "my online games desync!"
+ 4. "my online games desync!"
  you are probably running FA with proton 4.2-3 switch it to 3.16-9 Beta, accept steam restart, re-run FA from steam, go to your `\tmp\proton_*` and copy the run file to `~/faf` (overwrite, or delete the old one before copying).
 
- 7. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
+ 5. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
 ### sample :
 ```
 #!/bin/bash
@@ -235,7 +235,7 @@ PATH="/home/t/.steam/steam/steamapps/common/Proton 3.16 Beta/dist/bin/:/home/t/.
 
 possible flaws are there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `shutdown` at the end of it, also `steamapps` instead of `SteamApps`. Also try `WINEDLLOVERRIDES=""` (nothing inside).
 
- 8. Durring the FA start process from steam, the window for steam pre-check for Forged Alliance takes awhile then opens up too small and you get path assert failures. no panic! Simply close that window, go to your steam icon in the top left of your screen (notification's area) and open steam's library, right click on FA and click "properties", then go into the "local files" tab and click verify integrity of game files. Now try starting FA again. this time it should run. You can continue.
+ 6. Durring the FA start process from steam, the window for steam pre-check for Forged Alliance takes awhile then opens up too small and you get path assert failures. no panic! Simply close that window, go to your steam icon in the top left of your screen (notification's area) and open steam's library, right click on FA and click "properties", then go into the "local files" tab and click verify integrity of game files. Now try starting FA again. this time it should run. You can continue.
 
 
 #### What does faf.sh do?
