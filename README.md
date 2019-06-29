@@ -16,10 +16,10 @@ Distro icon should be clickable for a video-example (for the moment only had the
 Version | Distro | distro+DE |  | Comment
 --- | --- | --- | --- | ---
 10 | ![Windows](https://user-images.githubusercontent.com/5132359/55296434-a4f5d280-5419-11e9-982d-c1977de61c16.png) | Windows (windows) | ? | just go here : www.faforever.com
-19.04, 18.10, 18.04.2  | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=zQkiy8lK20o) | ubuntu (gnome3) | :heavy_check_mark: | base of script
+19.04, 18.10, 18.04.3  | [![how to install on ubuntu](https://img.apk.cafe/img:bz00eXFremMmbD00MjQmaD1wbmcmZj1HbGk5MCZpPTA)](https://www.youtube.com/watch?v=zQkiy8lK20o) | ubuntu (gnome3) | :heavy_check_mark: | base of script
 18.10 | ![xubuntu](https://user-images.githubusercontent.com/5132359/55296491-77f5ef80-541a-11e9-9909-58bee75404ec.png) | Xubuntu (xfce) | ? | should work. untested.
 19.1 | ![linuxmint](https://user-images.githubusercontent.com/5132359/54205373-7ea5dc80-44d6-11e9-851e-940f3742c1d4.png) | Mint (Cinnamon) | :heavy_check_mark: | likely closest behavior to stock ubuntu. nothing needed to change from base, worked out-of-the-box.
-18.04.2, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (Plasma) | :heavy_check_mark: | two adaptations were made for kubuntu to work: detecting plasma + ubuntu = (kubuntu if case). Also gnome-terminal was traded out in favor of konsole.
+18.04.3, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (Plasma) | :heavy_check_mark: | two adaptations were made for kubuntu to work: detecting plasma + ubuntu = (kubuntu if case). Also gnome-terminal was traded out in favor of konsole.
 12.4 | ![zorin](https://user-images.githubusercontent.com/5132359/54295562-92734080-45b3-11e9-95ed-627f2931ec94.png) | Zorin (zorin) | :heavy_check_mark:  | debconf-set-selections for steam is for some reason borked on zorin, trying to auto-accept the eula will result in the opposite. You'll have two eula accepting manual steps added to your process. really minor.
 18.04 |![lubuntu](https://user-images.githubusercontent.com/5132359/55295985-b805a400-5413-11e9-8fca-315db5462eb6.png) | Lubuntu (LXDE) | ? | should work. untested.
 5.0 | ![elementary-os](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | Elementary (Pantheon) | :heavy_check_mark: | used xterm instead of gnome-terminal. Also I didn't know how to shut down steam, there was no tray icon, I used htop 
@@ -208,7 +208,6 @@ cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
 ```   
  
- 5. FA does not start. nowadays you cannot run FA via FAF without steam open as well. at least not with my technique. open steam, the problem will dissapear.
  
  6. "my online games desync!"
  you are probably running FA with proton 4.2-3 switch it to 3.16-9 Beta, accept steam restart, re-run FA from steam, go to your `\tmp\proton_*` and copy the run file to `~/faf` (overwrite, or delete the old one before copying).
