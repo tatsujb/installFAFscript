@@ -14,27 +14,41 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+faf_log_file="$HOME/faf.sh-$faf_sh_version.log"
+echo $faf_log_file
+touch $faf_log_file 2>/dev/null
+
+
+to_log()
+{
+	echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+}
+
+log_separator()
+{
+	echo "_______________________________________________________________________________________________________" >> $faf_log_file
+}
+
 cd
 real_user=$(pwd | cut -c 7-)
  
-echo "_______________________________________________________________________________________________________" >> ~/faf.sh-$faf_sh_version.log
-echo "-------------------------------------------------------------------------------------------------------" >> ~/faf.sh-$faf_sh_version.log
+log_separator
 # DETERMINE OS BASE :
 unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)
-echo "[$(date --rfc-3339=seconds)] T1 New log file. fafSTACK version "$faf_sh_version" running : "$unameOut  >> ~/faf.sh-$faf_sh_version.log;;
+to_log "T1 New log file. fafSTACK version "$faf_sh_version" running : "$unameOut  ;;
     Darwin*)
 echo "Mac / Apple Macintosh is not supported yet though it could technically be; as evidenced by previous examples of people running FA and even FAF on mac. Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
-echo "[$(date --rfc-3339=seconds)] T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MAC UNSUPPORTED. "$unameOut  >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MAC UNSUPPORTED. "$unameOut  
 exit 1;;
     CYGWIN*)
 echo "Hello, you can go straight to : www.faforever.com and click on \"Download Client\". This script exists in order to help linux users achieve the same thing you can do out-of-the-box on your operating system. You have not the remotest use for this script :) be free, wild bird!"
-echo "[$(date --rfc-3339=seconds)] T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. WINDOWS UNSUPPORTED. "$unameOut  >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. WINDOWS UNSUPPORTED. "$unameOut  
 exit 1;;
     MINGW*)
 echo "Hello, are can on MinGW you cannot run Forged Alliance, this script is of no use to you."
-echo "[$(date --rfc-3339=seconds)] T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MINGW UNSUPPORTED. "$unameOut  >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MINGW UNSUPPORTED. "$unameOut  
 exit 1
 esac
 # DETERMINE LINUX DISTRO AND RELEASE :
@@ -79,134 +93,67 @@ else
     os_version=$(uname -r)
 fi
 
-echo "Distribution name + version + kernel version + architecture : "$operating_system" "$os_version" "$(uname -rm) >> ~/faf.sh-$faf_sh_version.log
-echo "-------------------------------------------------------------------------------------------------------" >> ~/faf.sh-$faf_sh_version.log
-echo "Hard storage setup :" >> ~/faf.sh-$faf_sh_version.log
-echo "_______________________________________________________________________________________________________" >> ~/faf.sh-$faf_sh_version.log
+echo "Distribution name + version + kernel version + architecture : "$operating_system" "$os_version" "$(uname -rm) >> "$faf_log_file"
+log_separator
+echo "Hard storage setup :" >> "$faf_log_file"
+log_separator
 lsblk_ouput=$(lsblk | grep -v 'loop')
-echo "$lsblk_ouput" >> ~/faf.sh-$faf_sh_version.log
+echo "$lsblk_ouput" >> "$faf_log_file"
 dfh_ouput=$(df -h --total | grep -v 'loop')
-echo "$dfh_ouput" >> ~/faf.sh-$faf_sh_version.log
-echo "_______________________________________________________________________________________________________" >> ~/faf.sh-$faf_sh_version.log
-echo "" >> ~/faf.sh-$faf_sh_version.log
+echo "$dfh_ouput" >> "$faf_log_file"
+log_separator
+echo "" >> "$faf_log_file"
+
+
+sleep 5s
+
+
 # real start of script
 to_be_installed=""
-if [ -f /bin/kill ]
-then
-    echo "[$(date --rfc-3339=seconds)] T1 procps is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-else
-    echo "[$(date --rfc-3339=seconds)] T1 procps was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed procps"
 
-fi
-if [ $(command -v xterm) ]
-then
-    echo "[$(date --rfc-3339=seconds)] T1 xterm is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-else
-    echo "[$(date --rfc-3339=seconds)] T1 xterm was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed xterm"
-fi
-if [ $(command -v whiptail) ]
-then
-    echo "[$(date --rfc-3339=seconds)] T1 whiptail is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-else
-    echo "[$(date --rfc-3339=seconds)] T1 whiptail was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed whiptail"
-fi
-if ! dpkg-query -W -f='${Status}' zenity | grep "ok installed"
-then
-    echo "[$(date --rfc-3339=seconds)] T1 zenity was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed zenity"
-else
-    echo "[$(date --rfc-3339=seconds)] T1 zenity is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-fi
-if [ $(command -v whiptail) ]
-then
-    echo "[$(date --rfc-3339=seconds)] T1 whiptail is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-else
-    echo "[$(date --rfc-3339=seconds)] T1 whiptail was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed whiptail"
-fi
-if [ $(command -v pv) ]
-then
-    echo "[$(date --rfc-3339=seconds)] T1 pv is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-else
-    echo "[$(date --rfc-3339=seconds)] T1 pv was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed pv"
-fi
-if ! dpkg-query -W -f='${Status}' python3-pip | grep "ok installed"
-then
-    echo "[$(date --rfc-3339=seconds)] T1 python3-pip was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed python3-pip"
-else
-    echo "[$(date --rfc-3339=seconds)] T1 python3-pip is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-fi
-if ! dpkg-query -W -f='${Status}' python3-setuptools | grep "ok installed"
-then
-    echo "[$(date --rfc-3339=seconds)] T1 python3-setuptools was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed python3-setuptools"
-else
-    echo "[$(date --rfc-3339=seconds)] T1 python3-setuptools is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-fi
-if ! dpkg-query -W -f='${Status}' python3-venv | grep "ok installed"
-then
-    echo "[$(date --rfc-3339=seconds)] T1 python3-venv was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed python3-venv"
-else
-    echo "[$(date --rfc-3339=seconds)] T1 python3-venv is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-fi
-if [ $(command -v curl) ]
-then
-    echo "[$(date --rfc-3339=seconds)] T1 curl is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-else
-    echo "[$(date --rfc-3339=seconds)] T1 curl was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed curl"
-fi
-if ! dpkg-query -W -f='${Status}' lib32gcc1 | grep "ok installed"
-then
-    echo "[$(date --rfc-3339=seconds)] T1 lib32gcc1 was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed lib32gcc1"
-else
-    echo "[$(date --rfc-3339=seconds)] T1 lib32gcc1 is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-fi
-if ! dpkg-query -W -f='${Status}' libnss3-tools | grep "ok installed"
-then
-    echo "[$(date --rfc-3339=seconds)] T1 libnss3 was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed libnss3-tools"
-else
-    echo "[$(date --rfc-3339=seconds)] T1 libnss3 is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-fi
+if_not_then_install() {
+	# $1 is the condition
+	# $2 is the package to be installed
+	if $1
+	then 
+		to_log "T1 $2 is already installed, proceeding..." 
+	else
+		to_log "T1 $2 was not yet installed, installing..." 
+		to_be_installed="$to_be_installed $2"
+	fi
+}
+
+if_not_then_install $([ -f /bin/kill ]) "procps"
+if_not_then_install $([ $(command -v xterm) ]) "xterm"
+if_not_then_install $([ $(command -v whiptail) ]) "whiptail"
+if_not_then_install $( dpkg-query -W -f='${Status}' zenity | grep "ok installed") "zenity"
+if_not_then_install $([ $(command -v whiptail) ]) "whiptail"
+if_not_then_install $([ $(command -v pv) ]) "pv"
+if_not_then_install $( dpkg-query -W -f='${Status}' python3-pip | grep "ok installed") "python3-pip"
+if_not_then_install $( dpkg-query -W -f='${Status}' python3-setuptools | grep "ok installed") "python3-setuptools"
+if_not_then_install $( dpkg-query -W -f='${Status}' python3-venv | grep "ok installed") "python3-venv"
+if_not_then_install $([ $(command -v curl) ]) "curl"
+if_not_then_install $( dpkg-query -W -f='${Status}' lib32gcc1 | grep "ok installed") "lib32gcc1"
+if_not_then_install $( dpkg-query -W -f='${Status}' libnss3-tools | grep "ok installed") "libnss3"
 if [ "$operating_system" != "Debian GNU/Linux" ]
 then
-if ! dpkg-query -W -f='${Status}' libd3dadapter9-mesa | grep "ok installed"
-then
-    echo "[$(date --rfc-3339=seconds)] T1 libd3dadapter9-mesa was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed libd3dadapter9-mesa libd3dadapter9-mesa:i386"
-else
-    echo "[$(date --rfc-3339=seconds)] T1 libd3dadapter9-mesa is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-fi
-fi
-if [ $(command -v jq) ]
-then
-    echo "[$(date --rfc-3339=seconds)] T1 jq is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
-else
-    echo "[$(date --rfc-3339=seconds)] T1 jq was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
-    to_be_installed="$to_be_installed jq"
-fi
+if_not_then_install $( dpkg-query -W -f='${Status}' libd3dadapter9-mesa | grep "ok installed") "libd3dadapter9-mesa"
+if_not_then_install $([ $(command -v jq) ]) "jq"
+
 if [ $(command -v steam) ];
 then
-    echo "[$(date --rfc-3339=seconds)] T1 steam is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 steam is already installed, proceeding..." 
 else
-    echo "[$(date --rfc-3339=seconds)] T1 steam was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 steam was not yet installed, installing..." 
     [ "$operating_system" = "Debian GNU/Linux" ] && usermod -a -G video,audio $real_user
     [ "$operating_system" = "Debian GNU/Linux" ] && dpkg --add-architecture i386
     to_be_installed="$to_be_installed steam"
 fi
 if [ $(command -v steamcmd) ]
 then
-    echo "[$(date --rfc-3339=seconds)] T1 steam CMD is already installed, proceeding..." >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 steam CMD is already installed, proceeding..." 
 else
-    echo "[$(date --rfc-3339=seconds)] T1 steam CMD was not yet installed, installing..." >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 steam CMD was not yet installed, installing..." 
     if [ "'$operating_system'" = "Debian GNU/Linux" ]
     then
         if getent passwd steam > /dev/null 2>&1
@@ -366,9 +313,9 @@ echo ""
 if [ "$to_be_installed" = "" ]
 then
     echo "all dependencies met :)"
-    echo "[$(date --rfc-3339=seconds)] T1 all dependencies met" >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 all dependencies met" 
 else
-    echo "[$(date --rfc-3339=seconds)] T1 installing $to_be_installed..." >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 installing $to_be_installed..." 
     # OS splitter
     if [ "$operating_system" = "Kubuntu" ]
     then
@@ -380,7 +327,7 @@ else
         eval "$gnome_opening_sudo_script $sudo_script"
     fi
 fi
-echo "[$(date --rfc-3339=seconds)] T1 start of second thread did not crash first thread" >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 start of second thread did not crash first thread" 
 # end of OS Splitter
 
 function install_faf_function
@@ -407,7 +354,7 @@ else
     then
         rm -rf faf
     fi
-        echo "[$(date --rfc-3339=seconds)] T1 installing DOWNLORD" >> ~/faf.sh-$faf_sh_version.log
+        to_log "T1 installing DOWNLORD" 
         mkdir faf
         cd faf
         faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
@@ -421,15 +368,15 @@ else
     # /end Download & install FAF client
     # Java install block
     echo "Now seeing if Java was already installed by this script..."
-    echo "[$(date --rfc-3339=seconds)] T1 Now seeing if Java was already installed by this script..." >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 Now seeing if Java was already installed by this script..." 
     if [ -d ~/faf/jdk-10.0.2 ]
     then
         echo "Java is already installed, moving on"
-        echo "[$(date --rfc-3339=seconds)] T1 Java already installed!" >> ~/faf.sh-$faf_sh_version.log
+        to_log "T1 Java already installed!" 
     else
         # Download & install java 10 open jdk
         echo "Java 10 installation procedure..."
-        echo "[$(date --rfc-3339=seconds)] T1 Java 10 installing..." >> ~/faf.sh-$faf_sh_version.log
+        to_log "T1 Java 10 installing..." 
         wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
         pv ~/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C ~/faf
         rm openjdk-10.0.2_linux-x64_bin.tar.gz
@@ -444,13 +391,13 @@ fi
 [ ! -d ~/.local/share/icons ] && mkdir -p .local/share/icons
 if [ ! -f ~/.local/share/icons/faf.png ]
 then
-    echo "[$(date --rfc-3339=seconds)] T1 getting desktop launcher icon" >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 getting desktop launcher icon" 
     cd ~/.local/share/icons
     wget https://github.com/tatsujb/FAFICON/raw/master/faf.png
 fi
 if [ ! -f ~/.local/share/applications/faforever.desktop ]
 then
-    echo "[$(date --rfc-3339=seconds)] T1 making desktop launcher" >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 making desktop launcher" 
     cd ~/.local/share/applications
     echo '#!/usr/bin/env xdg-open' >> faforever.desktop
     echo "[Desktop Entry]" >> faforever.desktop
@@ -469,7 +416,7 @@ cd ~
 function set_install_dir_function
 {
     directory=$(zenity --file-selection --directory --title "$1")
-    echo "[$(date --rfc-3339=seconds)] T1 folder set to $directory" >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 folder set to $directory" 
 } 
 
 function get_user_input_function
@@ -480,46 +427,46 @@ then
     if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : ~/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
     then
         default_dir=true
-        echo "[$(date --rfc-3339=seconds)] T1 default dir chosen" >> ~/faf.sh-$faf_sh_version.log
+        to_log "T1 default dir chosen" 
     else
         default_dir=false
-        echo "[$(date --rfc-3339=seconds)] T1 non-standart dir chosen" >> ~/faf.sh-$faf_sh_version.log
+        to_log "T1 non-standart dir chosen" 
         set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
     fi
 else
-    echo "[$(date --rfc-3339=seconds)] T1 FA already installed chosen" >> ~/faf.sh-$faf_sh_version.log
+    to_log "T1 FA already installed chosen" 
     what_to_do=$(whiptail --title "What do you wish to do?" --notags --nocancel --menu "" 12 85 0 "1" "Install another FA somewhere else, then install (FAF)" "2" "Reinstall FA, then install (FAF)" "3" "Use my install of FA and install (FAF)" "4" "FA is configured, I only want (FAF)" "5" "...wait... I messed up!" --fb 3>&1 1>&2 2>&3)
     case $what_to_do in
         1)
-            echo "[$(date --rfc-3339=seconds)] T1 resintall FA chosen" >> ~/faf.sh-$faf_sh_version.log
+            to_log "T1 resintall FA chosen" 
             already_fa=false
             if (whiptail --title "Second install of Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : ~/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
             then
                 default_dir=true
-                echo "[$(date --rfc-3339=seconds)] T1 default dir chosen" >> ~/faf.sh-$faf_sh_version.log
+                to_log "T1 default dir chosen" 
             else
                 default_dir=false
-                echo "[$(date --rfc-3339=seconds)] T1 non-standart dir chosen" >> ~/faf.sh-$faf_sh_version.log
+                to_log "T1 non-standart dir chosen" 
                 set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
             fi
         ;;
         2)
             del_directory=$(zenity --file-selection --directory --title "select the folder you want to delete (FA)")
             rm -rf del_directory
-            echo "[$(date --rfc-3339=seconds)] T1 resintall FA chosen" >> ~/faf.sh-$faf_sh_version.log
+            to_log "T1 resintall FA chosen" 
             already_fa=false
             if (whiptail --title "ReInstall Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : ~/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
             then
                 default_dir=true
-                echo "[$(date --rfc-3339=seconds)] T1 default dir chosen" >> ~/faf.sh-$faf_sh_version.log
+                to_log "T1 default dir chosen" 
             else
                 default_dir=false
-                echo "[$(date --rfc-3339=seconds)] T1 non-standart dir chosen" >> ~/faf.sh-$faf_sh_version.log
+                to_log "T1 non-standart dir chosen" 
                 set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
             fi
         ;;
         3)
-            echo "[$(date --rfc-3339=seconds)] T1 keep but configure FA chosen" >> ~/faf.sh-$faf_sh_version.log
+            to_log "T1 keep but configure FA chosen" 
             already_fa=true
             default_dir=false
             set_install_dir_function  "Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
@@ -529,7 +476,7 @@ else
             done
         ;;
         4)
-            echo "[$(date --rfc-3339=seconds)] T1 keep and dont configure FA chosen" >> ~/faf.sh-$faf_sh_version.log
+            to_log "T1 keep and dont configure FA chosen" 
             install_faf_function
             echo "installed faf only, as per user demand, nothing else to do, exiting."
             exit 0
@@ -544,7 +491,7 @@ get_user_input_function
 
 
 echo ""
-echo "[$(date --rfc-3339=seconds)] T1 FA not installed chosen" >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 FA not installed chosen" 
 while [ -z "$steam_user_name" ]
 do
     echo "steam user name :"
@@ -556,7 +503,7 @@ do
     read -s steam_password
 done
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-echo "[$(date --rfc-3339=seconds)] T1 Steam credentials entrusted to scritp" >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 Steam credentials entrusted to scritp" 
 echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1, PROTON_USE_GALLIUM_NINE=1, PROTON_GALLIUM_NINE_MODULEPATH="/usr/lib/i386-linux-gnu/d3d/d3dadapter9.so.1:/usr/lib/x86_64-linux-gnu/d3d/d3dadapter9.so.1" %command%' > ~/"the contents of this file are to be pasted in the forged alliance properties launch options"
 
 echo ""
@@ -702,13 +649,13 @@ then
 else
     eval "$gnome_opening_faf_script $faf_script $gnome_closing_faf_script"
 fi
-echo "[$(date --rfc-3339=seconds)] T1 start of second thread did not crash first thread" >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 start of second thread did not crash first thread" 
 # end of OS Splitter
 
 install_faf_function
  
 # wait for user to log in
-echo "[$(date --rfc-3339=seconds)] T1 waiting" >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 waiting" 
 echo ""
 echo ""
 no_login=true
@@ -721,11 +668,11 @@ do
 done
 echo ""
 echo "restarting (FAF)"
-echo "[$(date --rfc-3339=seconds)] T1 done waiting" >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 done waiting" 
 # sleep 2
 kill -9 $(pgrep java | tail -1)
 # editting client.prefs :
-echo "[$(date --rfc-3339=seconds)] T1 editing client.prefs" >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 editing client.prefs" 
 if [ -d ~/.steam/steam/SteamApps ]
 then
     steamapps="SteamApps"
@@ -762,4 +709,4 @@ gtk-launch faforever
 #protontricks 9420 galliumnine
 # gallium-nine block end
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
-echo "[$(date --rfc-3339=seconds)] T1 Finished thread one. (proton/downlord/open-jdk/bashrc)" >> ~/faf.sh-$faf_sh_version.log
+to_log "T1 Finished thread one. (proton/downlord/open-jdk/bashrc)" 
