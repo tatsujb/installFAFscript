@@ -130,10 +130,11 @@ if_not_then_install $( dpkg-query -W -f='${Status}' python3-setuptools | grep "o
 if_not_then_install $( dpkg-query -W -f='${Status}' python3-venv | grep "ok installed") "python3-venv"
 if_not_then_install $([ $(command -v curl) ]) "curl"
 if_not_then_install $( dpkg-query -W -f='${Status}' lib32gcc1 | grep "ok installed") "lib32gcc1"
-if_not_then_install $( dpkg-query -W -f='${Status}' libnss3-tools | grep "ok installed") "libnss3"
+if_not_then_install $( dpkg-query -W -f='${Status}' libnss3-tools | grep "ok installed") "libnss3-tools"
 if [ "$operating_system" != "Debian GNU/Linux" ]
 then
-if_not_then_install $( dpkg-query -W -f='${Status}' libd3dadapter9-mesa | grep "ok installed") "libd3dadapter9-mesa"
+if_not_then_install $( dpkg-query -W -f='${Status}' libd3dadapter9-mesa | grep "ok installed") "libd3dadapter9-mesa libd3dadapter9-mesa:i386"
+fi
 if_not_then_install $([ $(command -v jq) ]) "jq"
 
 if [ $(command -v steam) ];
