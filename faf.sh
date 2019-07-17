@@ -104,10 +104,6 @@ echo "$dfh_ouput" >> "$faf_log_file"
 log_separator
 echo "" >> "$faf_log_file"
 
-
-sleep 5s
-
-
 # real start of script
 to_be_installed=""
 
