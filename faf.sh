@@ -413,8 +413,8 @@ cd ~
 function set_install_dir_function
 {
 # soon to be DEPRECATED
-    fa_install_dir=$(zenity --file-selection --directory --title "$1")
-    to_log "T1 folder set to $fa_install_dir" 
+    install_fa_here=$(zenity --file-selection --directory --title "$1")
+    to_log "T1 folder set to $install_fa_here" 
 } 
 
 function auto_detect_fa_install_dir
@@ -580,10 +580,10 @@ while [ \( ! -d ~/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d ~/.steam/
 do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +app_update 9420 +quit;
 done;
 else echo "[$(date --rfc-3339=seconds)] T3 installing FA to default dir" >> ~/faf.sh-'$faf_sh_version'.log;
-while [ ! -d '$fa_install_dir'/bin ];
-do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +force_install_dir '$fa_install_dir' +app_update 9420 +quit;
+while [ ! -d '$install_fa_here'/bin ];
+do steamcmd +login '$steam_user_name' '$steam_password' +@sSteamCmdForcePlatformType windows +force_install_dir '$install_fa_here' +app_update 9420 +quit;
 done;
-cd '$fa_install_dir';
+cd '$install_fa_here';
 mkdir -p steamapps/common/Supreme\ Commander\ Forged\ Alliance;
 mv * steamapps/common/Supreme\ Commander\ Forged\ Alliance/ 2>/dev/null;
 cd ~;
@@ -595,7 +595,7 @@ eval "steam -login '$steam_user_name' '$steam_password' -applaunch 9420 &";
 echo "";
 if '$default_dir';
 then origin="~/.steam/steam";
-else origin='$fa_install_dir';
+else origin='$install_fa_here';
 fi;
 i=1;
 sp="/-\|";
@@ -652,14 +652,14 @@ else echo "[$(date --rfc-3339=seconds)] T3 neither steamapps nor SteamApps are f
 exit 1;
 fi;
 else echo "[$(date --rfc-3339=seconds)] T3 symlinking for non-standart install location" >> ~/faf.sh-'$faf_sh_version'.log;
-cd '$fa_install_dir'/steamapps/common/Supreme\ Commander\ Forged\ Alliance;
+cd '$install_fa_here'/steamapps/common/Supreme\ Commander\ Forged\ Alliance;
 rm -rf Maps;
 rm -rf Mods;
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps;
 ln -s ~/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods;
 if [ -d ~/.steam/steam/steamapps ];
 then if [ -d ~/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ];
-then cd '$fa_install_dir'/steamapps/compatdata/9420/pfx/drive_c/users/steamuser;
+then cd '$install_fa_here'/steamapps/compatdata/9420/pfx/drive_c/users/steamuser;
 rm -rf My\ Documents;
 mkdir My\ Documents;
 cd My\ Documents;
@@ -728,9 +728,9 @@ then
     normalpath="~/.steam/steam/$steamapps/common/Supreme Commander Forged Alliance"
     preferencesFile="~/.steam/steam/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
 else
-    installationPath="$fa_install_dir/$steamapps/common/Supreme Commander Forged Alliance"
-    normalpath="$fa_install_dir/$steamapps/common/Supreme Commander Forged Alliance"
-    preferencesFile="$fa_install_dir/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
+    installationPath="$install_fa_here/$steamapps/common/Supreme Commander Forged Alliance"
+    normalpath="$install_fa_here/$steamapps/common/Supreme Commander Forged Alliance"
+    preferencesFile="$install_fa_here/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
 fi
 jq --arg installationPath "$installationPath" --arg normalpath "$normalpath" --arg preferencesFile "$normalpath"  --arg user_path "~" '
     .forgedAlliance += {
