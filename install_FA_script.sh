@@ -62,7 +62,7 @@ no_config=true
 while $no_config
 do
     printf "\b${sp:i++%${#sp}:1}"
-    if [ \( "$(pidof SupremeCommande)" \) -a \( ! -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) ]
+    if [ \( ! "$(pidof SupremeCommande)" \) -a \( ! -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) ]
     then
         no_config=false
     fi
@@ -166,3 +166,4 @@ source .bashrc
 eval "$(cat .bashrc | tail -n +10)"
 echo "FA installation finished succesfully"
 echo "[$(date --rfc-3339=seconds)] T3 starting T4 and exiting T3" >> $faf_log_file
+gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"
