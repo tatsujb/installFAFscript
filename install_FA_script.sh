@@ -41,7 +41,7 @@ else
     echo "[$(date --rfc-3339=seconds)] T3 FA installed condition met" >> $faf_log_file
 fi
 echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> $faf_log_file
-eval "steam -login $steam_user_name $steam_password -applaunch 9420 &"
+(steam -login $steam_user_name $steam_password -applaunch 9420) &
 echo ""
 if $default_dir
 then
@@ -49,6 +49,7 @@ then
 else
     origin=$directory
 fi
+
 echo "waiting for Forged Alliance to be installed, Game.prefs to exits and Forged Alliance to be shut down"
 echo "you may also type \"c\" for \"continue\" to exit this loop"
 echo "if you feel the conditions for continuing sucessfully"
@@ -59,9 +60,7 @@ no_config=true
 while $no_config
 do 
     printf "\b${sp:i++%${#sp}:1}"
-    [[ ! $(pidof SupremeCommande) && \
-    -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs ]] && \
-    no_config=false
+    [[ ! $(pidof SupremeCommande) && -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs ]] && no_config=false
     read -t 1 -r typed_continue # Waits 1 sec for user input
     if [ "$typed_continue" = "c" ]
     then
