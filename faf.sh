@@ -165,6 +165,7 @@ then
     echo "all dependencies met :)"
     to_log "T1 all dependencies met"
 else
+    to_run_sudo_script="$work_dir/sudo_script.sh $faf_log_file $operating_system"
     to_log "T1 to be installed :$to_be_installed" 
     if [ ! -f sudo_script.sh ]
     then
@@ -175,15 +176,15 @@ else
     # OS splitter
     if [[ "$operating_system" = "Ubuntu" || "$operating_system" = "Debian GNU/Linux" ]]
     then
-        gnome-terminal --tab --active --title="externalized sudo" -- "$work_dir/sudo_script.sh" "$faf_log_file" "$operating_system" "$to_be_installed"
+        gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed"
     elif [ "$operating_system" = "Kubuntu" ]
     then
-        konsole -e "$work_dir/sudo_script.sh" "$faf_log_file" "$operating_system" "$to_be_installed"
+        konsole -e $to_run_sudo_script "$to_be_installed"
     elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
     then
-        io.elementary.terminal -e "$work_dir/sudo_script.sh" "$faf_log_file" "$operating_system" "$to_be_installed"
+        io.elementary.terminal -e $to_run_sudo_script "$to_be_installed"
     else
-        xterm -T "externalized sudo" -e "$work_dir/sudo_script.sh" "$faf_log_file" "$operating_system" "$to_be_installed"
+        xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
     fi
     # end of OS Splitter
 fi
@@ -399,7 +400,6 @@ esac
 
 get_user_input_function
 
-
 echo ""
 to_log "T1 FA not installed chosen" 
 while [ -z "$steam_user_name" ]
@@ -439,21 +439,23 @@ then
 fi
 chmod +x install_FA_script.sh
 # OS splitter again
+to_run_faf_script="$work_dir/install_FA_script.sh $faf_log_file $operating_system $real_user $steam_user_name $steam_password $already_fa $default_dir $directory"
+
 if [[ "$operating_system" = "Ubuntu" || "$operating_system" = "Debian GNU/Linux" ]]
 then
     echo 'gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"' >> install_FA_script.sh
-    gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- "$work_dir/install_FA_script.sh" "$faf_log_file" "$operating_system" "$already_fa" "$default_dir" "$directory" "$steam_user_name" "$steam_password" "$real_user"
+    gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- $to_run_faf_script
 elif [ "$operating_system" = "Kubuntu" ]
 then
     echo 'konsole -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    konsole -e "$work_dir/install_FA_script.sh" "$faf_log_file" "$operating_system" "$already_fa" "$default_dir" "$directory" "$steam_user_name" "$steam_password" "$real_user"
+    konsole -e $to_run_faf_script
 elif [ "$operating_system" = "elementary OS" ]
 then
     echo 'io.elementary.terminal -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    io.elementary.terminal -e "$work_dir/install_FA_script.sh" "$faf_log_file" "$operating_system" "$already_fa" "$default_dir" "$directory" "$steam_user_name" "$steam_password" "$real_user"
+    io.elementary.terminal -e $to_run_faf_script
 else
     echo 'xterm -T "(FAF)" -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    xterm -T "install & run steam, steamcmd, FA" -e "$work_dir/install_FA_script.sh" "$faf_log_file" "$operating_system" "$already_fa" "$default_dir" "$directory" "$steam_user_name" "$steam_password" "$real_user"
+    xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script
 fi
 #rm install_FA_script.sh
 
@@ -469,7 +471,7 @@ echo ""
 no_login=true
 echo "Please switch to opened FAF client, waiting on user to log in"
 echo "if FAF is not open yet simply switch to"
-echo -n " \"install & run steam, steamcmd, FA\" terminal tab)...  "
+echo -n "\"install & run steam, steamcmd, FA\" terminal tab...  "
 while $no_login
 do
   printf "\b${sp:i++%${#sp}:1}"

@@ -1,11 +1,11 @@
 faf_log_file=$1
 operating_system=$2
-already_fa=$3
-default_dir=$4
-directory=$5
-steam_user_name=$6
-steam_password=$7
-real_user=$8
+real_user=$3
+steam_user_name=$4
+steam_password=$5
+already_fa=$6
+default_dir=$7
+directory=$8
 
 echo "expecting you to type in Forged Alliances Launch options"
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted"
@@ -41,7 +41,7 @@ else
     echo "[$(date --rfc-3339=seconds)] T3 FA installed condition met" >> $faf_log_file
 fi
 echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> $faf_log_file
-eval "steam -login $steam_user_name $steam_password -applaunch 9420 &"
+(steam -login $steam_user_name $steam_password -applaunch 9420) &
 echo ""
 if $default_dir
 then
@@ -49,6 +49,7 @@ then
 else
     origin=$directory
 fi
+
 echo "waiting for Forged Alliance to be installed, Game.prefs to exits and Forged Alliance to be shut down"
 echo "you may also type \"c\" for \"continue\" to exit this loop"
 echo "if you feel the conditions for continuing sucessfully"
@@ -57,15 +58,16 @@ i=1
 sp="/-\|"
 no_config=true
 while $no_config
-do 
+do
     printf "\b${sp:i++%${#sp}:1}"
-    [[ ! $(pidof SupremeCommande) && \
-    -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs ]] && \
-    no_config=false
-    read -t 1 -r typed_continue # Waits 1 sec for user input
+    if [ \( ! $(pidof SupremeCommande) \) -a \( ! -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) ]
+    then
+        no_config=false
+    fi
+    read -t 1 -r typed_continue
     if [ "$typed_continue" = "c" ]
     then
-        break
+        return
     fi
 done
 echo ""
