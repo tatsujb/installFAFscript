@@ -61,12 +61,13 @@ sp="/-\|"
 no_config=true
 while $no_config
 do
+    sleep 1
     printf "\b${sp:i++%${#sp}:1}"
     if [ \( \( ! "$(pidof SupremeCommande)" \) -a \( -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) \) -o \( "$typed_continue" = "c" \) ]
     then
         no_config=false
     fi
-    read -t 2 typed_continue
+    read -s -r -t 1 typed_continue
 done
 echo ""
 if $already_fa
