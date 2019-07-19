@@ -113,39 +113,12 @@ if you want to run FAF again do not run faf.sh again (remember, it is a script t
 
 GL HF!
 
-### 7th OPTIONAL run in gallium nine mode :
-
- - A (if you are already running the nouveau driver, skip to B)
-
-open up your "Software and Updates", go to the "Aditional Drivers" tab select and apply "Nouveau"
-run :
-```
-sudo apt update && sudo apt autoremove -y && sudo apt autoclean
-```
-
-then reboot your computer,
- - B
-run :
-```
-sudo add-apt-repository ppa:ubuntu-x-swat/updates -y && sudo apt update && sudo apt full-upgrade -y
-python3 -m pip install --user pipx
-~/.local/bin/pipx ensurepath
-eval "$(cat .bashrc | tail -n +10)"
-pipx install protontricks
-pipx upgrade protontricks
-protontricks 9420 galliumnine
-```
-now your game uses gallium nine. graphic should be more on-par with what you experience on windows.
-
-
 ## Axes of improvements
 
 ```diff
 - W.I.P. set proton for FA (or all games) and FA launch options for user don't make user do it himself
 ```
-- W.I.P. solution for having to have steam open at all times during FAF play since 19/04/2019...
 - W.I.P. uninstall builtin
-- W.I.P. supporting gallium nine via winetricks & protontricks instead of via deprecated githubfork of proton
 - W.I.P. implement Mageia
 - W.I.P. implement Manjaro
 - W.I.P. implement Fedora
@@ -169,32 +142,13 @@ now your game uses gallium nine. graphic should be more on-par with what you exp
 
 ## Not working ?
 
-Feedback will help me fix things. This script creates a very minimal log file called "faf_sh-\*.log" in your home. Create an [Issue](https://github.com/tatsujb/installFAFscript/issues/new "new issue") and paste it's contents in it or as a pastebin link. Your first and foremost issue is probably the linux distro flavor, you can check what release is supported as of now [here](https://github.com/tatsujb/installFAFscript#run-successes-by-distro- "distro compatibility"), but a couple syntax edits should make my script work for you.
+Feedback will help me fix things. This script creates a very minimal log file called "faf_sh-\*.log" in your /tmp/faf_script_workdir. Create an [Issue](https://github.com/tatsujb/installFAFscript/issues/new "new issue") and paste it's contents in it or as a pastebin link. Your first and foremost issue is probably the linux distro flavor, you can check what release is supported as of now [here](https://github.com/tatsujb/installFAFscript#run-successes-by-distro- "distro compatibility"), but a couple syntax edits should make my script work for you.
 
 ### known issues :
 
- 1. Script does not continue stuck at "waiting for dependencies to be present... " or other. this is very likely because you are running on a distribution that is not ubuntu that I forgot to test. very stong odds you can fix it yourself by finding where a character such a `'` or `"` was not proprely closed. 90% of the time it's one of the closing variables :
-```
-# opening and closings
-debian_opening_sudo_script='gnome-terminal --tab --active --title="install dependencies..." -- bash -c '"'"''
-gnome_opening_sudo_script='gnome-terminal --tab --active --title="externalized sudo" -- bash -c '"'"''
-konsole_opening_sudo_script='konsole -e /bin/bash --rcfile <(echo '"'"''
-xterm_opening_sudo_script='xterm -T "externalized sudo" -e '"'"''
+ 1. "game already running" this is by far the most common issue. It happens both when trying to restart steam after enabling Proton and after steamCMD download, when steam is attempting to run FA for the first time in order to generate the config.ini file. The solution to this is unclear for me. But sometimes attempting to run the game outside of the script, shutting down you pc and restarting does this. In this case no need to have the script install FA for you which it now tolerates.
 
-gnome_opening_faf_script='gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- bash -c '"'"''
-konsole_opening_faf_script='konsole -e /bin/bash --rcfile <(echo '"'"''
-xterm_opening_faf_script='xterm -T "install & run steam, steamcmd, FA" -e '"'"''
-
-gnome_closing_faf_script='gnome-terminal --tab --title="FAF" -- bash -c "cd faf; ./downlords-faf-client";'"'"''
-konsole_closing_faf_script='konsole -e /bin/bash --rcfile <(echo "cd faf; ./downlords-faf-client; exit 0") &'"'"') &'
-xterm_closing_faf_script='xterm -T "FAF" -e "cd faf; ./downlords-faf-client";'"'"' &'
-# end opening and closings
-```
-...that are at fault.
-
- 2. "game already running" this is by far the most common issue. It happens both when trying to restart steam after enabling Proton and after steamCMD download, when steam is attempting to run FA for the first time in order to generate the config.ini file. The solution to this is unclear for me. But sometimes attempting to run the game outside of the script, shutting down you pc and restarting does this. In this case no need to have the script install FA for you which it now tolerates.
-
- 3. "I'm just missing Maps and Mods symlinking!" (adapt according to your FA install location)
+ 2. "I'm just missing Maps and Mods symlinking!" (adapt according to your FA install location)
 ```
 cd ~/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
 rm Maps
@@ -209,10 +163,10 @@ ln -s ~/My\ Games/ My\ Games
 ```   
  
  
- 4. "my online games desync!"
+ 3. "my online games desync!"
  you are probably running FA with proton 4.2-3 switch it to 3.16-9 Beta, accept steam restart, re-run FA from steam, go to your `\tmp\proton_*` and copy the run file to `~/faf` (overwrite, or delete the old one before copying).
 
- 5. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
+ 4. another known issue is run files being kinda borked at generation. if you're not getting an FA starting when running from FAF but it does start from steam, this is what you may want to look into, your run file is at `$HOME/faf/` and here's a sample one to find issues with yours :
 ### sample :
 ```
 #!/bin/bash
@@ -235,7 +189,7 @@ PATH="/home/t/.steam/steam/steamapps/common/Proton 3.16 Beta/dist/bin/:/home/t/.
 
 possible flaws are there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `shutdown` at the end of it, also `steamapps` instead of `SteamApps`. Also try `WINEDLLOVERRIDES=""` (nothing inside).
 
- 6. Durring the FA start process from steam, the window for steam pre-check for Forged Alliance takes awhile then opens up too small and you get path assert failures. no panic! Simply close that window, go to your steam icon in the top left of your screen (notification's area) and open steam's library, right click on FA and click "properties", then go into the "local files" tab and click verify integrity of game files. Now try starting FA again. this time it should run. You can continue.
+ 5. Durring the FA start process from steam, the window for steam pre-check for Forged Alliance takes awhile then opens up too small and you get path assert failures. no panic! Simply close that window, go to your steam icon in the top left of your screen (notification's area) and open steam's library, right click on FA and click "properties", then go into the "local files" tab and click verify integrity of game files. Now try starting FA again. this time it should run. You can continue.
 
 
 #### What does faf.sh do?
@@ -247,7 +201,7 @@ such a setup includes (at minimum) :
  - [Supreme Commander Forged Alliance]("https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/")
  - (FAF) JAVA client
  - Java 10
- - Gallium-Proton /or/ Proton /or/ Wine (to run the windows game)
+ - Proton or Wine (to run the windows game)
  
 In the case of this script, we will have recourse to some supplementary items in order to automate our task :
 
@@ -262,14 +216,7 @@ In the case of this script, we will have recourse to some supplementary items in
  Dependencies :
   
  - lib32gcc1 (steamCMD)
- - libnss3-tools libd3dadapter9-mesa:i386 libd3dadapter9-mesa (Gallium-Proton)
  - whiptail (contextual menus)
- - python3-pip python3-setuptools python3-venv (for pipx)
- -̶ ̶p̶i̶p̶x̶ ̶(̶n̶o̶t̶ ̶y̶e̶t̶,̶ ̶t̶h̶i̶s̶ ̶w̶i̶l̶l̶ ̶b̶e̶ ̶f̶o̶r̶ ̶g̶a̶l̶l̶i̶u̶m̶ ̶n̶i̶n̶e̶ ̶s̶u̶p̶p̶o̶r̶t̶)̶
- 
- Unwanteds :
- 
- - winetricks from apt (granted sudo, in the second step, this will be removed and the latest winetricks from github will be installed instead)
 
 # Un-installing :
 
@@ -277,7 +224,6 @@ If you are in the use-case of re-running the script this is almost entirely unec
 
 ```
 rm ~/the\ contents\ of\ this*
-rm ~/faf_sh-*.log
 rm ~/.install4j
 rm -rf ~/My\ Games
 rm -rf ~/faf
