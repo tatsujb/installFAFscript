@@ -19,7 +19,7 @@ echo "sudo mv winetricks /usr/bin";
 echo "sudo mv winetricks.bash-completion /usr/share/bash-completion/completions/winetricks";
 echo "";
 sudo echo "";
-echo "[$(date --rfc-3339=seconds)] T2 begining install of$to_be_installed" >> $HOME/faf.sh-?.?.log;
+echo "[$(date --rfc-3339=seconds)] T2 begining install of$to_be_installed" >> $HOME/faf.sh-*
 if [ ! $(command -v steam) ];
 then if [ "$operating_system" != "Zorin OS" ];
 then echo steam steam/question select "I AGREE" | sudo debconf-set-selections;
@@ -60,7 +60,7 @@ sudo sed -i "s/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb h
 else echo "[$(date --rfc-3339=seconds)] T2 did not enable partners, hoping it was already enabled." >> $HOME/faf.sh-?.?.log;
 fi;
 fi;
-if [[ "$operating_system" = "Arch" || "$operating_system" = "Manjaro" ]];
+if [ "$operating_system" = "Arch" || "$operating_system" = "Manjaro" ];
 then sudo pacman -Syu;
 sudo pacman -Syy;
 sudo pacman -Scc;
