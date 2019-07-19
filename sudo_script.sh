@@ -6,10 +6,6 @@ then
     operating_system="Ubuntu"
 fi
 
-echo "faf log : $faf_log_file"
-echo " OS : $operating_system"
-echo "to_be_installed :$to_be_installed"
-
 echo "If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies."
 echo "Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run."
 echo "At your own discretion, you may copy them, exit the script by closing all the terminal windows and execute them yourself."
