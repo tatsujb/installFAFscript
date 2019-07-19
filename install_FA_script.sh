@@ -61,15 +61,11 @@ sp="/-\|"
 no_config=true
 while $no_config
 do
+    read -t 1 -r typed_continue
     printf "\b${sp:i++%${#sp}:1}"
-    if [ \( ! "$(pidof SupremeCommande)" \) -a \( ! -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) ]
+    if [ \( \( ! "$(pidof SupremeCommande)" \) -a \( ! -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) \) -o \( "$typed_continue" = "c" \) ]
     then
         no_config=false
-    fi
-    read -t 1 -r typed_continue
-    if [ "$typed_continue" = "c" ]
-    then
-        break
     fi
 done
 echo ""
