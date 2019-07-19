@@ -52,22 +52,22 @@ fi
 
 echo ""
 echo "Waiting for Forged Alliance to be installed, Game.prefs to exits"
-echo "and for Forged Alliance to be shut down."
-echo "You may also type \"c\" and enter to exit this loop"
-echo "if you feel the conditions for continuing sucessfully"
-echo -n "have already been adequately met... "
+echo -n "and for Forged Alliance to be shut down."
+#echo "You may also type \"c\" and enter to exit this loop"
+#echo "if you feel the conditions for continuing sucessfully"
+#echo -n "have already been adequately met... "
 i=1
 sp="/-\|"
 no_config=true
 while $no_config
 do
-    sleep 1
     printf "\b${sp:i++%${#sp}:1}"
     if [ \( \( ! "$(pidof SupremeCommande)" \) -a \( -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) \) -o \( "$typed_continue" = "c" \) ]
     then
         no_config=false
     fi
-    read -s -r -t 1 typed_continue
+    sleep 1
+    #read -s -r -t 1 typed_continue
 done
 echo ""
 if $already_fa
