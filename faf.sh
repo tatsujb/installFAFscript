@@ -165,7 +165,7 @@ then
     echo "all dependencies met :)"
     to_log "T1 all dependencies met"
 else
-    to_run_sudo_script="$work_dir/sudo_script.sh \"$faf_log_file\" \"$operating_system\" \"$to_be_installed\""
+    to_run_sudo_script="$work_dir/sudo_script.sh $faf_log_file $operating_system"
     to_log "T1 to be installed :$to_be_installed" 
     if [ ! -f sudo_script.sh ]
     then
@@ -176,15 +176,15 @@ else
     # OS splitter
     if [[ "$operating_system" = "Ubuntu" || "$operating_system" = "Debian GNU/Linux" ]]
     then
-        gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script
+        gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed"
     elif [ "$operating_system" = "Kubuntu" ]
     then
-        konsole -e $to_run_sudo_script
+        konsole -e $to_run_sudo_script "$to_be_installed"
     elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
     then
-        io.elementary.terminal -e $to_run_sudo_script
+        io.elementary.terminal -e $to_run_sudo_script "$to_be_installed"
     else
-        xterm -T "externalized sudo" -e $to_run_sudo_script
+        xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
     fi
     # end of OS Splitter
 fi
@@ -395,7 +395,8 @@ then
 fi
 chmod +x install_FA_script.sh
 # OS splitter again
-to_run_faf_script="$work_dir/install_FA_script.sh $faf_log_file $operating_system $already_fa $default_dir $directory $steam_user_name $steam_password $real_user"
+to_run_faf_script="$work_dir/install_FA_script.sh $faf_log_file $operating_system $real_user $steam_user_name $steam_password $already_fa $default_dir $directory"
+
 if [[ "$operating_system" = "Ubuntu" || "$operating_system" = "Debian GNU/Linux" ]]
 then
     echo 'gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"' >> install_FA_script.sh
