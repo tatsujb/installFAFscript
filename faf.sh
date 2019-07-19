@@ -354,7 +354,6 @@ fi
 
 get_user_input_function
 
-
 echo ""
 to_log "T1 FA not installed chosen" 
 while [ -z "$steam_user_name" ]
@@ -427,7 +426,7 @@ echo ""
 no_login=true
 echo "Please switch to opened FAF client, waiting on user to log in"
 echo "if FAF is not open yet simply switch to"
-echo -n " \"install & run steam, steamcmd, FA\" terminal tab)...  "
+echo -n "\"install & run steam, steamcmd, FA\" terminal tab...  "
 while $no_login
 do
   printf "\b${sp:i++%${#sp}:1}"
