@@ -50,8 +50,10 @@ else
     origin=$directory
 fi
 
-echo "waiting for Forged Alliance to be installed, Game.prefs to exits and Forged Alliance to be shut down"
-echo "you may also type \"c\" for \"continue\" to exit this loop"
+echo ""
+echo "Waiting for Forged Alliance to be installed, Game.prefs to exits"
+echo "and for Forged Alliance to be shut down."
+echo "You may also type \"c\" and enter to exit this loop"
 echo "if you feel the conditions for continuing sucessfully"
 echo -n "have already been adequately met... "
 i=1
@@ -60,14 +62,14 @@ no_config=true
 while $no_config
 do
     printf "\b${sp:i++%${#sp}:1}"
-    if [ \( ! $(pidof SupremeCommande) \) -a \( ! -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) ]
+    if [ \( "$(pidof SupremeCommande)" \) -a \( ! -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) ]
     then
         no_config=false
     fi
     read -t 1 -r typed_continue
     if [ "$typed_continue" = "c" ]
     then
-        return
+        break
     fi
 done
 echo ""
