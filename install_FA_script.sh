@@ -1,11 +1,11 @@
 faf_log_file=$1
 operating_system=$2
-already_fa=$3
-default_dir=$4
-directory=$5
-steam_user_name=$6
-steam_password=$7
-real_user=$8
+real_user=$3
+steam_user_name=$4
+steam_password=$5
+already_fa=$6
+default_dir=$7
+directory=$8
 
 echo "expecting you to type in Forged Alliances Launch options"
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted"
