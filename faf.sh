@@ -104,7 +104,7 @@ echo "$dfh_ouput" >> "$faf_log_file"
 log_separator
 echo "" >> "$faf_log_file"
 
-# bengining of find missing dependencies
+# begining to find missing dependencies
 to_be_installed=""
 
 if_not_then_install() {
@@ -310,7 +310,7 @@ function extract_fa_install_dir {
     tmp_path=$1
     while [ ! -d "$tmp_path/$child_path" ]
     do
-        if [ $tmp_path = "/" ] || [ $tmp_path = "" ]
+        if [ "$tmp_path" = "/" ] || [ "$tmp_path" = "" ]
 	then
 	    to_log "Err -- FA install dir not found"
 	    break
@@ -344,28 +344,29 @@ function get_user_input_function
 {
 # $1 : (optional) path to a supcom install directory
 
-if [ $(extract_fa_install_dir $1) = "" ]
-    fa_install_dir=$(auto_detect_fa_install_dir)
-else
-    fa_install_dir=$(extract_fa_install_dir $1)
-fi
-if [ -d fa_install_dir ]
+if [ "$(extract_fa_install_dir $1)" = "" ]
+    fa_install_dir="$(auto_detect_fa_install_dir)"
 then
-    what_to_do=$(whiptail --title "The Supreme Commander Forged Alliance install directory has been detected at $fa_install_dir. Before installing the FAF client, would you like to "\
-	    --notags --nocancel --menu "" 12 85 0 \
-            "configure_fa"  "Configure FA for use with FAF, then install FAF"
-            "choose_fa_dir" "Choose an other Forged Alliance game install directory (or correct it)"\
-            "install_fa"    "Make a second install of FA somewhere else, then install the FAF client" \
-	    "reinstall_fa"  "Reinstall the Forged Alliance game through steam (needs your steam login)"\
-            "install_faf"   "Skip the configuration of FA and ONLY install the FAF client"
-            --fb 3>&1 1>&2 2>&3)
 else
-    what_to_do=$(whiptail --title "The Supreme Commander Forged Alliance (FA) install directory wasn't automatically detected. Would you like to "\
-	    --notags --nocancel --menu "" 12 85 0 \
-            "choose_fa_dir" "Browse for the Forged Alliance game install directory"\
-	    "install_fa"    "Install the Forged Alliance game through steam (needs your steam login)"\
-            "install_faf"   "Skip the installation/configuration of FA and ONLY install the FAF client"
-            --fb 3>&1 1>&2 2>&3)
+    fa_install_dir="$(extract_fa_install_dir $1)"
+fi
+if [ -d "$fa_install_dir" ]
+then
+	what_to_do=$(whiptail --title "Supreme Commander Forged Alliance (FA)" \
+            --menu "$error_msg The game's install directory has been detected at $fa_install_dir.\nBefore installing the FAF client, would you like to " 16 60 0 \
+            "configure_fa"  "Configure the game for use with FAF, then install FAF" \
+            "choose_fa_dir" "Choose an other game install directory (or correct it)" \
+            "install_fa"    "Make a 2nd install of FA somewhere else & install FAF" \
+            "reinstall_fa"  "Reinstall the game through steam (needs steam login)" \
+            "install_faf"   "Skip the FA configuration and ONLY install FAF" \
+	    --notags --nocancel 3>&1 1>&2 2>&3)
+else
+	what_to_do=$(whiptail --title "Install Forged Alliance Forever\n(Multiplayer client)" \
+	    --menu "The Supreme Commander Forged Alliance (FA) install directory wasn't automatically detected. Would you like to " 10 80 0 \
+            "choose_fa_dir" "Browse for the Forged Alliance game install directory" \
+	    "install_fa"    "Install the Forged Alliance game through steam (needs your steam login)" \
+            "install_faf"   "Skip the installation/configuration of FA and ONLY install the FAF client" \
+            --notags --nocancel 3>&1 1>&2 2>&3)
 fi
 case $what_to_do in
     configure_fa) to_log "T1 configure current FA install"
@@ -373,19 +374,23 @@ case $what_to_do in
                  default_dir=false;;
     install_fa) to_log "T1 install FA"
 	        install_fa ;;
-    choose_fa_dir) fa_install_dir=$(zenity --file-selection --directory 
-	                                   --title "Choose the FA installation directory")
-                   get_user_input $fa_install_dir
+    choose_fa_dir) fa_install_dir="$(zenity --file-selection \
+	                                   --directory \
+					   --filename "$HOME" \
+					   --height 20 \
+					   --width  60 \
+	                                   --title "Choose the FA installation directory")"
+                   get_user_input "$fa_install_dir"
 		   return "";;# stops recursion loop from running the rest of this function
     reinstall_fa) to_log "T1 reinstall FA chosen"
 	          if (whiptail --title "Are you sure you want to delete $fa_install_dir ?" 
 			       --yesno "" 12 85 --fb); then
                       echo "T1 removing $fa_install_dir"
-                      rm -rf $fa_install_dir
+                      rm -rf "$fa_install_dir"
                       install_fa
 		  else
                       to_log "T1 Cancels deletion of previous install."
-                      get_user_input $fa_install_dir
+                      get_user_input "$fa_install_dir"
 		      return "" 
 		  fi;;
     install_faf) to_log "T1 Skipping to install FAF without configuring FA"
