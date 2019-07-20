@@ -140,7 +140,7 @@ else
     ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
     if [ -d $HOME/.steam/steam/steamapps ]
     then
-        if [ -d $HOME/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
+        if [ -d $directory/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
         then
             cd $directory/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
             rm -rf My\ Documents
