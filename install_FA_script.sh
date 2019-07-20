@@ -40,16 +40,18 @@ else
     fi
     echo "[$(date --rfc-3339=seconds)] T3 FA installed condition met" >> $faf_log_file
 fi
-echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> $faf_log_file
-(steam -login $steam_user_name $steam_password -applaunch 9420) &
-echo ""
 if $default_dir
 then
     origin="$HOME/.steam/steam"
 else
     origin=$directory
 fi
-
+echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> $faf_log_file
+steam -login $steam_user_name $steam_password -applaunch 9420 &>/dev/null &
+echo ""
+echo ""
+echo ""
+echo ""
 echo ""
 echo "Waiting for Forged Alliance to be installed, Game.prefs to exits"
 echo -n "and for Forged Alliance to be shut down."
@@ -57,11 +59,11 @@ echo -n "and for Forged Alliance to be shut down."
 #echo "if you feel the conditions for continuing sucessfully"
 #echo -n "have already been adequately met... "
 i=1
-sp="/-\|"
+sp='/-\|'
 no_config=true
 while $no_config
 do
-    printf "\b${sp:i++%${#sp}:1}"
+    printf "\b${sp:i++%${#sp}:1}";
     if [ \( \( ! "$(pidof SupremeCommande)" \) -a \( -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) \) -o \( "$typed_continue" = "c" \) ]
     then
         no_config=false
@@ -163,4 +165,3 @@ source .bashrc
 eval "$(cat .bashrc | tail -n +10)"
 echo "FA installation finished succesfully"
 echo "[$(date --rfc-3339=seconds)] T3 starting T4 and exiting T3" >> $faf_log_file
-gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"
