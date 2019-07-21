@@ -84,7 +84,7 @@ then
     echo
 else
     to_log "T3 copying over run file"
-    cp -f /tmp/proton_'$real_user'/run $HOME/faf/
+    cp -f /tmp/proton_"$real_user"/run $HOME/faf/
 fi
 to_log "T3 making symbolic links"
 
