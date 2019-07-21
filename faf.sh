@@ -376,7 +376,7 @@ fi
 
 echo ""
 i=1
-sp="/-\|"
+sp='/-\|'
 no_steam=true
 echo "waiting for dependencies to be present... "
 while $no_steam
