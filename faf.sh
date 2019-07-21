@@ -141,7 +141,7 @@ then
     to_log "T1 steam CMD is already installed, proceeding..."
 else
     to_log "T1 steam CMD was not yet installed, installing..."
-    if [ "'$operating_system'" = "Debian GNU/Linux" ]
+    if [ "$operating_system" = "Debian GNU/Linux" ]
     then
         if getent passwd steam &>/dev/null
         then
@@ -439,32 +439,19 @@ to_log "T1 done waiting"
 kill -9 $(pgrep java | tail -1)
 # editting client.prefs :
 to_log "T1 editing client.prefs"
-if [ -d $HOME/.steam/steam/SteamApps ]
-then
-    steamapps="SteamApps"
-else
-    steamapps="steamapps"
-fi
-if $default_dir
-then
-    installationPath="$HOME/.steam/steam/$steamapps/common/Supreme Commander Forged Alliance"
-    normalpath="$HOME/.steam/steam/$steamapps/common/Supreme Commander Forged Alliance"
-    preferencesFile="$HOME/.steam/steam/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
-else
-    installationPath="$directory/$steamapps/common/Supreme Commander Forged Alliance"
-    normalpath="$directory/$steamapps/common/Supreme Commander Forged Alliance"
-    preferencesFile="$directory/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
-fi
-jq --arg installationPath "$installationPath" --arg normalpath "$normalpath" --arg preferencesFile "$normalpath"  --arg user_path "$HOME" '
+
+installation_path="$origin/$steamapps/common/Supreme Commander Forged Alliance"
+preferences_file="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
+user_path="$HOME/faf/run %s"
+
+jq --arg installation_path "$installation_path" --arg preferences_file "$preferences_file"  --arg user_path "$user_path" '
     .forgedAlliance += {
-        installationPath: ($installationPath),
-        path: ($normalpath),
-        preferencesFile: ($preferencesFile),
-        executableDecorator: ($HOME + "/faf/run \"%s\"")
+        installationPath: ($installation_path),
+        path: ($installation_path),
+        preferencesFile: ($preferences_file),
+        executableDecorator: ($user_path)
     }' $HOME/.faforever/client.prefs > $HOME/.faforever/client.prefs.tmp
 mv $HOME/.faforever/client.prefs.tmp $HOME/.faforever/client.prefs
-
-
 gtk-launch faforever
 
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
