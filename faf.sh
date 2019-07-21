@@ -1,6 +1,6 @@
 #!/bin/bash
   faf_sh_version=2.6
- 
+
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -31,7 +31,7 @@ log_separator()
 {
 	echo "_______________________________________________________________________________________________________" >> $faf_log_file
 }
- 
+
 log_separator
 # DETERMINE OS BASE :
 unameOut="$(uname -s)"
@@ -40,15 +40,15 @@ case "${unameOut}" in
 to_log "T1 New log file. fafSTACK version "$faf_sh_version" running : "$unameOut  ;;
     Darwin*)
 echo "Mac / Apple Macintosh is not supported yet though it could technically be; as evidenced by previous examples of people running FA and even FAF on mac. Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
-to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MAC UNSUPPORTED. "$unameOut  
+to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MAC UNSUPPORTED. "$unameOut
 exit 1;;
     CYGWIN*)
 echo "Hello, you can go straight to : www.faforever.com and click on \"Download Client\". This script exists in order to help linux users achieve the same thing you can do out-of-the-box on your operating system. You have not the remotest use for this script :) be free, wild bird!"
-to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. WINDOWS UNSUPPORTED. "$unameOut  
+to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. WINDOWS UNSUPPORTED. "$unameOut
 exit 1;;
     MINGW*)
 echo "Hello, are can on MinGW you cannot run Forged Alliance, this script is of no use to you."
-to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MINGW UNSUPPORTED. "$unameOut  
+to_log "T1 New log file. fafSTACK version "$faf_sh_version". FAILIURE. MINGW UNSUPPORTED. "$unameOut
 exit 1
 esac
 # DETERMINE LINUX DISTRO AND RELEASE :
@@ -112,27 +112,27 @@ if_not_then_install() {
 	# $2  is the condition
 	if ! $2 &>/dev/null
 	then
-                to_log "T1 $1 was not yet installed, installing..." 
+                to_log "T1 $1 was not yet installed, installing..."
 		to_be_installed="$to_be_installed $1"
 	else
-		to_log "T1 $1 is already installed, proceeding..." 
+		to_log "T1 $1 is already installed, proceeding..."
 	fi
 }
 
 if [ $(command -v steam) ];
 then
-    to_log "T1 steam is already installed, proceeding..." 
+    to_log "T1 steam is already installed, proceeding..."
 else
-    to_log "T1 steam was not yet installed, installing..." 
+    to_log "T1 steam was not yet installed, installing..."
     [ "$operating_system" = "Debian GNU/Linux" ] && usermod -a -G video,audio $real_user
     [ "$operating_system" = "Debian GNU/Linux" ] && dpkg --add-architecture i386
     to_be_installed="$to_be_installed steam"
 fi
 if [ $(command -v steamcmd) ]
 then
-    to_log "T1 steam CMD is already installed, proceeding..." 
+    to_log "T1 steam CMD is already installed, proceeding..."
 else
-    to_log "T1 steam CMD was not yet installed, installing..." 
+    to_log "T1 steam CMD was not yet installed, installing..."
     if [ "'$operating_system'" = "Debian GNU/Linux" ]
     then
         if getent passwd steam &>/dev/null
@@ -151,11 +151,11 @@ if_not_then_install "whiptail" "[ $(command -v whiptail) ]"
 if_not_then_install "pv" "[ $(command -v pv) ]"
 if_not_then_install "curl" "[ $(command -v curl) ]"
 if_not_then_install "jq" "[ $(command -v jq) ]"
-if_not_then_install "zenity" "dpkg-query -W -f='${Status}' zenity | grep 'ok installed'" 
+if_not_then_install "zenity" "dpkg-query -W -f='${Status}' zenity | grep 'ok installed'"
 if_not_then_install "lib32gcc1" "dpkg-query -W -f='${Status}' lib32gcc1 | grep 'ok installed'"
 if [ "$operating_system" = "Ubuntu" ]
 then
-if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]" 
+if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]"
 fi
 # end of find missing dependencies
 
@@ -166,7 +166,7 @@ then
     to_log "T1 all dependencies met"
 else
     to_run_sudo_script="$work_dir/sudo_script.sh $faf_log_file $operating_system"
-    to_log "T1 to be installed :$to_be_installed" 
+    to_log "T1 to be installed :$to_be_installed"
     if [ ! -f sudo_script.sh ]
     then
         wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh $work_dir
@@ -190,7 +190,7 @@ else
 fi
 #rm sudo_script.sh
 
-to_log "T1 start of second thread did not crash first thread" 
+to_log "T1 start of second thread did not crash first thread"
 
 function install_faf_function
 {
@@ -233,15 +233,15 @@ else
     # /end Download & install FAF client
     # Java install block
     echo "Now seeing if Java was already installed by this script..."
-    to_log "T1 Now seeing if Java was already installed by this script..." 
+    to_log "T1 Now seeing if Java was already installed by this script..."
     if [ -d $work_dir/faf/jdk-10.0.2 ]
     then
         echo "Java is already installed, moving on"
-        to_log "T1 Java already installed!" 
+        to_log "T1 Java already installed!"
     else
         # Download & install java 10 open jdk
         echo "Java 10 installation procedure..."
-        to_log "T1 Java 10 installing..." 
+        to_log "T1 Java 10 installing..."
         wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz $work_dir/faf
         pv $work_dir/faf/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C $work_dir/faf
         rm openjdk-10.0.2_linux-x64_bin.tar.gz
@@ -256,13 +256,13 @@ fi
 [ ! -d $HOME/.local/share/icons ] && mkdir -p .local/share/icons
 if [ ! -f $HOME/.local/share/icons/faf.png ]
 then
-    to_log "T1 getting desktop launcher icon" 
+    to_log "T1 getting desktop launcher icon"
     cd $HOME/.local/share/icons
     wget https://github.com/tatsujb/FAFICON/raw/master/faf.png
 fi
 if [ ! -f $HOME/.local/share/applications/faforever.desktop ]
 then
-    to_log "T1 making desktop launcher" 
+    to_log "T1 making desktop launcher"
     cd $HOME/.local/share/applications
     echo '#!/usr/bin/env xdg-open' >> faforever.desktop
     echo "[Desktop Entry]" >> faforever.desktop
@@ -281,7 +281,7 @@ cd $work_dir
 function set_install_dir_function
 {
     directory=$(zenity --file-selection --directory --title "$1")
-    to_log "T1 folder set to $directory" 
+    to_log "T1 folder set to $directory"
 } 
 
 function get_user_input_function
@@ -292,46 +292,46 @@ then
     if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
     then
         default_dir=true
-        to_log "T1 default dir chosen" 
+        to_log "T1 default dir chosen"
     else
         default_dir=false
-        to_log "T1 non-standart dir chosen" 
+        to_log "T1 non-standart dir chosen"
         set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
     fi
 else
-    to_log "T1 FA already installed chosen" 
+    to_log "T1 FA already installed chosen"
     what_to_do=$(whiptail --title "What do you wish to do?" --notags --nocancel --menu "" 12 85 0 "1" "Install another FA somewhere else, then install (FAF)" "2" "Reinstall FA, then install (FAF)" "3" "Use my install of FA and install (FAF)" "4" "FA is configured, I only want (FAF)" "5" "...wait... I messed up!" --fb 3>&1 1>&2 2>&3)
     case $what_to_do in
         1)
-            to_log "T1 resintall FA chosen" 
+            to_log "T1 resintall FA chosen"
             already_fa=false
             if (whiptail --title "Second install of Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
             then
                 default_dir=true
-                to_log "T1 default dir chosen" 
+                to_log "T1 default dir chosen"
             else
                 default_dir=false
-                to_log "T1 non-standart dir chosen" 
+                to_log "T1 non-standart dir chosen"
                 set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
             fi
         ;;
         2)
             del_directory=$(zenity --file-selection --directory --title "select the folder you want to delete (FA)")
             rm -rf del_directory
-            to_log "T1 resintall FA chosen" 
+            to_log "T1 resintall FA chosen"
             already_fa=false
             if (whiptail --title "ReInstall Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
             then
                 default_dir=true
-                to_log "T1 default dir chosen" 
+                to_log "T1 default dir chosen"
             else
                 default_dir=false
-                to_log "T1 non-standart dir chosen" 
+                to_log "T1 non-standart dir chosen"
                 set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
             fi
         ;;
         3)
-            to_log "T1 keep but configure FA chosen" 
+            to_log "T1 keep but configure FA chosen"
             already_fa=true
             default_dir=false
             set_install_dir_function  "Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
@@ -341,7 +341,7 @@ else
             done
         ;;
         4)
-            to_log "T1 keep and dont configure FA chosen" 
+            to_log "T1 keep and dont configure FA chosen"
             install_faf_function
             echo "installed faf only, as per user demand, nothing else to do, exiting."
             exit 0
@@ -355,7 +355,7 @@ fi
 get_user_input_function
 
 echo ""
-to_log "T1 FA not installed chosen" 
+to_log "T1 FA not installed chosen"
 bind 'TAB: accept-line' &>/dev/null
 while [ -z "$steam_user_name" ]
 do
@@ -368,7 +368,7 @@ do
     IFS= read -e -s steam_password
 done
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-to_log "T1 Steam credentials entrusted to script" 
+to_log "T1 Steam credentials entrusted to script"
 if [ ! -f $HOME/the\ contents\ of\ this* ]
 then
 echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > $HOME/"the contents of this file are to be pasted in the forged alliance properties launch options"
@@ -415,13 +415,13 @@ else
 fi
 #rm install_FA_script.sh
 
-to_log "T1 start of second thread did not crash first thread" 
+to_log "T1 start of second thread did not crash first thread"
 # end of OS Splitter
 
 install_faf_function
- 
+
 # wait for user to log in
-to_log "T1 waiting" 
+to_log "T1 waiting"
 echo ""
 echo ""
 no_login=true
@@ -436,11 +436,11 @@ do
 done
 echo ""
 echo "restarting (FAF)"
-to_log "T1 done waiting" 
+to_log "T1 done waiting"
 # sleep 2
 kill -9 $(pgrep java | tail -1)
 # editting client.prefs :
-to_log "T1 editing client.prefs" 
+to_log "T1 editing client.prefs"
 if [ -d $HOME/.steam/steam/SteamApps ]
 then
     steamapps="SteamApps"
@@ -470,4 +470,4 @@ mv $HOME/.faforever/client.prefs.tmp $HOME/.faforever/client.prefs
 gtk-launch faforever
 
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
-to_log "T1 Finished thread one. (proton/downlord/open-jdk/bashrc)" 
+to_log "T1 Finished thread one. (proton/downlord/open-jdk/bashrc)"
