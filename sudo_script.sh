@@ -1,3 +1,5 @@
+#!/bin/bash
+
 faf_log_file=$1
 operating_system=$2
 to_be_installed=$3
