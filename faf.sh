@@ -169,7 +169,7 @@ else
     to_log "T1 to be installed :$to_be_installed"
     if [ ! -f sudo_script.sh ]
     then
-        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh $work_dir
+        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh
     fi
     chmod +x sudo_script.sh
 
@@ -224,7 +224,7 @@ else
     cd faf
     faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
     faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
-    wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz $work_dir/faf
+    wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
     pv _dfc_unix_$faf_version.tar.gz | tar xzp -C $work_dir/faf
     mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
     rm -rf downlords-faf-client-${faf_version_number:1}
@@ -242,7 +242,7 @@ else
         # Download & install java 10 open jdk
         echo "Java 10 installation procedure..."
         to_log "T1 Java 10 installing..."
-        wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz $work_dir/faf
+        wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
         pv $work_dir/faf/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C $work_dir/faf
         rm openjdk-10.0.2_linux-x64_bin.tar.gz
         echo "" >> $HOME/.bashrc
