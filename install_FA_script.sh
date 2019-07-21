@@ -1,4 +1,4 @@
-"!/bin/bash
+#!/bin/bash
 
 faf_log_file=$1
 operating_system=$2
@@ -20,18 +20,18 @@ else
     echo ""
     echo ""
     echo ""
-    to_log "T3 running steam" 
+    to_log "T3 running steam"
     steam -login $steam_user_name $steam_password
     rm $HOME/the\ contents\ of\ this*
     if $default_dir
     then
-        to_log "T3 installing FA to default dir" 
+        to_log "T3 installing FA to default dir"
         while [ \( ! -d $HOME/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d $HOME/.steam/steam/SteamApps/common/Supreme* \) ]
         do
             steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +app_update 9420 +quit
         done
     else
-        to_log "T3 installing FA to custom dir" 
+        to_log "T3 installing FA to custom dir"
         while [ ! -d $directory/bin ]
         do
             steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +force_install_dir $directory +app_update 9420 +quit
@@ -41,7 +41,7 @@ else
         mv * steamapps/common/Supreme\ Commander\ Forged\ Alliance/ 2>/dev/null
         cd
     fi
-    to_log "T3 FA installed condition met" 
+    to_log "T3 FA installed condition met"
 fi
 if $default_dir
 then
@@ -49,7 +49,7 @@ then
 else
     origin=$directory
 fi
-to_log "T3 launching FA" 
+to_log "T3 launching FA"
 steam -login $steam_user_name $steam_password -applaunch 9420 &>/dev/null &
 echo ""
 echo ""
@@ -79,10 +79,10 @@ if $already_fa
 then
     echo
 else
-    to_log "T3 copying over run file" 
+    to_log "T3 copying over run file"
     cp -f /tmp/proton_'$real_user'/run $HOME/faf/
 fi
-to_log "T3 making symbolic links" 
+to_log "T3 making symbolic links"
 if $default_dir
 then
     if [ -d $HOME/.steam/steam/steamapps ]
@@ -95,7 +95,7 @@ then
             ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
             ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
         else
-            to_log "T3 steamapps FA folder not found" 
+            to_log "T3 steamapps FA folder not found"
         fi
         if [ -d $HOME/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
         then
@@ -105,11 +105,11 @@ then
             cd My\ Documents
             ln -s $HOME/My\ Games/ My\ Games
         else
-            to_log "T3 steamapps FA compatdata folder not found" 
+            to_log "T3 steamapps FA compatdata folder not found"
         fi
     elif [ -d $HOME/.steam/steam/SteamApps ]
     then
-        to_log "T3 curious case of SteamApps instead of steamapps" 
+        to_log "T3 curious case of SteamApps instead of steamapps"
         if [ -d $HOME/.steam/steam/SteamApps/common/Supreme* ]
         then
             cd $HOME/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
@@ -118,7 +118,7 @@ then
             ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
             ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
         else
-            to_log "T3 SteamApps FA folder not found" 
+            to_log "T3 SteamApps FA folder not found"
         fi
         if [ -d $HOME/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
         then
@@ -128,14 +128,14 @@ then
             cd My\ Documents
             ln -s $HOME/My\ Games/ My\ Games
         else
-            to_log "T3 SteamApps FA compatdata folder not found" 
+            to_log "T3 SteamApps FA compatdata folder not found"
         fi
     else
-        to_log "T3 neither steamapps nor SteamApps are found. exiting" 
+        to_log "T3 neither steamapps nor SteamApps are found. exiting"
         exit 1
     fi
 else
-    to_log "T3 symlinking for non-standart install location" 
+    to_log "T3 symlinking for non-standart install location"
     cd $directory/steamapps/common/Supreme\ Commander\ Forged\ Alliance
     rm -rf Maps
     rm -rf Mods
@@ -167,4 +167,4 @@ cd
 source .bashrc
 eval "$(cat .bashrc | tail -n +10)"
 echo "FA installation finished succesfully"
-to_log "T3 starting T4 and exiting T3" 
+to_log "T3 starting T4 and exiting T3"
