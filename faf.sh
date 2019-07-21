@@ -253,7 +253,7 @@ else
 fi
 # /end Java install block
 # make faf .desktop runner
-[ ! -d $HOME/.local/share/icons ] && mkdir -p .local/share/icons
+[ ! -d $HOME/.local/share/icons ] && mkdir -p $HOME/.local/share/icons
 if [ ! -f $HOME/.local/share/icons/faf.png ]
 then
     to_log "T1 getting desktop launcher icon"
@@ -387,7 +387,7 @@ do
 done
 echo ""
 
-mv $work_dir/faf/ $HOME/
+mv "$work_dir/faf/" "$HOME/"
 
 if [ ! -f install_FA_script.sh ]
 then
