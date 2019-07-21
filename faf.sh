@@ -387,7 +387,7 @@ do
 done
 echo ""
 
-mv $work_dir/faf $HOME
+mv $work_dir/faf/ $HOME/
 
 if [ ! -f install_FA_script.sh ]
 then
