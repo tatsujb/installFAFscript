@@ -119,6 +119,14 @@ if_not_then_install() {
 	fi
 }
 
+if_not_then_install "procps" "[ -f /bin/kill ]"
+if_not_then_install "xterm" "[ $(command -v xterm) ]"
+if_not_then_install "whiptail" "[ $(command -v whiptail) ]"
+if_not_then_install "pv" "[ $(command -v pv) ]"
+if_not_then_install "curl" "[ $(command -v curl) ]"
+if_not_then_install "jq" "[ $(command -v jq) ]"
+if_not_then_install "zenity" "[ $(command -v zenity) ]"
+[[ "$operating_system" = "Ubuntu" ]] && if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]"
 if [ $(command -v steam) ];
 then
     to_log "T1 steam is already installed, proceeding..."
@@ -145,18 +153,7 @@ else
     fi
     to_be_installed="$to_be_installed steamcmd"
 fi
-if_not_then_install "procps" "[ -f /bin/kill ]"
-if_not_then_install "xterm" "[ $(command -v xterm) ]"
-if_not_then_install "whiptail" "[ $(command -v whiptail) ]"
-if_not_then_install "pv" "[ $(command -v pv) ]"
-if_not_then_install "curl" "[ $(command -v curl) ]"
-if_not_then_install "jq" "[ $(command -v jq) ]"
-if_not_then_install "zenity" "[ $(command -v zenity) ]"
 
-if [ "$operating_system" = "Ubuntu" ]
-then
-if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]"
-fi
 # end of find missing dependencies
 
 echo ""
