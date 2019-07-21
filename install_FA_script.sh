@@ -9,10 +9,14 @@ already_fa=$6
 default_dir=$7
 directory=$8
 
-to_log()
-{
-        echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
-}
+to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file }
+
+if $default_dir
+then
+    origin="$HOME/.steam/steam"
+else
+    origin=$directory
+fi
 
 echo "expecting you to type in Forged Alliances Launch options"
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted"
@@ -47,12 +51,6 @@ else
     fi
     to_log "T3 FA installed condition met"
 fi
-if $default_dir
-then
-    origin="$HOME/.steam/steam"
-else
-    origin=$directory
-fi
 to_log "T3 launching FA"
 steam -login $steam_user_name $steam_password -applaunch 9420 &>/dev/null &
 echo ""
@@ -70,8 +68,10 @@ sp='/-\|'
 no_config=true
 while $no_config
 do
-    printf "\b${sp:i++%${#sp}:1}"
-    if [ \( \( ! "$(pidof SupremeCommande)" \) -a \( -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) \) -o \( "$typed_continue" = "c" \) ]
+    printf "\b${sp:i++%${#sp}:1}";
+    if [ \( ! "$(pidof SupremeCommande)" \) -a \
+	 \( -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) ] || \
+       [ "$typed_continue" = "c" ]
     then
         no_config=false
     fi
@@ -84,89 +84,37 @@ then
     echo
 else
     to_log "T3 copying over run file"
-    cp -f /tmp/proton_'$real_user'/run $HOME/faf/
+    cp -f /tmp/proton_"$real_user"/run $HOME/faf/
 fi
 to_log "T3 making symbolic links"
-if $default_dir
-then
-    if [ -d $origin/steamapps ]
-    then
-        if [ -d $origin/steamapps/common/Supreme* ]
-        then
-            cd $origin/steamapps/common/Supreme\ Commander\ Forged\ Alliance
-            rm -rf Maps
-            rm -rf Mods
-            ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
-            ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
-        else
-            to_log "T3 steamapps FA folder not found"
-        fi
-        if [ -d $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
-        then
-            cd $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
-            rm -rf My\ Documents
-            mkdir My\ Documents
-            cd My\ Documents
-            ln -s $HOME/My\ Games/ My\ Games
-        else
-            to_log "T3 steamapps FA compatdata folder not found"
-        fi
-    elif [ -d $origin/SteamApps ]
-    then
-        to_log "T3 curious case of SteamApps instead of steamapps"
-        if [ -d $origin/SteamApps/common/Supreme* ]
-        then
-            cd $origin/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
-            rm -rf Maps
-            rm -rf Mods
-            ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
-            ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
-        else
-            to_log "T3 SteamApps FA folder not found"
-        fi
-        if [ -d $origin/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
-        then
-            cd $origin/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
-            rm -rf My\ Documents
-            mkdir My\ Documents
-            cd My\ Documents
-            ln -s $HOME/My\ Games/ My\ Games
-        else
-            to_log "T3 SteamApps FA compatdata folder not found"
-        fi
-    else
-        to_log "T3 neither steamapps nor SteamApps are found. exiting"
-        exit 1
-    fi
-else
-    to_log "T3 symlinking for non-standart install location"
-    cd $origin/steamapps/common/Supreme\ Commander\ Forged\ Alliance
-    rm -rf Maps
-    rm -rf Mods
-    ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
-    ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
-    if [ -d $origin/steamapps ]
-    then
-        if [ -d $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
-        then
-            cd $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
-            rm -rf My\ Documents
-            mkdir My\ Documents
-            cd My\ Documents
-            ln -s $HOME/My\ Games/ My\ Games
-        fi
-    elif [ -d $origin/SteamApps ]
-    then
-        if [ -d $origin/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
-        then
-            cd $origin/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
-            rm -rf My\ Documents
-            mkdir My\ Documents
-            cd My\ Documents
-            ln -s $HOME/My\ Games/ My\ Games
-        fi
-    fi
-fi
+
+steamapps_list=("steamapps" "SteamApps")
+
+for steamapps in $steamapps_list
+do
+    # It should always be possible to find this folder
+    [ -d "$origin/$steamapps/common/$supcom"  ] && \
+    fa_install_dir="$origin/$steamapps/common/$supcom"
+    [ -d "$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" ] && \
+    compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" && \
+    break
+done
+[ "$compatdata" = "" ] && \
+    echo "[$(date --rfc-3339=seconds)] T3 neither steamapps nor SteamApps compatdata was found. exiting" >> $faf_log_file \
+    exit 1
+
+cd "$fa_install_dir" 
+rm -rf Maps
+rm -rf Mods
+ln -s $HOME/My\ Games/Gas\ Powered\ Games/$supcom/Maps/ Maps
+ln -s $HOME/My\ Games/Gas\ Powered\ Games/$supcom/Mods/ Mods
+
+cd "$compatdata"
+rm -rf My\ Documents
+mkdir My\ Documents
+cd My\ Documents
+ln -s $HOME/My\ Games/ My\ Games
+
 cd
 source .bashrc
 eval "$(cat .bashrc | tail -n +10)"
