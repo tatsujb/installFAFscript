@@ -133,7 +133,7 @@ then
     to_log "T1 steam CMD is already installed, proceeding..."
 else
     to_log "T1 steam CMD was not yet installed, installing..."
-    if [ "'$operating_system'" = "Debian GNU/Linux" ]
+    if [ "$operating_system" = "Debian GNU/Linux" ]
     then
         if getent passwd steam &>/dev/null
         then
