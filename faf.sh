@@ -387,8 +387,6 @@ do
 done
 echo ""
 
-mv "$work_dir/faf/" "$HOME/"
-
 if [ ! -f install_FA_script.sh ]
 then
     wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh $work_dir
@@ -419,6 +417,9 @@ to_log "T1 start of second thread did not crash first thread"
 # end of OS Splitter
 
 install_faf_function
+
+mv "$work_dir/faf/" "$HOME/"
+to_log "T1 $([[ -d $HOME/faf ]] && echo did || echo "didnt") successfully move faf dir"
 
 # wait for user to log in
 to_log "T1 waiting"
