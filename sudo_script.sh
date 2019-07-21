@@ -1,10 +1,17 @@
+#!/bin/bash
+
 faf_log_file=$1
 operating_system=$2
 to_be_installed=$3
 if [ ! operating_system ]
-then 
+then
     operating_system="Ubuntu"
 fi
+
+to_log()
+{
+        echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+}
 
 echo "If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies."
 echo "Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run."
@@ -17,12 +24,12 @@ echo "Pending obtaning sudo priveledges, this windows will run the following :"
 echo ""
 echo "sudo apt update -y &&"
 echo "sudo apt full-upgrade -y &&"
-echo "sudo apt install -y$to_be_installed &&"
+echo "sudo apt install -y $to_be_installed &&"
 echo "sudo apt autoremove -y &&"
 echo "sudo apt autoclean"
 echo ""
 sudo echo ""
-echo "[$(date --rfc-3339=seconds)] T2 begining install of$to_be_installed" >> $faf_log_file
+to_log "T2 begining install of$to_be_installed"
 if [ ! $(command -v steam) ]
 then
     if [ "$operating_system" != "Zorin OS" ]
@@ -43,39 +50,39 @@ if [ "$operating_system" = "Debian GNU/Linux" ]
 then
     if grep -q "debian.org/debian/ stretch main contrib non-free" /etc/apt/sources.list > /dev/null
     then
-        echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch already correct" >> $faf_log_file
+        to_log "T2 editing debian sources : stretch already correct"
     else
-        echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch edited" >> $faf_log_file
+        to_log "T2 editing debian sources : stretch edited"
         sed -i "s_debian.org/debian/ stretch main contrib_debian.org/debian/ stretch main contrib non-free_" /etc/apt/sources.list
     fi
     if grep -q "http://security.debian.org/debian-security stretch/updates main contrib non-free" /etc/apt/sources.list > /dev/null
     then
-        echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch/updates already correct" >> $faf_log_file
+        to_log "T2 editing debian sources : stretch/updates already correct"
     else
-        echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch/updates edited" >> $faf_log_file
+        to_log "T2 editing debian sources : stretch/updates edited"
         sed -i "s_http://security.debian.org/debian-security stretch/updates main contrib_http://security.debian.org/debian-security stretch/updates main contrib non-free_" /etc/apt/sources.list
     fi
     if grep -q "debian.org/debian/ stretch-updates main contrib non-free" /etc/apt/sources.list > /dev/null
     then
-        echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch-updates already correct" >> $faf_log_file
+        to_log "T2 editing debian sources : stretch-updates already correct"
     else
-        echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : stretch-updates edited" >> $faf_log_file
+        to_log "T2 editing debian sources : stretch-updates edited"
         sed -i "s_debian.org/debian/ stretch-updates main contrib_debian.org/debian/ stretch-updates main contrib non-free_" /etc/apt/sources.list
     fi
     if grep -q "deb http://ftp.*.debian.org/debian/ stretch-proposed-updates main contrib non-free" /etc/apt/sources.list > /dev/null
     then
-        echo "[$(date --rfc-3339=seconds)] T2 editing debian sources : proposed already present" >> $faf_log_file
+        to_log "T2 editing debian sources : proposed already present"
     else
         donwload_country=$(grep "deb http://ftp." /etc/apt/sources.list | head -1 | cut -d. -f2)
-        echo "[$(date --rfc-3339=seconds)] T1 editing debian sources : added proposed" >> $faf_log_file
+        to_log "T1 editing debian sources : added proposed"
         echo "deb http://ftp.$donwload_country.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
     fi
     else if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
     then
-        echo "[$(date --rfc-3339=seconds)] T2 enabled partners" >> $faf_log_file
+        to_log "T2 enabled partners"
         sudo sed -i "s/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g" /etc/apt/sources.list
     else
-        echo "[$(date --rfc-3339=seconds)] T2 did not enable partners, hoping it was already enabled." >> $faf_log_file
+        to_log "T2 did not enable partners, hoping it was already enabled."
     fi
 fi
 if [ \( "$operating_system" = "Arch"\) -o \( "$operating_system" = "Manjaro" \) ]
@@ -111,4 +118,4 @@ else
     sudo apt autoremove -y
     sudo apt autoclean
 fi
-echo "[$(date --rfc-3339=seconds)] T2 finished succesfully" >> $faf_log_file
+to_log "T2 finished succesfully"

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 faf_log_file=$1
 operating_system=$2
 real_user=$3
@@ -6,6 +8,8 @@ steam_password=$5
 already_fa=$6
 default_dir=$7
 directory=$8
+
+to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file }
 
 if $default_dir
 then
@@ -24,18 +28,18 @@ else
     echo ""
     echo ""
     echo ""
-    echo "[$(date --rfc-3339=seconds)] T3 running steam" >> $faf_log_file
+    to_log "T3 running steam"
     steam -login $steam_user_name $steam_password
     rm $HOME/the\ contents\ of\ this*
     if $default_dir
     then
-        echo "[$(date --rfc-3339=seconds)] T3 installing FA to default dir" >> $faf_log_file
-        while [ \( ! -d $origin/steamapps/common/Supreme* \) -a \( ! -d $origin/SteamApps/common/Supreme* \) ]
+        to_log "T3 installing FA to default dir"
+        while [ \( ! -d $HOME/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d $HOME/.steam/steam/SteamApps/common/Supreme* \) ]
         do
             steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +app_update 9420 +quit
         done
     else
-        echo "[$(date --rfc-3339=seconds)] T3 installing FA to custom dir" >> $faf_log_file
+        to_log "T3 installing FA to custom dir"
         while [ ! -d $directory/bin ]
         do
             steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +force_install_dir $directory +app_update 9420 +quit
@@ -45,20 +49,20 @@ else
         mv * steamapps/common/Supreme\ Commander\ Forged\ Alliance/ 2>/dev/null
         cd
     fi
-    echo "[$(date --rfc-3339=seconds)] T3 FA installed condition met" >> $faf_log_file
+    to_log "T3 FA installed condition met"
 fi
-echo "[$(date --rfc-3339=seconds)] T3 launching FA" >> $faf_log_file
+to_log "T3 launching FA"
 steam -login $steam_user_name $steam_password -applaunch 9420 &>/dev/null &
 echo ""
 echo ""
 echo ""
 echo ""
 echo ""
-echo "Waiting for Forged Alliance to be installed, Game.prefs to exits"
-echo -n "and for Forged Alliance to be shut down."
-#echo "You may also type \"c\" and enter to exit this loop"
-#echo "if you feel the conditions for continuing sucessfully"
-#echo -n "have already been adequately met... "
+echo "Waiting for Forged Alliance to be run, Game.prefs to exist"
+echo "and for Forged Alliance to be shut down."
+echo "You may also type \"c\" (and enter/return) to exit this loop"
+echo "if you feel the conditions for continuing sucessfully"
+echo -n "have already been adequately met... "
 i=1
 sp='/-\|'
 no_config=true
@@ -72,17 +76,17 @@ do
         no_config=false
     fi
     sleep 1
-    #read -s -r -t 1 typed_continue
+    read -s -r -t 1 typed_continue
 done
 echo ""
 if $already_fa
 then
     echo
 else
-    echo "[$(date --rfc-3339=seconds)] T3 copying over run file" >> $faf_log_file
+    to_log "T3 copying over run file"
     cp -f /tmp/proton_'$real_user'/run $HOME/faf/
 fi
-echo "[$(date --rfc-3339=seconds)] T3 making symbolic links" >> $faf_log_file
+to_log "T3 making symbolic links"
 
 steamapps_list=("steamapps" "SteamApps")
 
@@ -115,4 +119,4 @@ cd
 source .bashrc
 eval "$(cat .bashrc | tail -n +10)"
 echo "FA installation finished succesfully"
-echo "[$(date --rfc-3339=seconds)] T3 starting T4 and exiting T3" >> $faf_log_file
+to_log "T3 starting T4 and exiting T3"
