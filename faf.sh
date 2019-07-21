@@ -419,7 +419,7 @@ to_log "T1 start of second thread did not crash first thread"
 install_faf_function
 
 mv "$work_dir/faf/" "$HOME/"
-to_log "T1 $([[ -d $HOME/faf ]] && echo did || echo "didnt") successfully move faf dir"
+to_log "T1 $([[ -d $HOME/faf ]] && echo did || echo didnt) successfully move faf dir"
 
 # wait for user to log in
 to_log "T1 waiting"
