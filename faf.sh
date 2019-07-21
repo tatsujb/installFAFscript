@@ -105,7 +105,7 @@ log_separator
 echo "" >> "$faf_log_file"
 
 # bengining of find missing dependencies
-to_be_installed=""
+to_be_installed="lib32gcc1"
 
 if_not_then_install() {
 	# $1  is the package to be installed
@@ -151,8 +151,8 @@ if_not_then_install "whiptail" "[ $(command -v whiptail) ]"
 if_not_then_install "pv" "[ $(command -v pv) ]"
 if_not_then_install "curl" "[ $(command -v curl) ]"
 if_not_then_install "jq" "[ $(command -v jq) ]"
-if_not_then_install "zenity" "dpkg-query -W -f='${Status}' zenity | grep 'ok installed'"
-if_not_then_install "lib32gcc1" "dpkg-query -W -f='${Status}' lib32gcc1 | grep 'ok installed'"
+if_not_then_install "zenity" "[ $(command -v zenity) ]"
+
 if [ "$operating_system" = "Ubuntu" ]
 then
 if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]"
