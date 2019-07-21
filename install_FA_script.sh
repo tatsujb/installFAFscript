@@ -9,7 +9,11 @@ already_fa=$6
 default_dir=$7
 directory=$8
 
-to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file }
+to_log()
+{
+        echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+}
+
 echo "expecting you to type in Forged Alliances Launch options"
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted"
 echo "once thats done edit steam settings in order to enable Proton for all games"
@@ -66,7 +70,7 @@ sp='/-\|'
 no_config=true
 while $no_config
 do
-    printf "\b${sp:i++%${#sp}:1}";
+    printf "\b${sp:i++%${#sp}:1}"
     if [ \( \( ! "$(pidof SupremeCommande)" \) -a \( -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) \) -o \( "$typed_continue" = "c" \) ]
     then
         no_config=false
@@ -153,9 +157,9 @@ else
         fi
     elif [ -d $HOME/.steam/steam/SteamApps ]
     then
-        if [ -d $HOME/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
+        if [ -d $directory/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
         then
-            cd $HOME/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
+            cd $directory/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
             rm -rf My\ Documents
             mkdir My\ Documents
             cd My\ Documents
