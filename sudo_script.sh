@@ -29,7 +29,7 @@ echo "sudo apt autoremove -y &&"
 echo "sudo apt autoclean"
 echo ""
 sudo echo ""
-to_log "T2 begining install of$to_be_installed"
+to_log "T2 begining install of $to_be_installed"
 if [ ! $(command -v steam) ]
 then
     if [ "$operating_system" != "Zorin OS" ]
@@ -91,30 +91,30 @@ then
     sudo pacman -Syy
     sudo pacman -Scc
     sudo pacman -Suu
-    sudo pacman -S$to_be_installed
+    sudo pacman - $to_be_installed
 elif [ "$operating_system" = "Fedora" ]
 then
     sudo dnf distro-sync
-    sudo dnf install -y$to_be_installed
+    sudo dnf install -y $to_be_installed
     sudo dnf clean all
     sudo dnf autoremove
 elif [ "$operating_system" = "Mageia" ]
 then
     sudo dnf distro-sync
-    sudo dnf install -y$to_be_installed
+    sudo dnf install -y $to_be_installed
     sudo dnf clean all
     sudo dnf autoremove
 elif [ "$operating_system" = "CentOS" ]
 then
     sudo yum upgrade
-    sudo yum install -y$to_be_installed
+    sudo yum install -y $to_be_installed
     sudo yum clean all
 else
     sudo apt update -y
     sudo apt full-upgrade -y
     [ "$operating_system" = "Debian GNU/Linux" ] && sudo /usr/sbin/usermod -a -G video,audio $real_user
     [ "$operating_system" = "Debian GNU/Linux" ] && sudo dpkg --add-architecture i386
-    sudo apt install -y$to_be_installed
+    sudo apt install -y $to_be_installed
     sudo apt autoremove -y
     sudo apt autoclean
 fi
