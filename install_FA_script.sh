@@ -89,11 +89,11 @@ fi
 to_log "T3 making symbolic links"
 if $default_dir
 then
-    if [ -d $HOME/.steam/steam/steamapps ]
+    if [ -d $origin/steamapps ]
     then
-        if [ -d $HOME/.steam/steam/steamapps/common/Supreme* ]
+        if [ -d $origin/steamapps/common/Supreme* ]
         then
-            cd $HOME/.steam/steam/steamapps/common/Supreme\ Commander\ Forged\ Alliance
+            cd $origin/steamapps/common/Supreme\ Commander\ Forged\ Alliance
             rm -rf Maps
             rm -rf Mods
             ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
@@ -101,9 +101,9 @@ then
         else
             to_log "T3 steamapps FA folder not found"
         fi
-        if [ -d $HOME/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
+        if [ -d $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
         then
-            cd $HOME/.steam/steam/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
+            cd $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
             rm -rf My\ Documents
             mkdir My\ Documents
             cd My\ Documents
@@ -111,12 +111,12 @@ then
         else
             to_log "T3 steamapps FA compatdata folder not found"
         fi
-    elif [ -d $HOME/.steam/steam/SteamApps ]
+    elif [ -d $origin/SteamApps ]
     then
         to_log "T3 curious case of SteamApps instead of steamapps"
-        if [ -d $HOME/.steam/steam/SteamApps/common/Supreme* ]
+        if [ -d $origin/SteamApps/common/Supreme* ]
         then
-            cd $HOME/.steam/steam/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
+            cd $origin/SteamApps/common/Supreme\ Commander\ Forged\ Alliance
             rm -rf Maps
             rm -rf Mods
             ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
@@ -124,9 +124,9 @@ then
         else
             to_log "T3 SteamApps FA folder not found"
         fi
-        if [ -d $HOME/.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
+        if [ -d $origin/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
         then
-            cd $HOME.steam/steam/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
+            cd $origin/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
             rm -rf My\ Documents
             mkdir My\ Documents
             cd My\ Documents
@@ -140,26 +140,26 @@ then
     fi
 else
     to_log "T3 symlinking for non-standart install location"
-    cd $directory/steamapps/common/Supreme\ Commander\ Forged\ Alliance
+    cd $origin/steamapps/common/Supreme\ Commander\ Forged\ Alliance
     rm -rf Maps
     rm -rf Mods
     ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Maps/ Maps
     ln -s $HOME/My\ Games/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Mods/ Mods
-    if [ -d $HOME/.steam/steam/steamapps ]
+    if [ -d $origin/steamapps ]
     then
-        if [ -d $directory/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
+        if [ -d $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
         then
-            cd $directory/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
+            cd $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser
             rm -rf My\ Documents
             mkdir My\ Documents
             cd My\ Documents
             ln -s $HOME/My\ Games/ My\ Games
         fi
-    elif [ -d $HOME/.steam/steam/SteamApps ]
+    elif [ -d $origin/SteamApps ]
     then
-        if [ -d $directory/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
+        if [ -d $origin/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser ]
         then
-            cd $directory/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
+            cd $origin/SteamApps/compatdata/9420/pfx/drive_c/users/steamuser
             rm -rf My\ Documents
             mkdir My\ Documents
             cd My\ Documents
