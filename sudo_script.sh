@@ -4,11 +4,14 @@ faf_log_file=$1
 operating_system=$2
 to_be_installed=$3
 if [ ! operating_system ]
-then 
+then
     operating_system="Ubuntu"
 fi
 
-to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file }
+to_log()
+{
+        echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+}
 
 echo "If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies."
 echo "Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run."
@@ -26,7 +29,7 @@ echo "sudo apt autoremove -y &&"
 echo "sudo apt autoclean"
 echo ""
 sudo echo ""
-to_log "T2 begining install of$to_be_installed" 
+to_log "T2 begining install of$to_be_installed"
 if [ ! $(command -v steam) ]
 then
     if [ "$operating_system" != "Zorin OS" ]
@@ -47,39 +50,39 @@ if [ "$operating_system" = "Debian GNU/Linux" ]
 then
     if grep -q "debian.org/debian/ stretch main contrib non-free" /etc/apt/sources.list > /dev/null
     then
-        to_log "T2 editing debian sources : stretch already correct" 
+        to_log "T2 editing debian sources : stretch already correct"
     else
-        to_log "T2 editing debian sources : stretch edited" 
+        to_log "T2 editing debian sources : stretch edited"
         sed -i "s_debian.org/debian/ stretch main contrib_debian.org/debian/ stretch main contrib non-free_" /etc/apt/sources.list
     fi
     if grep -q "http://security.debian.org/debian-security stretch/updates main contrib non-free" /etc/apt/sources.list > /dev/null
     then
-        to_log "T2 editing debian sources : stretch/updates already correct" 
+        to_log "T2 editing debian sources : stretch/updates already correct"
     else
-        to_log "T2 editing debian sources : stretch/updates edited" 
+        to_log "T2 editing debian sources : stretch/updates edited"
         sed -i "s_http://security.debian.org/debian-security stretch/updates main contrib_http://security.debian.org/debian-security stretch/updates main contrib non-free_" /etc/apt/sources.list
     fi
     if grep -q "debian.org/debian/ stretch-updates main contrib non-free" /etc/apt/sources.list > /dev/null
     then
-        to_log "T2 editing debian sources : stretch-updates already correct" 
+        to_log "T2 editing debian sources : stretch-updates already correct"
     else
-        to_log "T2 editing debian sources : stretch-updates edited" 
+        to_log "T2 editing debian sources : stretch-updates edited"
         sed -i "s_debian.org/debian/ stretch-updates main contrib_debian.org/debian/ stretch-updates main contrib non-free_" /etc/apt/sources.list
     fi
     if grep -q "deb http://ftp.*.debian.org/debian/ stretch-proposed-updates main contrib non-free" /etc/apt/sources.list > /dev/null
     then
-        to_log "T2 editing debian sources : proposed already present" 
+        to_log "T2 editing debian sources : proposed already present"
     else
         donwload_country=$(grep "deb http://ftp." /etc/apt/sources.list | head -1 | cut -d. -f2)
-        to_log "T1 editing debian sources : added proposed" 
+        to_log "T1 editing debian sources : added proposed"
         echo "deb http://ftp.$donwload_country.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
     fi
     else if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
     then
-        to_log "T2 enabled partners" 
+        to_log "T2 enabled partners"
         sudo sed -i "s/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g" /etc/apt/sources.list
     else
-        to_log "T2 did not enable partners, hoping it was already enabled." 
+        to_log "T2 did not enable partners, hoping it was already enabled."
     fi
 fi
 if [ \( "$operating_system" = "Arch"\) -o \( "$operating_system" = "Manjaro" \) ]
@@ -115,4 +118,4 @@ else
     sudo apt autoremove -y
     sudo apt autoclean
 fi
-to_log "T2 finished succesfully" 
+to_log "T2 finished succesfully"
