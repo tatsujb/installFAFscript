@@ -60,11 +60,11 @@ echo ""
 echo ""
 echo ""
 echo ""
-echo "Waiting for Forged Alliance to be installed, Game.prefs to exits"
-echo -n "and for Forged Alliance to be shut down."
-#echo "You may also type \"c\" and enter to exit this loop"
-#echo "if you feel the conditions for continuing sucessfully"
-#echo -n "have already been adequately met... "
+echo "Waiting for Forged Alliance to be run, Game.prefs to exist"
+echo "and for Forged Alliance to be shut down."
+echo "You may also type \"c\" (and enter/return) to exit this loop"
+echo "if you feel the conditions for continuing sucessfully"
+echo -n "have already been adequately met... "
 i=1
 sp='/-\|'
 no_config=true
@@ -76,7 +76,7 @@ do
         no_config=false
     fi
     sleep 1
-    #read -s -r -t 1 typed_continue
+    read -s -r -t 1 typed_continue
 done
 echo ""
 if $already_fa
