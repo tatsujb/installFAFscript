@@ -386,7 +386,7 @@ echo ""
 
 if [ ! -f install_FA_script.sh ]
 then
-    wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh $work_dir
+    wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
 fi
 chmod +x install_FA_script.sh
 # OS splitter again
