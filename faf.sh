@@ -463,7 +463,7 @@ jq --arg installationPath "$installationPath" --arg normalpath "$normalpath" --a
         installationPath: ($installationPath),
         path: ($normalpath),
         preferencesFile: ($preferencesFile),
-        executableDecorator: ($HOME + "/faf/run "%s"")
+        executableDecorator: ($HOME + "/faf/run \"%s\"")
     }' $HOME/.faforever/client.prefs > $HOME/.faforever/client.prefs.tmp
 mv $HOME/.faforever/client.prefs.tmp $HOME/.faforever/client.prefs
 
