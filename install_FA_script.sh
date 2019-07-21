@@ -92,20 +92,12 @@ do
     [ -d "$origin/$steamapps/common/$supcom"  ] && \
     fa_install_dir="$origin/$steamapps/common/$supcom"
     [ -d "$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" ] && \
-    home_steamapps="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" && \
+    compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" && \
     break
 done
-[ "$home_steamapps" = "" ] && \
+[ "$compatdata" = "" ] && \
     echo "[$(date --rfc-3339=seconds)] T3 neither steamapps nor SteamApps compatdata was found. exiting" >> $faf_log_file \
     exit 1
-
-if [ -d $home_steamapps/compatdata/9420/pfx/drive_c/users/steamuser ]
-then
-    compatdata=$home_steamapps/compatdata/9420/pfx/drive_c/users/steamuser
-else
-    echo "[$(date --rfc-3339=seconds)] T3 Steam compatdata was found. exiting" >> $faf_log_file \
-    exit 1
-fi
 
 cd "$fa_install_dir" 
 rm -rf Maps
