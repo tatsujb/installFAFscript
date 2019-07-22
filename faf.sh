@@ -127,32 +127,8 @@ if_not_then_install "curl" "[ $(command -v curl) ]"
 if_not_then_install "jq" "[ $(command -v jq) ]"
 if_not_then_install "zenity" "[ $(command -v zenity) ]"
 [[ "$operating_system" = "Ubuntu" ]] && if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]"
-if [ $(command -v steam) ];
-then
-    to_log "T1 steam is already installed, proceeding..."
-else
-    to_log "T1 steam was not yet installed, installing..."
-    [ "$operating_system" = "Debian GNU/Linux" ] && usermod -a -G video,audio $real_user
-    [ "$operating_system" = "Debian GNU/Linux" ] && dpkg --add-architecture i386
-    to_be_installed="$to_be_installed steam"
-fi
-if [ $(command -v steamcmd) ]
-then
-    to_log "T1 steam CMD is already installed, proceeding..."
-else
-    to_log "T1 steam CMD was not yet installed, installing..."
-    if [ "$operating_system" = "Debian GNU/Linux" ]
-    then
-        if getent passwd steam &>/dev/null
-        then
-	    echo "steam home already exists"
-        else
-	    useradd -m steam
-            ln -s /usr/games/steamcmd /home/steam/steamcmd
-        fi
-    fi
-    to_be_installed="$to_be_installed steamcmd"
-fi
+if_not_then_install "steam" "[ $(command -v steam) ]"
+if_not_then_install "steamcmd" "[ $(command -v steamcmd) ]"
 
 # end of find missing dependencies
 

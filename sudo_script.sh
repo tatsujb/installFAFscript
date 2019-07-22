@@ -2,7 +2,7 @@
 
 VERBOSE=false
 DEBUG=false
-faf_log_file="/tmp/faf.log"
+logfile="/tmp/faf.sh.log"
 operating_system="Ubuntu"
 
 
@@ -19,12 +19,12 @@ while true; do
       echo "  -h, --help             Display this message and exit"
       echo "  -v, --verbose          enable verbose output"
       echo "  -D, --debug            enable the DEBUG symbol"
-      echo "  -l, --logfile          location of the logfile"
-      echo "  -o, --operating_system Operating system to install the packages for (default : Ubuntu)"
+      echo "  -l, --logfile          location of the logfile (default: $logfile)"
+      echo "  -o, --operating_system OS for which to install the packages for (default : $operating_system)"
       exit 1;;
     -v | --verbose ) VERBOSE=true; shift ;;
     -D | --debug ) DEBUG=true; shift ;;
-    -l | --logfile ) faf_log_file=$2; shift 2 ;;
+    -l | --logfile ) logfile=$2; shift 2 ;;
     -o | --operating_system ) operating_system=$2; shift 2 ;;
     -- ) shift; break ;;
     * ) break ;;
@@ -32,12 +32,12 @@ while true; do
 done
 to_be_installed=$@
 
-to_log() { echo -e "[$(date --rfc-3339=seconds)] $*" >> "$faf_log_file"; }
+to_log() { echo -e "[$(date --rfc-3339=seconds)] $*" >> "$logfile"; }
 
 to_log "####################\nT2 sudo (install X packages) script\n####################"
 to_log "  --verbose $VERBOSE"
 to_log "  --debug $DEBUG"
-to_log "  --logfile $faf_log_file"
+to_log "  --logfile $logfile"
 to_log "  --operating_system $operating_system"
 
 echo "If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies."
@@ -50,13 +50,13 @@ echo ""
 echo "Pending obtaning sudo priveledges, this windows will run the following :"
 echo ""
 _short_os=$(echo "$operating_system" | cut -c -4)
-echo -e "$(grep -A 10 "$_short_os.*\*" $0 | \
-	grep -v "$_short_os.*\*" | \
+echo -e "$(grep -A 100 "$_short_os.*\*" $0 | \
+           grep -v "$_short_os.*\*" | \
+           grep -v "to_log" | \
            awk '{if ($0 ~ / {8}.*/) {print $0;}
-                 else {exit;}
-                }' | \
+                 else {exit;}}' | \
            sed "s/\$to_be_installed/$to_be_installed/" | \
-	   sed 's/^ */  /')"
+	   sed 's/^ \{8\}//')"
 
 echo ""
 sudo echo ""
@@ -107,6 +107,16 @@ case "$operating_system" in
             sudo sed -i "s/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g" /etc/apt/sources.list
         else
             to_log "T2 did not enable partners, hoping it was already enabled."
+        fi
+        sudo usermod -a -G video,audio $real_user
+        sudo dpkg --add-architecture i386
+        if   echo $to_be_installed | grep steamcmd >/dev/null \
+          && getent passwd steam &>/dev/null
+        then
+            echo "steam home already exists"
+        else
+            sudo useradd -m steam
+            sudo ln -s /usr/games/steamcmd /home/steam/steamcmd
         fi;;
     *);;
 esac
@@ -131,8 +141,6 @@ case "$operating_system" in
     Ubuntu* | *)
         sudo apt update -y
         sudo apt full-upgrade -y
-        [ "$operating_system" = "Debian GNU/Linux" ] && sudo /usr/sbin/usermod -a -G video,audio $real_user
-        [ "$operating_system" = "Debian GNU/Linux" ] && sudo dpkg --add-architecture i386
         sudo apt install -y $to_be_installed
         sudo apt autoremove -y
         sudo apt autoclean;;
