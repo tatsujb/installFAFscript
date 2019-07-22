@@ -194,31 +194,17 @@ function install_faf_function
 # Download & install FAF client
 echo "now moving on to installing Downlord's FAF..."
 
+to_log "T1 installing DOWNLORD"
+cd $work_dir
 if [[ "$operating_system" = "Arch" || "$operating_system" = "Manjaro" ]]
 then
-    cd
-    if [ -d faf ]
-    then
-        rm -rf faf
-    fi
-    mkdir faf
-    cd faf
     curl https://aur.archlinux.org/cgit/aur.git/snapshot/downlords-faf-client.tar.gz
-    pv -xzvf faf.tar.gz | tar xzp -C
-    cd faf
+    tar -xf downlords-faf-client.tar.gz
+    cd downlords-faf-client
     makepkg -si
     cd
     ln -s $HOME/.faforever/user
 else
-    cd
-    if [ -d faf ]
-    then
-        rm -rf faf
-    fi
-    to_log "T1 installing DOWNLORD"
-    cd $work_dir
-    mkdir faf
-    cd faf
     faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
     faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
     wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
