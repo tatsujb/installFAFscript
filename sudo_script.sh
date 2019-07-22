@@ -2,8 +2,9 @@
 
 VERBOSE=false
 DEBUG=false
-faf_log_file=""
+faf_log_file="/tmp/faf.log"
 operating_system="Ubuntu"
+
 
 TEMP=`getopt -o hvDfl:o: --long help,verbose,debug,logfile:,operating_system: \
              -n "$0" -- "$@"`
@@ -31,7 +32,7 @@ while true; do
 done
 to_be_installed=$@
 
-to_log() { echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file }
+to_log() { echo -e "[$(date --rfc-3339=seconds)] $*" >> "$faf_log_file"; }
 
 to_log "####################\nT2 sudo (install X packages) script\n####################"
 to_log "  --verbose $VERBOSE"
@@ -48,17 +49,21 @@ echo "However, if you trust the script, you may simply type in your admin passwo
 echo ""
 echo "Pending obtaning sudo priveledges, this windows will run the following :"
 echo ""
-echo "sudo apt update -y &&"
-echo "sudo apt full-upgrade -y &&"
-echo "sudo apt install -y $to_be_installed &&"
-echo "sudo apt autoremove -y &&"
-echo "sudo apt autoclean"
+_short_os=$(echo "$operating_system" | cut -c -4)
+echo -e "$(grep -A 10 "$_short_os.*\*" $0 | \
+	grep -v "$_short_os.*\*" | \
+           awk '{if ($0 ~ / {8}.*/) {print $0;}
+                 else {exit;}
+                }' | \
+           sed "s/\$to_be_installed/$to_be_installed/" | \
+	   sed 's/^ */  /')"
+
 echo ""
 sudo echo ""
 to_log "T2 preparing installs - checking sources & misc."
 case "$operating_system" in
     Zorin*) 
-        for $_s in ("steam" "steamcmd")
+        for $_s in "steam" "steamcmd"
         do
             if [ ! $(command -v $_s) ]
 	    then
@@ -96,13 +101,14 @@ case "$operating_system" in
             to_log "T1 editing debian sources : added proposed"
             echo "deb http://ftp.$donwload_country.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
         fi
-        else if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
+        if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
         then
             to_log "T2 enabled partners"
             sudo sed -i "s/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g" /etc/apt/sources.list
         else
             to_log "T2 did not enable partners, hoping it was already enabled."
         fi;;
+    *);;
 esac
 
 to_log "T2 begining install of $to_be_installed"

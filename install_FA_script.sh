@@ -29,7 +29,7 @@ while true; do
   esac
 done
 
-to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file }
+to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file; }
 
 to_log -e "####################\nT3 install FA script\n####################"
 to_log "  --verbose $VERBOSE"
