@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 cd
-real_user=$(pwd | cut -c 7-)
+real_user=$(echo $HOME | cut -c 7-)
 work_dir=/tmp/faf_script_workdir
 mkdir -p $work_dir
 faf_log_file="$work_dir/faf.sh-$faf_sh_version.log"
@@ -351,63 +351,28 @@ fi
 
 get_user_input_function
 
-echo ""
-to_log "T1 FA not installed chosen"
-bind 'TAB: accept-line' &>/dev/null
-while [ -z "$steam_user_name" ]
-do
-    echo "steam user name :"
-    IFS= read -e steam_user_name
-done
-while [ -z "$steam_password" ]
-do
-    echo "steam password :"
-    IFS= read -e -s steam_password
-done
-# NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-to_log "T1 Steam credentials entrusted to script"
-if [ ! -f $HOME/the\ contents\ of\ this* ]
-then
-echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > $HOME/"the contents of this file are to be pasted in the forged alliance properties launch options"
-fi
-
-echo ""
-i=1
-sp='/-\|'
-no_steam=true
-echo "waiting for dependencies to be present... "
-while $no_steam
-do
-  printf "\b${sp:i++%${#sp}:1}"
-  [[ $(command -v steam) ]] && no_steam=false
-  sleep 1
-done
-echo ""
-
 if [ ! -f install_FA_script.sh ]
 then
     wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
 fi
 chmod +x install_FA_script.sh
 # OS splitter again
-to_run_faf_script="$work_dir/install_FA_script.sh $faf_log_file $operating_system $real_user $steam_user_name $steam_password $already_fa $default_dir $directory"
+to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -o \'$operating_system\' -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
 
-if [[ "$operating_system" = "Ubuntu" || "$operating_system" = "Debian GNU/Linux" ]]
-then
-    echo 'gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"' >> install_FA_script.sh
-    gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- $to_run_faf_script
-elif [ "$operating_system" = "Kubuntu" ]
-then
-    echo 'konsole -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    konsole -e $to_run_faf_script
-elif [ "$operating_system" = "elementary OS" ]
-then
-    echo 'io.elementary.terminal -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    io.elementary.terminal -e $to_run_faf_script
-else
-    echo 'xterm -T "(FAF)" -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script
-fi
+case $operating_system in
+    Ubuntu* | Debian*)
+        echo 'gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"' >> install_FA_script.sh
+        gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- $to_run_faf_script;;
+    Kubuntu*)
+        echo 'konsole -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
+        konsole -e $to_run_faf_script;;
+    elementary*)
+        echo 'io.elementary.terminal -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
+        io.elementary.terminal -e $to_run_faf_script;;
+    *)
+        echo 'xterm -T "(FAF)" -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
+        xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script;;
+esac
 #rm install_FA_script.sh
 
 to_log "T1 start of second thread did not crash first thread"
