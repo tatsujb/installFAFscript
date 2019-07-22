@@ -24,7 +24,7 @@ cd $work_dir
 
 to_log()
 {
-	echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+	echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
 }
 
 log_separator()
@@ -162,8 +162,8 @@ then
     echo "all dependencies met :)"
     to_log "T1 all dependencies met"
 else
-    to_run_sudo_script="$work_dir/sudo_script.sh $faf_log_file $operating_system"
-    to_log "T1 to be installed :$to_be_installed"
+    to_run_sudo_script="$work_dir/sudo_script.sh --logfile $faf_log_file --operating_system $operating_system"
+    to_log "T1 to be installed : $to_be_installed"
     if [ ! -f sudo_script.sh ]
     then
         wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh
@@ -171,18 +171,16 @@ else
     chmod +x sudo_script.sh
 
     # OS splitter
-    if [[ "$operating_system" = "Ubuntu" || "$operating_system" = "Debian GNU/Linux" ]]
-    then
-        gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed"
-    elif [ "$operating_system" = "Kubuntu" ]
-    then
-        konsole -e $to_run_sudo_script "$to_be_installed"
-    elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
-    then
-        io.elementary.terminal -e $to_run_sudo_script "$to_be_installed"
-    else
-        xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
-    fi
+    case "$operating_system" in
+        Ubuntu* | Debian*)
+            gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed";;
+        Kubuntu*)
+            konsole -e $to_run_sudo_script "$to_be_installed"
+        elementary*)
+            io.elementary.terminal -e $to_run_sudo_script "$to_be_installed"
+        *)
+            xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
+    esac
     # end of OS Splitter
 fi
 #rm sudo_script.sh
@@ -359,7 +357,7 @@ chmod +x install_FA_script.sh
 # OS splitter again
 to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -o \'$operating_system\' -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
 
-case $operating_system in
+case "$operating_system" in
     Ubuntu* | Debian*)
         echo 'gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"' >> install_FA_script.sh
         gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- $to_run_faf_script;;

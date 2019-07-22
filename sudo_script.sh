@@ -1,17 +1,43 @@
 #!/bin/bash
 
-faf_log_file=$1
-operating_system=$2
-to_be_installed=$3
-if [ ! operating_system ]
-then
-    operating_system="Ubuntu"
-fi
+VERBOSE=false
+DEBUG=false
+faf_log_file=""
+operating_system="Ubuntu"
 
-to_log()
-{
-        echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
-}
+TEMP=`getopt -o hvDfl:o: --long help,verbose,debug,logfile:,operating_system: \
+             -n "$0" -- "$@"`
+
+if [ $? != 0 ] ; then echo " Terminating..." >&2 ; exit 1 ; fi
+eval set -- "$TEMP"
+while true; do
+  case "$1" in
+    -h | --help )
+      echo "$0 [OPTIONS] package [package ...]"
+      echo "OPTIONS"
+      echo "  -h, --help             Display this message and exit"
+      echo "  -v, --verbose          enable verbose output"
+      echo "  -D, --debug            enable the DEBUG symbol"
+      echo "  -l, --logfile          location of the logfile"
+      echo "  -o, --operating_system Operating system to install the packages for (default : Ubuntu)"
+      exit 1;;
+    -v | --verbose ) VERBOSE=true; shift ;;
+    -D | --debug ) DEBUG=true; shift ;;
+    -l | --logfile ) faf_log_file=$2; shift 2 ;;
+    -o | --operating_system ) operating_system=$2; shift 2 ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+to_be_installed=$@
+
+to_log() { echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file }
+
+to_log "####################\nT2 sudo (install X packages) script\n####################"
+to_log "  --verbose $VERBOSE"
+to_log "  --debug $DEBUG"
+to_log "  --logfile $faf_log_file"
+to_log "  --operating_system $operating_system"
 
 echo "If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies."
 echo "Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run."
