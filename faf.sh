@@ -162,7 +162,7 @@ then
     echo "all dependencies met :)"
     to_log "T1 all dependencies met"
 else
-    to_run_sudo_script="$work_dir/sudo_script.sh --logfile $faf_log_file --operating_system $operating_system"
+    to_run_sudo_script="$work_dir/sudo_script.sh --logfile $faf_log_file --operating_system \'$operating_system\'"
     to_log "T1 to be installed : $to_be_installed"
     if [ ! -f sudo_script.sh ]
     then
