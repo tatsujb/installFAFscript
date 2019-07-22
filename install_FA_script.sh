@@ -25,9 +25,7 @@ if $already_fa
 then
     echo ""
 else
-    echo ""
-    echo ""
-    echo ""
+    echo -e "\n\n\n"
     to_log "T3 running steam"
     steam -login $steam_user_name $steam_password
     rm $HOME/the\ contents\ of\ this*
@@ -53,12 +51,7 @@ else
 fi
 to_log "T3 launching FA"
 steam -login $steam_user_name $steam_password -applaunch 9420 &>/dev/null &
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo "Waiting for Forged Alliance to be run, Game.prefs to exist"
+echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
 echo "and for Forged Alliance to be shut down."
 echo "You may also type \"c\" (and enter/return) to exit this loop"
 echo "if you feel the conditions for continuing sucessfully"
@@ -79,10 +72,8 @@ do
     read -s -r -t 1 typed_continue
 done
 echo ""
-if $already_fa
+if ! $already_fa
 then
-    echo
-else
     to_log "T3 copying over run file"
     cp -f /tmp/proton_"$real_user"/run $HOME/faf/
 fi
@@ -100,7 +91,7 @@ do
     break
 done
 [ "$compatdata" = "" ] && \
-    echo "[$(date --rfc-3339=seconds)] T3 neither steamapps nor SteamApps compatdata was found. exiting" >> $faf_log_file \
+    to_log "T3 neither steamapps nor SteamApps compatdata was found. exiting" && \
     exit 1
 
 cd "$fa_install_dir" 
