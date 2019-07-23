@@ -162,6 +162,18 @@ fi
 #rm sudo_script.sh
 
 to_log "T1 start of second thread did not crash first thread"
+echo ""	
+i=1	
+sp='/-\|'	
+no_steam=true	
+echo "waiting for dependencies to be present... "	
+while $no_steam	
+do	
+  printf "\b${sp:i++%${#sp}:1}"	
+  [[ $(command -v steam) ]] && no_steam=false	
+  sleep 1	
+done	
+echo ""	
 
 function install_faf_function
 {
