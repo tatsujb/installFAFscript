@@ -48,6 +48,7 @@ else
     origin=$fa_base_dir
 fi
 
+bind 'TAB: accept-line' &>/dev/null
 while [ -z "$steam_user_name" ]
 do
     echo "steam user name :"
