@@ -151,9 +151,9 @@ else
         Ubuntu* | Debian*)
             gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed";;
         Kubuntu*)
-            konsole -e $to_run_sudo_script "$to_be_installed"
+            konsole -e $to_run_sudo_script "$to_be_installed";;
         elementary*)
-            io.elementary.terminal -e $to_run_sudo_script "$to_be_installed"
+            io.elementary.terminal -e $to_run_sudo_script "$to_be_installed";;
         *)
             xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
     esac
@@ -331,7 +331,7 @@ case "$operating_system" in
         io.elementary.terminal -e $to_run_faf_script;;
     *)
         echo 'xterm -T "(FAF)" -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-        xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script;;
+        xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script
 esac
 #rm install_FA_script.sh
 
