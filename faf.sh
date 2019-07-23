@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 cd
-real_user=$(pwd | cut -c 7-)
+real_user=$(echo $HOME | cut -c 7-)
 work_dir=/tmp/faf_script_workdir
 mkdir -p $work_dir
 faf_log_file="$work_dir/faf.sh-$faf_sh_version.log"
@@ -24,7 +24,7 @@ cd $work_dir
 
 to_log()
 {
-	echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+	echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
 }
 
 log_separator()
@@ -127,32 +127,8 @@ if_not_then_install "curl" "[ $(command -v curl) ]"
 if_not_then_install "jq" "[ $(command -v jq) ]"
 if_not_then_install "zenity" "[ $(command -v zenity) ]"
 [[ "$operating_system" = "Ubuntu" ]] && if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]"
-if [ $(command -v steam) ];
-then
-    to_log "T1 steam is already installed, proceeding..."
-else
-    to_log "T1 steam was not yet installed, installing..."
-    [ "$operating_system" = "Debian GNU/Linux" ] && usermod -a -G video,audio $real_user
-    [ "$operating_system" = "Debian GNU/Linux" ] && dpkg --add-architecture i386
-    to_be_installed="$to_be_installed steam"
-fi
-if [ $(command -v steamcmd) ]
-then
-    to_log "T1 steam CMD is already installed, proceeding..."
-else
-    to_log "T1 steam CMD was not yet installed, installing..."
-    if [ "$operating_system" = "Debian GNU/Linux" ]
-    then
-        if getent passwd steam &>/dev/null
-        then
-	    echo "steam home already exists"
-        else
-	    useradd -m steam
-            ln -s /usr/games/steamcmd /home/steam/steamcmd
-        fi
-    fi
-    to_be_installed="$to_be_installed steamcmd"
-fi
+if_not_then_install "steam" "[ $(command -v steam) ]"
+if_not_then_install "steamcmd" "[ $(command -v steamcmd) ]"
 
 # end of find missing dependencies
 
@@ -162,8 +138,8 @@ then
     echo "all dependencies met :)"
     to_log "T1 all dependencies met"
 else
-    to_run_sudo_script="$work_dir/sudo_script.sh $faf_log_file $operating_system"
-    to_log "T1 to be installed :$to_be_installed"
+    to_run_sudo_script="$work_dir/sudo_script.sh --logfile $faf_log_file --operating_system \'$operating_system\'"
+    to_log "T1 to be installed : $to_be_installed"
     if [ ! -f sudo_script.sh ]
     then
         wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh
@@ -171,18 +147,16 @@ else
     chmod +x sudo_script.sh
 
     # OS splitter
-    if [[ "$operating_system" = "Ubuntu" || "$operating_system" = "Debian GNU/Linux" ]]
-    then
-        gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed"
-    elif [ "$operating_system" = "Kubuntu" ]
-    then
-        konsole -e $to_run_sudo_script "$to_be_installed"
-    elif [ "$operating_system" = "elementary OS" ] # elementary's acting up. have to resort to xterm
-    then
-        io.elementary.terminal -e $to_run_sudo_script "$to_be_installed"
-    else
-        xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
-    fi
+    case "$operating_system" in
+        Ubuntu* | Debian*)
+            gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed";;
+        Kubuntu*)
+            konsole -e $to_run_sudo_script "$to_be_installed"
+        elementary*)
+            io.elementary.terminal -e $to_run_sudo_script "$to_be_installed"
+        *)
+            xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
+    esac
     # end of OS Splitter
 fi
 #rm sudo_script.sh
@@ -194,31 +168,17 @@ function install_faf_function
 # Download & install FAF client
 echo "now moving on to installing Downlord's FAF..."
 
+to_log "T1 installing DOWNLORD"
+cd $work_dir
 if [[ "$operating_system" = "Arch" || "$operating_system" = "Manjaro" ]]
 then
-    cd
-    if [ -d faf ]
-    then
-        rm -rf faf
-    fi
-    mkdir faf
-    cd faf
     curl https://aur.archlinux.org/cgit/aur.git/snapshot/downlords-faf-client.tar.gz
-    pv -xzvf faf.tar.gz | tar xzp -C
-    cd faf
+    tar -xf downlords-faf-client.tar.gz
+    cd downlords-faf-client
     makepkg -si
     cd
     ln -s $HOME/.faforever/user
 else
-    cd
-    if [ -d faf ]
-    then
-        rm -rf faf
-    fi
-    to_log "T1 installing DOWNLORD"
-    cd $work_dir
-    mkdir faf
-    cd faf
     faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
     faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
     wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
@@ -351,63 +311,28 @@ fi
 
 get_user_input_function
 
-echo ""
-to_log "T1 FA not installed chosen"
-bind 'TAB: accept-line' &>/dev/null
-while [ -z "$steam_user_name" ]
-do
-    echo "steam user name :"
-    IFS= read -e steam_user_name
-done
-while [ -z "$steam_password" ]
-do
-    echo "steam password :"
-    IFS= read -e -s steam_password
-done
-# NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-to_log "T1 Steam credentials entrusted to script"
-if [ ! -f $HOME/the\ contents\ of\ this* ]
-then
-echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > $HOME/"the contents of this file are to be pasted in the forged alliance properties launch options"
-fi
-
-echo ""
-i=1
-sp='/-\|'
-no_steam=true
-echo "waiting for dependencies to be present... "
-while $no_steam
-do
-  printf "\b${sp:i++%${#sp}:1}"
-  [[ $(command -v steam) ]] && no_steam=false
-  sleep 1
-done
-echo ""
-
 if [ ! -f install_FA_script.sh ]
 then
     wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
 fi
 chmod +x install_FA_script.sh
 # OS splitter again
-to_run_faf_script="$work_dir/install_FA_script.sh $faf_log_file $operating_system $real_user $steam_user_name $steam_password $already_fa $default_dir $directory"
+to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -o \'$operating_system\' -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
 
-if [[ "$operating_system" = "Ubuntu" || "$operating_system" = "Debian GNU/Linux" ]]
-then
-    echo 'gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"' >> install_FA_script.sh
-    gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- $to_run_faf_script
-elif [ "$operating_system" = "Kubuntu" ]
-then
-    echo 'konsole -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    konsole -e $to_run_faf_script
-elif [ "$operating_system" = "elementary OS" ]
-then
-    echo 'io.elementary.terminal -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    io.elementary.terminal -e $to_run_faf_script
-else
-    echo 'xterm -T "(FAF)" -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-    xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script
-fi
+case "$operating_system" in
+    Ubuntu* | Debian*)
+        echo 'gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"' >> install_FA_script.sh
+        gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- $to_run_faf_script;;
+    Kubuntu*)
+        echo 'konsole -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
+        konsole -e $to_run_faf_script;;
+    elementary*)
+        echo 'io.elementary.terminal -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
+        io.elementary.terminal -e $to_run_faf_script;;
+    *)
+        echo 'xterm -T "(FAF)" -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
+        xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script;;
+esac
 #rm install_FA_script.sh
 
 to_log "T1 start of second thread did not crash first thread"

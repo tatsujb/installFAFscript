@@ -1,21 +1,69 @@
 #!/bin/bash
 
-faf_log_file=$1
-operating_system=$2
-real_user=$3
-steam_user_name=$4
-steam_password=$5
-already_fa=$6
-default_dir=$7
-directory=$8
+VERBOSE=false
+DEBUG=false
+already_fa=false
+faf_log_file=""
+operating_system=""
+real_user=""
+default_dir=""
+fa_base_dir=""
 
-to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file }
+TEMP=`getopt -o vDfm:l:u:d:o: --long verbose,debug,logfile: \
+             -n "$0" -- "$@"`
+
+if [ $? != 0 ] ; then echo " Terminating..." >&2 ; exit 1 ; fi
+eval set -- "$TEMP"
+while true; do
+  case "$1" in
+    -v | --verbose ) VERBOSE=true; shift ;;
+    -D | --debug ) DEBUG=true; shift ;;
+    --default_dir ) default_dir=true; shift ;;
+    -f | --already_fa ) already_fa=true; shift ;;
+    -l | --logfile ) faf_log_file=$2; shift 2 ;;
+    -o | --operating_system ) operating_system=$2; shift 2 ;;
+    -u | --real_user ) real_user=$2; shift 2 ;;
+    --fa_base_dir ) fa_base_dir=$2; shift 2 ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file; }
+
+to_log -e "####################\nT3 install FA script\n####################"
+to_log "  --verbose $VERBOSE"
+to_log "  --debug $DEBUG"
+to_log "  --default_dir $default_dir"
+to_log "  --already_fa $already_fa"
+to_log "  --logfile $faf_log_file"
+to_log "  --operating_system $operating_system"
+to_log "  --real_user $real_user"
+to_log "  --fa_base_dir $fa_base_dir"
 
 if $default_dir
 then
     origin="$HOME/.steam/steam"
 else
-    origin=$directory
+    origin=$fa_base_dir
+fi
+
+while [ -z "$steam_user_name" ]
+do
+    echo "steam user name :"
+    IFS= read -e steam_user_name
+done
+while [ -z "$steam_password" ]
+do
+    echo "steam password :"
+    IFS= read -e -s steam_password
+done
+
+# NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
+to_log "T1 Steam credentials entrusted to script"
+if [ ! -f $HOME/the\ contents\ of\ this* ]
+then
+echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > $HOME/"the contents of this file are to be pasted in the forged alliance properties launch options"
 fi
 
 echo "expecting you to type in Forged Alliances Launch options"
@@ -25,9 +73,7 @@ if $already_fa
 then
     echo ""
 else
-    echo ""
-    echo ""
-    echo ""
+    echo -e "\n\n\n"
     to_log "T3 running steam"
     steam -login $steam_user_name $steam_password
     rm $HOME/the\ contents\ of\ this*
@@ -40,11 +86,11 @@ else
         done
     else
         to_log "T3 installing FA to custom dir"
-        while [ ! -d $directory/bin ]
+        while [ ! -d $fa_base_dir/bin ]
         do
-            steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +force_install_dir $directory +app_update 9420 +quit
+            steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +force_install_dir $fa_base_dir +app_update 9420 +quit
         done
-        cd $directory
+        cd $fa_base_dir
         mkdir -p steamapps/common/Supreme\ Commander\ Forged\ Alliance
         mv * steamapps/common/Supreme\ Commander\ Forged\ Alliance/ 2>/dev/null
         cd
@@ -53,12 +99,7 @@ else
 fi
 to_log "T3 launching FA"
 steam -login $steam_user_name $steam_password -applaunch 9420 &>/dev/null &
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo "Waiting for Forged Alliance to be run, Game.prefs to exist"
+echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
 echo "and for Forged Alliance to be shut down."
 echo "You may also type \"c\" (and enter/return) to exit this loop"
 echo "if you feel the conditions for continuing sucessfully"
@@ -79,10 +120,8 @@ do
     read -s -r -t 1 typed_continue
 done
 echo ""
-if $already_fa
+if ! $already_fa
 then
-    echo
-else
     to_log "T3 copying over run file"
     cp -f /tmp/proton_"$real_user"/run $HOME/faf/
 fi
@@ -100,7 +139,7 @@ do
     break
 done
 [ "$compatdata" = "" ] && \
-    echo "[$(date --rfc-3339=seconds)] T3 neither steamapps nor SteamApps compatdata was found. exiting" >> $faf_log_file \
+    to_log "T3 neither steamapps nor SteamApps compatdata was found. exiting" && \
     exit 1
 
 cd "$fa_install_dir" 
