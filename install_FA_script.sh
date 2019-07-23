@@ -41,13 +41,6 @@ to_log "  --operating_system $operating_system"
 to_log "  --real_user $real_user"
 to_log "  --fa_base_dir $fa_base_dir"
 
-# NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-to_log "T1 Steam credentials entrusted to script"
-if [ ! -f $HOME/the\ contents\ of\ this* ]
-then
-echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > $HOME/"the contents of this file are to be pasted in the forged alliance properties launch options"
-fi
-
 if $default_dir
 then
     origin="$HOME/.steam/steam"
@@ -65,7 +58,6 @@ do
     echo "steam password :"
     IFS= read -e -s steam_password
 done
-
 
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
 to_log "T1 Steam credentials entrusted to script"
