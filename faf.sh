@@ -132,6 +132,37 @@ if_not_then_install "steamcmd" "[ $(command -v steamcmd) ]"
 
 # end of find missing dependencies
 
+best_term() {
+    # find present terminals on the syst and tries the least buggy one
+    # prints the opening command to run a script in a new window/tab
+    eval set `getopt -o "t:T:" --long "title" -n "$0"`
+    case "$1" in
+        -t|-T|--title) $_title=$2; shift 2;;
+    esac
+    terms=(gnome-terminal xterm urxvt konsole)
+    for t in ${terms[*]}
+    do
+        if [ $(command -v $t) ]
+        then
+	    printf $t
+            case $t in
+	        gnome-terminal)
+		    printf " --tab --active "
+		    if [ ! -z "$_title" ]; then printf "--title \"$_title\""; fi
+	            printf " --";;
+		xterm)
+		    if [ ! -z "$_title" ]; then printf " -T \"$_title\""; fi
+		    printf " -e";;
+		urxvt)
+		    printf " -e bash";;
+		konsole)
+		    printf " --new-tab -e bash";;
+            esac
+            return 0
+        fi
+    done
+}
+
 echo ""
 if [ "$to_be_installed" = "" ]
 then
