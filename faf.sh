@@ -139,6 +139,9 @@ best_term() {
     case "$1" in
         -t|-T|--title) $_title=$2; shift 2;;
     esac
+    # TODO : Test if this works well
+    cur_term_ish="$("$(ps -p $(ps -p $$ -o ppid=) o args=)" | awk '{print $1}')"
+    # TODO : test current terminal emulator vs. whitelisted emulators
     terms=(gnome-terminal xterm urxvt konsole)
     for t in ${terms[*]}
     do
