@@ -52,12 +52,12 @@ bind 'TAB: accept-line' &>/dev/null
 while [ -z "$steam_user_name" ]
 do
     echo "steam user name :"
-    IFS= read -e steam_user_name
+    IFS= read -e -r steam_user_name
 done
 while [ -z "$steam_password" ]
 do
     echo "steam password :"
-    IFS= read -e -s steam_password
+    IFS= read -e -r -s steam_password
 done
 
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
