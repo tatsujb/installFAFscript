@@ -49,6 +49,7 @@ echo "However, if you trust the script, you may simply type in your admin passwo
 echo ""
 echo "Pending obtaning sudo priveledges, this windows will run the following :"
 echo ""
+#TODO: fix below, does not work on ubuntu :
 _short_os=$(echo "$operating_system" | cut -c -4)
 echo -e "$(grep -A 100 "$_short_os.*\*" $0 | \
            grep -v "$_short_os.*\*" | \
@@ -62,7 +63,7 @@ echo ""
 sudo echo ""
 to_log "T2 preparing installs - checking sources & misc."
 case "$operating_system" in
-    Zorin*) 
+    Ubuntu*) 
         for $_s in "steam" "steamcmd"
         do
             if [ ! $(command -v $_s) ]
