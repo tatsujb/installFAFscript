@@ -34,11 +34,11 @@ to_be_installed=$@
 
 to_log() { echo -e "[$(date --rfc-3339=seconds)] $*" >> "$logfile"; }
 
-to_log "####################\nT2 sudo (install X packages) script\n####################"
-to_log "  --verbose $VERBOSE"
-to_log "  --debug $DEBUG"
-to_log "  --logfile $logfile"
-to_log "  --operating_system $operating_system"
+to_log "####################T2 sudo (install X packages) script####################"
+to_log "T2  --verbose $VERBOSE"
+to_log "T2  --debug $DEBUG"
+to_log "T2  --logfile $logfile"
+to_log "T2  --operating_system $operating_system"
 
 echo "If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies."
 echo "Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run."
@@ -65,7 +65,7 @@ echo -e "press Ctrl+C (multiple times) without entering your password\n"
 sudo echo ""
 to_log "T2 preparing installs - checking sources & misc."
 case "$operating_system" in
-    Zorin*)
+    Ubuntu*) 
         for $_s in "steam" "steamcmd"
         do
             if [ ! $(command -v $_s) ]

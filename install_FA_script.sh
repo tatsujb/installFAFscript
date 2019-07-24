@@ -29,17 +29,20 @@ while true; do
   esac
 done
 
-to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file; }
+to_log()
+{
+     echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+}
 
-to_log -e "####################\nT3 install FA script\n####################"
-to_log "  --verbose $VERBOSE"
-to_log "  --debug $DEBUG"
-to_log "  --default_dir $default_dir"
-to_log "  --already_fa $already_fa"
-to_log "  --logfile $faf_log_file"
-to_log "  --operating_system $operating_system"
-to_log "  --real_user $real_user"
-to_log "  --fa_base_dir $fa_base_dir"
+to_log "####################T3 install FA script####################"
+to_log "T3  --verbose $VERBOSE"
+to_log "T3  --debug $DEBUG"
+to_log "T3  --default_dir $default_dir"
+to_log "T3  --already_fa $already_fa"
+to_log "T3  --logfile $faf_log_file"
+to_log "T3  --operating_system $operating_system"
+to_log "T3  --real_user $real_user"
+to_log "T3  --fa_base_dir $fa_base_dir"
 
 if $default_dir
 then
@@ -48,15 +51,16 @@ else
     origin=$fa_base_dir
 fi
 
+bind 'TAB: accept-line' &>/dev/null
 while [ -z "$steam_user_name" ]
 do
     echo "steam user name :"
-    IFS= read -e steam_user_name
+    IFS= read -e -r steam_user_name
 done
 while [ -z "$steam_password" ]
 do
     echo "steam password :"
-    IFS= read -e -s steam_password
+    IFS= read -e -r -s steam_password
 done
 
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
@@ -142,7 +146,7 @@ done
     to_log "T3 neither steamapps nor SteamApps compatdata was found. exiting" && \
     exit 1
 
-cd "$fa_install_dir" 
+cd "$fa_install_dir"
 rm -rf Maps
 rm -rf Mods
 ln -s $HOME/My\ Games/Gas\ Powered\ Games/$supcom/Maps/ Maps

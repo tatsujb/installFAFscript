@@ -151,17 +151,23 @@ else
         Ubuntu* | Debian*)
             gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed";;
         Kubuntu*)
-            konsole -e $to_run_sudo_script "$to_be_installed"
+            konsole -e $to_run_sudo_script "$to_be_installed";;
         elementary*)
-            io.elementary.terminal -e $to_run_sudo_script "$to_be_installed"
+            io.elementary.terminal -e $to_run_sudo_script "$to_be_installed";;
         *)
-            xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
+            xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed";;
     esac
     # end of OS Splitter
 fi
 #rm sudo_script.sh
 
 to_log "T1 start of second thread did not crash first thread"
+ 
+function set_install_dir_function
+{
+    directory=$(zenity --file-selection --directory --title "$1")
+    to_log "T1 folder set to $directory"
+} 
 
 function install_faf_function
 {
@@ -234,12 +240,6 @@ fi
 cd $work_dir
 # /end make faf .desktop runner
 }
- 
-function set_install_dir_function
-{
-    directory=$(zenity --file-selection --directory --title "$1")
-    to_log "T1 folder set to $directory"
-} 
 
 function get_user_input_function
 {
@@ -310,6 +310,18 @@ fi
 }
 
 get_user_input_function
+echo ""	
+i=1	
+sp='/-\|'	
+no_steam=true	
+echo "waiting for dependencies to be present... "	
+while $no_steam	
+do	
+  printf "\b${sp:i++%${#sp}:1}"	
+  [[ $(command -v steam) ]] && no_steam=false	
+  sleep 1	
+done	
+echo ""	
 
 if [ ! -f install_FA_script.sh ]
 then
