@@ -49,12 +49,13 @@ echo "However, if you trust the script, you may simply type in your admin passwo
 echo ""
 echo "Pending obtaning sudo priveledges, this windows will run the following :"
 echo ""
-_short_os=$(echo "$operating_system" | cut -c -4)
+_short_os=$(echo "$operating_system" | sed 's/['\''"\\]//g' | cut -c -4 )
+echo $_short_os
 cat $0 | \
     grep -v "to_log" | \
     awk '{if ($0 ~ /'$_short_os'[a-zA-Z]*\*/) {
             getline;
-            while ($0 ~ /^ {8}/) {
+            while ($0 ~ /^        /) {
               print $0;
               getline;}}}' | \
     sed 's/\$to_be_installed/'"$to_be_installed"'/' | \
@@ -66,7 +67,7 @@ sudo echo ""
 to_log "T2 preparing installs - checking sources & misc."
 case "$operating_system" in
     Ubuntu*) 
-        for $_s in "steam" "steamcmd"
+        for _s in "steam" "steamcmd"
         do
             if [ ! $(command -v $_s) ]
             then
