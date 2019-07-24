@@ -162,18 +162,12 @@ fi
 #rm sudo_script.sh
 
 to_log "T1 start of second thread did not crash first thread"
-echo ""	
-i=1	
-sp='/-\|'	
-no_steam=true	
-echo "waiting for dependencies to be present... "	
-while $no_steam	
-do	
-  printf "\b${sp:i++%${#sp}:1}"	
-  [[ $(command -v steam) ]] && no_steam=false	
-  sleep 1	
-done	
-echo ""	
+ 
+function set_install_dir_function
+{
+    directory=$(zenity --file-selection --directory --title "$1")
+    to_log "T1 folder set to $directory"
+} 
 
 function install_faf_function
 {
@@ -247,12 +241,6 @@ cd $work_dir
 # /end make faf .desktop runner
 }
 
-function set_install_dir_function
-{
-    directory=$(zenity --file-selection --directory --title "$1")
-    to_log "T1 folder set to $directory"
-}
-
 function get_user_input_function
 {
 if (whiptail --title "The game Forged Alliance is NOT installed on my system :" --yesno "" 12 85 --fb)
@@ -322,6 +310,18 @@ fi
 }
 
 get_user_input_function
+echo ""	
+i=1	
+sp='/-\|'	
+no_steam=true	
+echo "waiting for dependencies to be present... "	
+while $no_steam	
+do	
+  printf "\b${sp:i++%${#sp}:1}"	
+  [[ $(command -v steam) ]] && no_steam=false	
+  sleep 1	
+done	
+echo ""	
 
 if [ ! -f install_FA_script.sh ]
 then

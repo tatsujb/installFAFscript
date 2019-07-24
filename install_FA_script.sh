@@ -29,17 +29,20 @@ while true; do
   esac
 done
 
-to_log() { echo "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file; }
+to_log()
+{
+     echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+}
 
-to_log -e "####################\nT3 install FA script\n####################"
-to_log "  --verbose $VERBOSE"
-to_log "  --debug $DEBUG"
-to_log "  --default_dir $default_dir"
-to_log "  --already_fa $already_fa"
-to_log "  --logfile $faf_log_file"
-to_log "  --operating_system $operating_system"
-to_log "  --real_user $real_user"
-to_log "  --fa_base_dir $fa_base_dir"
+to_log "####################T3 install FA script####################"
+to_log "T3  --verbose $VERBOSE"
+to_log "T3  --debug $DEBUG"
+to_log "T3  --default_dir $default_dir"
+to_log "T3  --already_fa $already_fa"
+to_log "T3  --logfile $faf_log_file"
+to_log "T3  --operating_system $operating_system"
+to_log "T3  --real_user $real_user"
+to_log "T3  --fa_base_dir $fa_base_dir"
 
 if $default_dir
 then
