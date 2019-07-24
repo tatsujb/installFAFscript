@@ -60,7 +60,7 @@ echo -e "$(grep -A 100 "$_short_os.*\*" $0 | \
 
 echo ""
 sudo echo ""
-to_log "T2 preparing to install $1 - checking sources & misc."
+to_log "T2 preparing installs - checking sources & misc."
 case "$operating_system" in
     Zorin*) 
         for $_s in "steam" "steamcmd"
