@@ -162,6 +162,82 @@ fi
 #rm sudo_script.sh
 
 to_log "T1 start of second thread did not crash first thread"
+ 
+function set_install_dir_function
+{
+    directory=$(zenity --file-selection --directory --title "$1")
+    to_log "T1 folder set to $directory"
+} 
+
+function get_user_input_function
+{
+if (whiptail --title "The game Forged Alliance is NOT installed on my system :" --yesno "" 12 85 --fb)
+then
+    already_fa=false
+    if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
+    then
+        default_dir=true
+        to_log "T1 default dir chosen"
+    else
+        default_dir=false
+        to_log "T1 non-standart dir chosen"
+        set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
+    fi
+else
+    to_log "T1 FA already installed chosen"
+    what_to_do=$(whiptail --title "What do you wish to do?" --notags --nocancel --menu "" 12 85 0 "1" "Install another FA somewhere else, then install (FAF)" "2" "Reinstall FA, then install (FAF)" "3" "Use my install of FA and install (FAF)" "4" "FA is configured, I only want (FAF)" "5" "...wait... I messed up!" --fb 3>&1 1>&2 2>&3)
+    case $what_to_do in
+        1)
+            to_log "T1 resintall FA chosen"
+            already_fa=false
+            if (whiptail --title "Second install of Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
+            then
+                default_dir=true
+                to_log "T1 default dir chosen"
+            else
+                default_dir=false
+                to_log "T1 non-standart dir chosen"
+                set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
+            fi
+        ;;
+        2)
+            del_directory=$(zenity --file-selection --directory --title "select the folder you want to delete (FA)")
+            rm -rf del_directory
+            to_log "T1 resintall FA chosen"
+            already_fa=false
+            if (whiptail --title "ReInstall Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
+            then
+                default_dir=true
+                to_log "T1 default dir chosen"
+            else
+                default_dir=false
+                to_log "T1 non-standart dir chosen"
+                set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
+            fi
+        ;;
+        3)
+            to_log "T1 keep but configure FA chosen"
+            already_fa=true
+            default_dir=false
+            set_install_dir_function  "Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
+            while [ ! -d "$directory/steamapps/common/Supreme Commander Forged Alliance" ]
+            do
+                set_install_dir_function "Sorry, that was wrong, Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
+            done
+        ;;
+        4)
+            to_log "T1 keep and dont configure FA chosen"
+            install_faf_function
+            echo "installed faf only, as per user demand, nothing else to do, exiting."
+            exit 0
+        ;;
+        5)
+            get_user_input_function
+    esac
+fi
+}
+
+get_user_input_function
 echo ""	
 i=1	
 sp='/-\|'	
@@ -246,82 +322,6 @@ fi
 cd $work_dir
 # /end make faf .desktop runner
 }
- 
-function set_install_dir_function
-{
-    directory=$(zenity --file-selection --directory --title "$1")
-    to_log "T1 folder set to $directory"
-} 
-
-function get_user_input_function
-{
-if (whiptail --title "The game Forged Alliance is NOT installed on my system :" --yesno "" 12 85 --fb)
-then
-    already_fa=false
-    if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
-    then
-        default_dir=true
-        to_log "T1 default dir chosen"
-    else
-        default_dir=false
-        to_log "T1 non-standart dir chosen"
-        set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
-    fi
-else
-    to_log "T1 FA already installed chosen"
-    what_to_do=$(whiptail --title "What do you wish to do?" --notags --nocancel --menu "" 12 85 0 "1" "Install another FA somewhere else, then install (FAF)" "2" "Reinstall FA, then install (FAF)" "3" "Use my install of FA and install (FAF)" "4" "FA is configured, I only want (FAF)" "5" "...wait... I messed up!" --fb 3>&1 1>&2 2>&3)
-    case $what_to_do in
-        1)
-            to_log "T1 resintall FA chosen"
-            already_fa=false
-            if (whiptail --title "Second install of Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
-            then
-                default_dir=true
-                to_log "T1 default dir chosen"
-            else
-                default_dir=false
-                to_log "T1 non-standart dir chosen"
-                set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
-            fi
-        ;;
-        2)
-            del_directory=$(zenity --file-selection --directory --title "select the folder you want to delete (FA)")
-            rm -rf del_directory
-            to_log "T1 resintall FA chosen"
-            already_fa=false
-            if (whiptail --title "ReInstall Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
-            then
-                default_dir=true
-                to_log "T1 default dir chosen"
-            else
-                default_dir=false
-                to_log "T1 non-standart dir chosen"
-                set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
-            fi
-        ;;
-        3)
-            to_log "T1 keep but configure FA chosen"
-            already_fa=true
-            default_dir=false
-            set_install_dir_function  "Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
-            while [ ! -d "$directory/steamapps/common/Supreme Commander Forged Alliance" ]
-            do
-                set_install_dir_function "Sorry, that was wrong, Select grandparent folder that contains steamapps/common/Supreme Commander Forged Alliance"
-            done
-        ;;
-        4)
-            to_log "T1 keep and dont configure FA chosen"
-            install_faf_function
-            echo "installed faf only, as per user demand, nothing else to do, exiting."
-            exit 0
-        ;;
-        5)
-            get_user_input_function
-    esac
-fi
-}
-
-get_user_input_function
 
 if [ ! -f install_FA_script.sh ]
 then
