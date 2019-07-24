@@ -62,7 +62,7 @@ echo ""
 sudo echo ""
 to_log "T2 preparing installs - checking sources & misc."
 case "$operating_system" in
-    Zorin*) 
+    Zorin*)
         for $_s in "steam" "steamcmd"
         do
             if [ ! $(command -v $_s) ]

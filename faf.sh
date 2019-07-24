@@ -155,7 +155,7 @@ else
         elementary*)
             io.elementary.terminal -e $to_run_sudo_script "$to_be_installed";;
         *)
-            xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
+            xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed";;
     esac
     # end of OS Splitter
 fi
@@ -246,12 +246,12 @@ fi
 cd $work_dir
 # /end make faf .desktop runner
 }
- 
+
 function set_install_dir_function
 {
     directory=$(zenity --file-selection --directory --title "$1")
     to_log "T1 folder set to $directory"
-} 
+}
 
 function get_user_input_function
 {
@@ -343,7 +343,7 @@ case "$operating_system" in
         io.elementary.terminal -e $to_run_faf_script;;
     *)
         echo 'xterm -T "(FAF)" -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-        xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script
+        xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script;;
 esac
 #rm install_FA_script.sh
 
