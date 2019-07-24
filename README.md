@@ -1,6 +1,19 @@
 [![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/55295910-de770f80-5412-11e9-8950-f22f6176e406.png)](https://www.youtube.com/watch?v=zQkiy8lK20o)
 ###### licensed under GPL-3.0-or-later
 
+## !! Unstable version !!
+
+Sorry, we didn't follow the right protocol. As a result, you will temporarily have to get the latest stable version here:
+
+[faf.sh](https://raw.githubusercontent.com/tatsujb/installFAFscript/030e2aad883e3d5f1d4d4717e032cbed9a1bd3d0/faf.sh)
+
+[Commit](https://github.com/tatsujb/installFAFscript/tree/030e2aad883e3d5f1d4d4717e032cbed9a1bd3d0)
+
+get the stable script :
+```bash
+wget https://raw.githubusercontent.com/tatsujb/installFAFscript/030e2aad883e3d5f1d4d4717e032cbed9a1bd3d0/faf.sh
+```
+
 ## Looking for Contributors! Please apply as a github issue.
 
 
