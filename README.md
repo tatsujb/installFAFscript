@@ -1,6 +1,19 @@
 [![how to install on ubuntu](https://user-images.githubusercontent.com/5132359/55295910-de770f80-5412-11e9-8950-f22f6176e406.png)](https://www.youtube.com/watch?v=zQkiy8lK20o)
 ###### licensed under GPL-3.0-or-later
 
+## !! Unstable version !!
+
+Sorry, we didn't follow the right protocol. As a result, you will temporarily have to get the latest stable version here:
+
+[faf.sh](https://raw.githubusercontent.com/tatsujb/installFAFscript/030e2aad883e3d5f1d4d4717e032cbed9a1bd3d0/faf.sh)
+
+[Commit](https://github.com/tatsujb/installFAFscript/tree/030e2aad883e3d5f1d4d4717e032cbed9a1bd3d0)
+
+get the stable script :
+```bash
+wget https://raw.githubusercontent.com/tatsujb/installFAFscript/030e2aad883e3d5f1d4d4717e032cbed9a1bd3d0/faf.sh
+```
+
 ## Looking for Contributors! Please apply as a github issue.
 
 
@@ -22,20 +35,20 @@ Version | Distro | distro+DE |  | Comment
 18.04.3, 18.10 | ![kubuntu](https://user-images.githubusercontent.com/5132359/54205501-c75d9580-44d6-11e9-91fa-ee67fff0e3f8.png) | Kubuntu (Plasma) | :heavy_check_mark: | two adaptations were made for kubuntu to work: detecting plasma + ubuntu = (kubuntu if case). Also gnome-terminal was traded out in favor of konsole.
 12.4 | ![zorin](https://user-images.githubusercontent.com/5132359/54295562-92734080-45b3-11e9-95ed-627f2931ec94.png) | Zorin (zorin) | :heavy_check_mark:  | debconf-set-selections for steam is for some reason borked on zorin, trying to auto-accept the eula will result in the opposite. You'll have two eula accepting manual steps added to your process. really minor.
 18.04 |![lubuntu](https://user-images.githubusercontent.com/5132359/55295985-b805a400-5413-11e9-8fca-315db5462eb6.png) | Lubuntu (LXDE) | ? | should work. untested.
-5.0 | ![elementary-os](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | Elementary (Pantheon) | :heavy_check_mark: | used xterm instead of gnome-terminal. Also I didn't know how to shut down steam, there was no tray icon, I used htop 
+5.0 | ![elementary-os](https://user-images.githubusercontent.com/5132359/54205279-59b16980-44d6-11e9-9f65-5c191eb33645.png) | Elementary (Pantheon) | :heavy_check_mark: | used xterm instead of gnome-terminal. Also I didn't know how to shut down steam, there was no tray icon, I used htop
 2019.04.01 | ![archlinux](https://user-images.githubusercontent.com/5132359/56390390-38a60c00-622c-11e9-8314-653787a84ab7.png) | Arch (gnome3) | ? | should work. untested.
 9.8 | ![debian](https://user-images.githubusercontent.com/5132359/54201700-99745300-44ce-11e9-8435-dc65f98a2147.png) | Debian (gnome3) | :heavy_check_mark: | you must have installed and preconfigured `sudo` before running this script. if you do not want this script is not for you (23/04/2019) marks me dropping support of sudoless debian.
 29 | ![Fedora](https://user-images.githubusercontent.com/5132359/54399527-2978ef00-46bf-11e9-8418-0031c7e991f7.png) | Fedora (gnome3) | ? | should work. untested.
 18.0.4 | ![manjaro](https://user-images.githubusercontent.com/5132359/54216185-76a36800-44e9-11e9-9e32-52d6a4071643.png) | Manjaro (Plasma) | ? | should work. untested.
 6.1 | ![mageia](https://user-images.githubusercontent.com/5132359/56390795-26789d80-622d-11e9-9046-763803153305.png) | Mageia (Plasma) | ? | should work. untested.
-18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | CenT OS (gnome3) | :heavy_multiplication_x: | 
+18.10 | ![centos](https://user-images.githubusercontent.com/5132359/54216744-88393f80-44ea-11e9-8536-9fbd56ad3913.png) | CenT OS (gnome3) | :heavy_multiplication_x: |
 10.14 | ![apple](https://user-images.githubusercontent.com/5132359/54368435-6d92d200-4674-11e9-922f-9aebabfd7ca2.png) | Apple (Aqua) | :heavy_multiplication_x: | started work...
 ? | ? | ? | ? | don't see your Operating system in here? Try the script or open it and read it to find issues simply by looking and open up an [issue](https://github.com/tatsujb/installFAFscript/issues/new "open new issue") if it doesn't work.
 
 
 # Install (read entirely before running)
 
-## Pre-requisites 
+## Pre-requisites
 
 - a steam account with Forged Alliance activated on it [(9420)](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") (no steam does not need to be preinstalled, it does not need to not be preinstalled either, both work)
 - your steam games are public (they no longer are by default) so if your account is relatively new and you haven't done this yet follow this guide first :  https://youtu.be/ElH4aetA5Hc
@@ -51,9 +64,9 @@ click on faf.sh above, then click on "RAW", then type <kbd>Ctrl</kbd> + <kbd>S</
 
 make it executable : (terminal) `chmod +x faf.sh`
 
-### 3rd 
+### 3rd
 
-run the script within a terminal : `./faf.sh` 
+run the script within a terminal : `./faf.sh`
 
 The script will begin by asking for your linux session password.
 
@@ -65,7 +78,7 @@ If however you trust that this terminal tab does exatly what it claims you may s
 
 Switch back to the first terminal tab. (or simply wait, the sudo tab closing will result in the same)
 
-you are being asked if you do not have FA installed. 
+you are being asked if you do not have FA installed.
 
 if you select no you have five choices :
 
@@ -76,10 +89,10 @@ if you select no you have five choices :
  3. Use my install of FA
  4. only install FAF for me.
  5. go back to the menu from before.
- 
+
 if you select yes you are then asked whether you want to install FA to default dir and drive (SDA), at your discretion you may choose no and you will be prompted with a Gui to pick the folder.
 
-### 5th (I chose "yes I do not have FA installed", if not skip this step) 
+### 5th (I chose "yes I do not have FA installed", if not skip this step)
 
 After you've made your choices a new terminal tab opens up that begins by launching steam.
 
@@ -133,9 +146,9 @@ GL HF!
 - r̶e̶f̶a̶c̶t̶o̶r̶i̶n̶g̶.̶.̶.̶ ̶I̶ ̶l̶a̶z̶i̶l̶y̶ ̶c̶o̶p̶y̶ ̶p̶a̶s̶t̶e̶d̶ ̶t̶h̶e̶ ̶s̶c̶r̶i̶p̶t̶ ̶f̶o̶r̶ ̶t̶h̶e̶ ̶d̶i̶s̶t̶r̶o̶'̶s̶ ̶i̶f̶ ̶c̶a̶s̶e̶s̶,̶ ̶t̶h̶i̶s̶ ̶m̶a̶d̶e̶ ̶i̶t̶ ̶o̶v̶e̶r̶ ̶1̶7̶0̶0̶ ̶l̶i̶n̶e̶s̶ ̶l̶o̶n̶g̶.̶.̶.̶ ̶t̶h̶e̶r̶e̶ ̶s̶h̶o̶u̶l̶d̶ ̶b̶e̶ ̶a̶ ̶b̶e̶t̶t̶e̶r̶ ̶w̶a̶y̶ ̶b̶u̶t̶ ̶I̶'̶m̶ ̶s̶h̶o̶r̶t̶ ̶o̶n̶ ̶t̶i̶m̶e̶.̶ ̶i̶t̶ ̶w̶o̶r̶k̶s̶ ̶t̶h̶a̶t̶'̶s̶ ̶t̶h̶e̶ ̶m̶a̶i̶n̶ ̶f̶a̶c̶t̶o̶r̶.̶ now refactored : 2383 −> down to 671 !!!
 - r̶e̶m̶o̶v̶e̶ ̶a̶s̶ ̶m̶u̶c̶h̶ ̶a̶s̶ ̶p̶o̶s̶s̶i̶b̶l̶e̶ ̶.̶b̶a̶s̶h̶r̶c̶ ̶m̶o̶d̶i̶f̶i̶c̶a̶t̶i̶o̶n̶s̶ ̶a̶n̶d̶ ̶d̶e̶f̶a̶u̶l̶t̶ ̶t̶o̶ ̶u̶s̶i̶n̶g̶ ̶t̶h̶e̶ ̶r̶u̶n̶ ̶f̶i̶l̶e̶ ̶s̶t̶e̶a̶m̶ ̶c̶r̶e̶a̶t̶e̶s̶
 - m̶a̶k̶e̶ ̶t̶h̶i̶s̶ ̶s̶c̶r̶i̶p̶t̶ ̶m̶o̶r̶e̶ ̶p̶o̶s̶i̶x̶-̶c̶o̶m̶p̶l̶i̶a̶n̶t̶ could always be better
-- ~~create if-cases for differing linux distros~~ 
+- ~~create if-cases for differing linux distros~~
 - r̶e̶m̶o̶v̶e̶ ̶t̶h̶e̶ ̶n̶e̶e̶d̶ ̶f̶o̶r̶ ̶t̶h̶e̶ ̶u̶s̶e̶r̶ ̶s̶o̶ ̶s̶e̶t̶ ̶f̶a̶f̶ ̶s̶e̶t̶t̶i̶n̶g̶s̶ ̶h̶i̶m̶s̶e̶l̶f̶
-- c̶r̶e̶a̶t̶e̶ ̶F̶A̶F̶ ̶l̶a̶u̶n̶c̶h̶e̶r̶ 
+- c̶r̶e̶a̶t̶e̶ ̶F̶A̶F̶ ̶l̶a̶u̶n̶c̶h̶e̶r̶
 - f̶i̶g̶u̶r̶e̶ ̶o̶u̶t̶ ̶a̶ ̶p̶r̶o̶p̶e̶r̶ ̶f̶i̶x̶ ̶t̶o̶ ̶t̶h̶e̶ ̶c̶u̶r̶r̶e̶n̶t̶ ̶l̶a̶c̶k̶ ̶o̶f̶ ̶p̶a̶t̶h̶-̶r̶e̶s̶o̶l̶v̶i̶n̶g̶ ̶f̶o̶r̶ ̶F̶A̶F̶'̶s̶ ̶s̶e̶t̶t̶i̶n̶g̶ ̶"̶C̶o̶m̶m̶a̶n̶d̶ ̶l̶i̶n̶e̶ ̶f̶o̶r̶m̶a̶t̶ ̶f̶o̶r̶ ̶e̶x̶e̶c̶u̶t̶a̶b̶l̶e̶"̶ ̶t̶h̶e̶n̶ ̶t̶h̶e̶ ̶c̶u̶r̶r̶e̶n̶t̶ ̶w̶o̶r̶k̶a̶r̶o̶u̶n̶d̶:̶ ̶C̶u̶r̶r̶e̶n̶t̶l̶y̶ ̶I̶'̶m̶ ̶f̶o̶r̶c̶e̶d̶ ̶t̶o̶ ̶c̶o̶p̶y̶ ̶P̶r̶o̶t̶o̶n̶ ̶G̶a̶l̶l̶i̶u̶m̶ ̶n̶i̶n̶e̶'̶s̶ ̶f̶o̶l̶d̶e̶r̶ ̶t̶o̶ ̶a̶ ̶n̶e̶w̶ ̶f̶o̶l̶d̶e̶r̶ ̶a̶n̶d̶ ̶p̶o̶i̶n̶t̶ ̶t̶o̶ ̶t̶h̶a̶t̶ ̶n̶e̶w̶ ̶f̶o̶l̶d̶e̶r̶ ̶i̶n̶s̶t̶e̶a̶d̶ ̶b̶e̶c̶a̶u̶s̶e̶ ̶t̶h̶e̶ ̶n̶e̶w̶ ̶f̶o̶l̶d̶e̶r̶'̶s̶ ̶p̶a̶t̶h̶ ̶d̶o̶e̶s̶n̶'̶t̶ ̶c̶o̶n̶t̶a̶i̶n̶ ̶d̶o̶t̶s̶,̶ ̶n̶u̶m̶b̶e̶r̶s̶ ̶o̶r̶ ̶s̶p̶a̶c̶e̶s̶ ̶w̶h̶i̶c̶h̶ ̶"̶C̶o̶m̶m̶a̶n̶d̶ ̶l̶i̶n̶e̶ ̶f̶o̶r̶m̶a̶t̶ ̶f̶o̶r̶ ̶e̶x̶e̶c̶u̶t̶a̶b̶l̶e̶"̶ ̶s̶e̶t̶t̶i̶n̶g̶ ̶e̶n̶t̶r̶y̶ ̶i̶n̶ ̶F̶A̶F̶ ̶a̶p̶p̶a̶r̶e̶n̶t̶l̶y̶ ̶c̶a̶n̶n̶o̶t̶ ̶h̶a̶n̶d̶l̶e̶.̶ ̶I̶ ̶h̶a̶v̶e̶n̶'̶t̶ ̶r̶e̶s̶e̶a̶r̶c̶h̶e̶d̶ ̶t̶h̶i̶s̶ ̶s̶u̶f̶f̶i̶c̶i̶e̶n̶t̶l̶y̶ ̶b̶u̶t̶ ̶I̶ ̶s̶u̶s̶p̶e̶c̶t̶ ̶t̶h̶e̶r̶e̶'̶s̶ ̶a̶ ̶b̶e̶t̶t̶e̶r̶ ̶w̶a̶y̶ ̶t̶o̶ ̶d̶o̶ ̶t̶h̶i̶s̶.̶
 - ~~figure out if any chages to /etc/environement are actually needed. I haven't been able to / or had time to rule out these changes as useless. ideally /ec/environment wouldn't be touched at all.~~ none were needed
 - ideas welcome.
@@ -160,9 +173,9 @@ rm -rf My\ Documents
 mkdir My\ Documents
 cd My\ Documents
 ln -s ~/My\ Games/ My\ Games
-```   
- 
- 
+```
+
+
  3. "my online games desync!"
  you are probably running FA with proton 4.2-3 switch it to 3.16-9 Beta, accept steam restart, re-run FA from steam, go to your `\tmp\proton_*` and copy the run file to `~/faf` (overwrite, or delete the old one before copying).
 
@@ -202,19 +215,19 @@ such a setup includes (at minimum) :
  - (FAF) JAVA client
  - Java 10
  - Proton or Wine (to run the windows game)
- 
+
 In the case of this script, we will have recourse to some supplementary items in order to automate our task :
 
  - curl (fetches installers from git)
- - steamCMD (downloads the game) 
+ - steamCMD (downloads the game)
  - steam (installs it)
  - pv (progress indicators)
  - kill (used to stop faf in order to set settings, procps package if you don't have kill)
  - zenity (browse for folder)
  - jq (json modifier)
- 
+
  Dependencies :
-  
+
  - lib32gcc1 (steamCMD)
  - whiptail (contextual menus)
 
@@ -257,7 +270,7 @@ sudo rm -rf /usr/bin/winetricks
 sudo rm -rf /usr/share/bash-completion/completions/winetricks
 sudo apt install winetricks
 ```
-4. OPTIONAL remove other dependencies 
+4. OPTIONAL remove other dependencies
 ```
 sudo apt remove -y python3-pip python3-setuptools python3-venv zenity procps jq pv curl
 ```
