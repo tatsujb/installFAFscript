@@ -129,7 +129,6 @@ for gxti in "gnome-terminal --title -x --tab --active" \
         gxttitle=$2
         gxtexec=$3
         gxtextras="$4 $5 $6 $7 $8"
-        return
         ;;
     esac
 done
@@ -139,6 +138,7 @@ if [ -z "$gxtdetected" ]; then
 else 
     to_log "User terminal detected as $gxtdetected"
 fi
+to_log "Used terminal is $gxtpath."
 
 # bengining of find missing dependencies
 to_be_installed="lib32gcc1"
