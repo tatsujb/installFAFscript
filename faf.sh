@@ -134,8 +134,6 @@ for gxti in "gnome-terminal --title -x --tab --active" \
     esac
 done
 
-getxterm
-
 if [ -z "$gtxdetected" ]; then 
     to_log "User terminal unrecognised or unrecommended $gtxpredetected in favor of $gxtpath."
 else 
