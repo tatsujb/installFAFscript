@@ -24,12 +24,12 @@ cd $work_dir
 
 to_log()
 {
-	echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+    echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
 }
 
 log_separator()
 {
-	echo "_______________________________________________________________________________________________________" >> $faf_log_file
+    echo "_______________________________________________________________________________________________________" >> $faf_log_file
 }
 
 log_separator
@@ -104,6 +104,44 @@ echo "$dfh_ouput" >> "$faf_log_file"
 log_separator
 echo "" >> "$faf_log_file"
 
+# Get the name and execute switch for a useful terminal emulator
+#
+# Sets $gxtpath to the emulator path or empty
+# Sets $gxttitle to the "title" switch for that emulator
+# Sets $gxtexec to the "execute" switch for that emulator
+# May clobber $gtx*
+# gnome-terminal and mate-terminal use -e differently to other emulators
+# Terminals organised in decreasing order of reliability and
+# compatibility with the script
+gxtpredetected="$(ps -p $(ps -p $(ps -p $$ -o ppid=) -o ppid=) o args= | awk '{print $1}' )"
+for gxti in "gnome-terminal --title -x --tab --active" \
+                "xterm -T -e" \
+                "urxvt -T -e" \
+                "konsole --title -e" \
+                "mate-terminal --title -x" \
+                "rxvt -T -e"; do
+    set $gxti
+    case "$gxtpredetected" in *$1*)
+        gxtdetected="$1";;
+    esac
+    gxtpath="`which $1 2>/dev/null`"
+    case "$gxtpath" in ?*)
+        gxttitle=$2
+        gxtexec=$3
+        gxtextras="$4 $5 $6 $7 $8"
+        return
+        ;;
+    esac
+done
+
+getxterm
+
+if [ -z "$gtxdetected" ]; then 
+    to_log "User terminal unrecognised or unrecommended $gtxpredetected in favor of $gxtpath."
+else 
+    to_log "User terminal detected as $gtxdetected"
+fi
+
 # bengining of find missing dependencies
 to_be_installed="lib32gcc1"
 
@@ -126,45 +164,11 @@ if_not_then_install "pv" "[ $(command -v pv) ]"
 if_not_then_install "curl" "[ $(command -v curl) ]"
 if_not_then_install "jq" "[ $(command -v jq) ]"
 if_not_then_install "zenity" "[ $(command -v zenity) ]"
-[[ "$operating_system" = "Ubuntu" ]] && if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]"
+[[ "$operating_system" = "Ubuntu" ]] && if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]" # TODO Deprecated? Redundant?
 if_not_then_install "steam" "[ $(command -v steam) ]"
 if_not_then_install "steamcmd" "[ $(command -v steamcmd) ]"
 
 # end of find missing dependencies
-
-best_term() {
-    # find present terminals on the syst and tries the least buggy one
-    # prints the opening command to run a script in a new window/tab
-    eval set `getopt -o "t:T:" --long "title" -n "$0"`
-    case "$1" in
-        -t|-T|--title) $_title=$2; shift 2;;
-    esac
-    # TODO : Test if this works well
-    cur_term_ish="$("$(ps -p $(ps -p $$ -o ppid=) o args=)" | awk '{print $1}')"
-    # TODO : test current terminal emulator vs. whitelisted emulators
-    terms=(gnome-terminal xterm urxvt konsole)
-    for t in ${terms[*]}
-    do
-        if [ $(command -v $t) ]
-        then
-	    printf $t
-            case $t in
-	        gnome-terminal)
-		    printf " --tab --active "
-		    if [ ! -z "$_title" ]; then printf "--title \"$_title\""; fi
-	            printf " --";;
-		xterm)
-		    if [ ! -z "$_title" ]; then printf " -T \"$_title\""; fi
-		    printf " -e";;
-		urxvt)
-		    printf " -e bash";;
-		konsole)
-		    printf " --new-tab -e bash";;
-            esac
-            return 0
-        fi
-    done
-}
 
 echo ""
 if [ "$to_be_installed" = "" ]
@@ -179,19 +183,7 @@ else
         wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh
     fi
     chmod +x sudo_script.sh
-
-    # OS splitter
-    case "$operating_system" in
-        Ubuntu* | Debian*)
-            gnome-terminal --tab --active --title="externalized sudo" -- $to_run_sudo_script "$to_be_installed";;
-        Kubuntu*)
-            konsole -e $to_run_sudo_script "$to_be_installed";;
-        elementary*)
-            io.elementary.terminal -e $to_run_sudo_script "$to_be_installed";;
-        *)
-            xterm -T "externalized sudo" -e $to_run_sudo_script "$to_be_installed"
-    esac
-    # end of OS Splitter
+    $gxtpath $gxtextras $gxttitle "externalised sudo" $gxtexec $to_run_sudo_script "$to_be_installed"
 fi
 #rm sudo_script.sh
 
@@ -362,27 +354,12 @@ then
     wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
 fi
 chmod +x install_FA_script.sh
-# OS splitter again
 to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -o \'$operating_system\' -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
-
-case "$operating_system" in
-    Ubuntu* | Debian*)
-        echo 'gnome-terminal --tab --active --title="(FAF)" --working-directory=$HOME/faf -- "./downlords-faf-client"' >> install_FA_script.sh
-        gnome-terminal --tab --active --title="install & run steam, steamcmd, FA" -- $to_run_faf_script;;
-    Kubuntu*)
-        echo 'konsole -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-        konsole -e $to_run_faf_script;;
-    elementary*)
-        echo 'io.elementary.terminal -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-        io.elementary.terminal -e $to_run_faf_script;;
-    *)
-        echo 'xterm -T "(FAF)" -e "cd $HOME/faf; ./downlords-faf-client"' >> install_FA_script.sh
-        xterm -T "install & run steam, steamcmd, FA" -e $to_run_faf_script
-esac
+echo "$gxtpath $gxtextras $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client" >> install_FA_script.sh
+$gxtpath $gxtextras $gxttitle "install & run steam, steamcmd and FA" $gxtexec $to_run_faf_script "$to_be_installed"
 #rm install_FA_script.sh
 
 to_log "T1 start of second thread did not crash first thread"
-# end of OS Splitter
 
 install_faf_function
 
