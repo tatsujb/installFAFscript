@@ -50,7 +50,6 @@ echo ""
 echo "Pending obtaning sudo priveledges, this windows will run the following :"
 echo ""
 _short_os=$(echo "$operating_system" | sed 's/['\''"\\]//g' | cut -c -4 )
-echo $_short_os
 cat $0 | \
     grep -v "to_log" | \
     awk '{if ($0 ~ /'$_short_os'[a-zA-Z]*\*/) {
