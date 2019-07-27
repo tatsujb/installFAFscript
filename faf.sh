@@ -111,10 +111,11 @@ echo "" >> "$faf_log_file"
 # Sets $gxtexec to the "execute" switch for that emulator
 # May clobber $gtx*
 # gnome-terminal and mate-terminal use -e differently to other emulators
+# in the case of gnome-terminal ALWAYS use the options before $gxtexec
 # Terminals organised in decreasing order of reliability and
 # compatibility with the script
 gxtpredetected="$(ps -p $(ps -p $(ps -p $$ -o ppid=) -o ppid=) o args= | awk '{print $1}' )"
-for gxti in "gnome-terminal --title -x --tab --active" \
+for gxti in "gnome-terminal --title -- --tab --active" \
                 "xterm -T -e" \
                 "urxvt -T -e" \
                 "konsole --title -e" \
@@ -128,8 +129,9 @@ for gxti in "gnome-terminal --title -x --tab --active" \
     case "$gxtpath" in ?*)
         gxttitle=$2
         gxtexec=$3
-        gxtextras="$4 $5 $6 $7 $8"
-        ;;
+        gxtoptions="$4 $5 $6 $7 $8"
+        break
+	;;
     esac
 done
 
@@ -181,7 +183,7 @@ else
         wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh
     fi
     chmod +x sudo_script.sh
-    $gxtpath $gxtextras $gxttitle "externalised sudo" $gxtexec $to_run_sudo_script "$to_be_installed"
+    $gxtpath $gxtoptions $gxttitle "externalised sudo" $gxtexec $to_run_sudo_script "$to_be_installed"
 fi
 #rm sudo_script.sh
 
@@ -353,8 +355,8 @@ then
 fi
 chmod +x install_FA_script.sh
 to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -o \'$operating_system\' -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
-echo "$gxtpath $gxtextras $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client" >> install_FA_script.sh
-$gxtpath $gxtextras $gxttitle "install & run steam, steamcmd and FA" $gxtexec $to_run_faf_script "$to_be_installed"
+echo "$gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client" >> install_FA_script.sh
+$gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" $gxtexec $to_run_faf_script "$to_be_installed"
 #rm install_FA_script.sh
 
 to_log "T1 start of second thread did not crash first thread"
