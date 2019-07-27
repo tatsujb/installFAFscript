@@ -146,7 +146,7 @@ done
     to_log "T3 neither steamapps nor SteamApps compatdata was found. exiting" && \
     exit 1
 
-cd "$fa_install_dir" 
+cd "$fa_install_dir"
 rm -rf Maps
 rm -rf Mods
 ln -s $HOME/My\ Games/Gas\ Powered\ Games/$supcom/Maps/ Maps

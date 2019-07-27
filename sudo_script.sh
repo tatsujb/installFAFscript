@@ -49,17 +49,19 @@ echo "However, if you trust the script, you may simply type in your admin passwo
 echo ""
 echo "Pending obtaning sudo priveledges, this windows will run the following :"
 echo ""
-#TODO: fix below, does not work on ubuntu :
 _short_os=$(echo "$operating_system" | cut -c -4)
-echo -e "$(grep -A 100 "$_short_os.*\*" $0 | \
-           grep -v "$_short_os.*\*" | \
-           grep -v "to_log" | \
-           awk '{if ($0 ~ / {8}.*/) {print $0;}
-                 else {exit;}}' | \
-           sed "s/\$to_be_installed/$to_be_installed/" | \
-	   sed 's/^ \{8\}//')"
+cat $0 | \
+    grep -v "to_log" | \
+    awk '{if ($0 ~ /'$_short_os'[a-zA-Z]*\*/) {
+            getline;
+            while ($0 ~ /^ {8}/) {
+              print $0;
+              getline;}}}' | \
+    sed 's/\$to_be_installed/'"$to_be_installed"'/' | \
+    sed 's/^ \{8\}/  /;s/;;//'
 
-echo ""
+echo -e "\n\nIf you wish to cancel installing the packages, please"
+echo -e "press Ctrl+C (multiple times) without entering your password\n"
 sudo echo ""
 to_log "T2 preparing installs - checking sources & misc."
 case "$operating_system" in
@@ -67,11 +69,11 @@ case "$operating_system" in
         for $_s in "steam" "steamcmd"
         do
             if [ ! $(command -v $_s) ]
-	    then
+            then
                 echo $_s steam/question select "I AGREE" | sudo debconf-set-selections
                 echo $_s steam/license note '' | sudo debconf-set-selections
-	    fi
-	done;;
+            fi
+        done;;
     Debian*)
         if grep -q "debian.org/debian/ stretch main contrib non-free" /etc/apt/sources.list > /dev/null
         then
@@ -98,9 +100,9 @@ case "$operating_system" in
         then
             to_log "T2 editing debian sources : proposed already present"
         else
-            donwload_country=$(grep "deb http://ftp." /etc/apt/sources.list | head -1 | cut -d. -f2)
+            download_country=$(grep "deb http://ftp." /etc/apt/sources.list | head -1 | cut -d. -f2)
             to_log "T1 editing debian sources : added proposed"
-            echo "deb http://ftp.$donwload_country.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
+            echo "deb http://ftp.$download_country.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
         fi
         if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
         then
@@ -139,7 +141,7 @@ case "$operating_system" in
         sudo yum -y upgrade
         sudo yum -y install $to_be_installed
         sudo yum -y clean all;;
-    Ubuntu* | *)
+    Ubuntu* | Debian* | *)
         sudo apt update -y
         sudo apt full-upgrade -y
         sudo apt install -y $to_be_installed
