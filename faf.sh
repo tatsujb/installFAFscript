@@ -335,53 +335,63 @@ fi
 if [ -d "$fa_install_dir" ]
 then
     what_to_do=$(whiptail --title "Supreme Commander Forged Alliance (FA)" \
-            --menu "$error_msg The game's install directory has been detected at $fa_install_dir.\nBefore installing the FAF client, would you like to " 16 60 0 \
-            "configure_fa"  "Configure the game for use with FAF, then install FAF" \
-            "choose_fa_dir" "Choose an other game install directory (or correct it)" \
-            "install_fa"    "Make a 2nd install of FA somewhere else & install FAF" \
-            "reinstall_fa"  "Reinstall the game through steam (needs steam login)" \
-            "install_faf"   "Skip the FA configuration and ONLY install FAF" \
-            --notags --nocancel 3>&1 1>&2 2>&3)
+        --menu "$error_msg The game's install directory has been detected at $fa_install_dir.\nBefore installing the FAF client, would you like to " 16 60 0 \
+        "configure_fa"  "Configure the game for use with FAF, then install FAF" \
+        "choose_fa_dir" "Choose an other game install directory (or correct it)" \
+        "install_fa"    "Make a 2nd install of FA somewhere else & install FAF" \
+        "reinstall_fa"  "Reinstall the game through steam (needs steam login)" \
+        "install_faf"   "Skip the FA configuration and ONLY install FAF" \
+        --notags --nocancel 3>&1 1>&2 2>&3)
 else
     what_to_do=$(whiptail --title "Install Forged Alliance Forever\n(Multiplayer client)" \
-            --menu "The Supreme Commander Forged Alliance (FA) install directory wasn't automatically detected. Would you like to " 10 80 0 \
-            "choose_fa_dir" "Browse for the Forged Alliance game install directory" \
-            "install_fa"    "Install the Forged Alliance game through steam (needs your steam login)" \
-            "install_faf"   "Skip the installation/configuration of FA and ONLY install the FAF client" \
-            --notags --nocancel 3>&1 1>&2 2>&3)
+        --menu "The Supreme Commander Forged Alliance (FA) install directory wasn't automatically detected. Would you like to " 10 80 0 \
+        "choose_fa_dir" "Browse for the Forged Alliance game install directory" \
+        "install_fa"    "Install the Forged Alliance game through steam (needs your steam login)" \
+        "install_faf"   "Skip the installation/configuration of FA and ONLY install the FAF client" \
+        --notags --nocancel 3>&1 1>&2 2>&3)
 fi
 case $what_to_do in
-    configure_fa) to_log "T1 configure current FA install"
-                 already_fa=true
-                 default_dir=false;;
-    install_fa) to_log "T1 install FA"
-                install_fa ;;
-    choose_fa_dir) fa_install_dir="$(zenity --file-selection \
-                                           --directory \
-                                           --filename "$HOME" \
-                                           --height 20 \
-                                           --width  60 \
-                                           --title "Choose the FA installation directory")"
-                   get_user_input "$fa_install_dir"
-                   return "";;# stops recursion loop from running the rest of this function
-    reinstall_fa) to_log "T1 reinstall FA chosen"
-                  if (whiptail --title "Are you sure you want to delete $fa_install_dir ?"
-                               --yesno "" 12 85 --fb); then
-                      echo "T1 removing $fa_install_dir"
-                      rm -rf "$fa_install_dir"
-                      install_fa
-                  else
-                      to_log "T1 Cancels deletion of previous install."
-                      get_user_input "$fa_install_dir"
-                      return ""
-                  fi;;
-    install_faf) to_log "T1 Skipping to install FAF without configuring FA"
-                     install_faf_function
-                 echo "installed faf only, as per user demand, nothing else to do, exiting."
-                 exit 0;;
-    *) to_log "Err -- Unexpected Whiptail tag provided : $what_to_do"
-       echo "An error has occured. For support, please provide the logfile"
-       exit 1;;
+    configure_fa)
+        to_log "T1 configure current FA install"
+        already_fa=true
+        default_dir=false;;
+    install_fa)
+        to_log "T1 install FA"
+        install_fa
+        already_fa=false;;
+    choose_fa_dir)
+        default_dir=false
+        fa_install_dir="$(zenity --file-selection \
+                                 --directory \
+                                 --filename "$HOME" \
+                                 --height 20 \
+                                 --width  60 \
+                                 --title "Choose the FA installation directory")"
+       get_user_input "$fa_install_dir"
+       return;;# stops recursion loop from running the rest of this function
+    reinstall_fa)
+        to_log "T1 reinstall FA chosen"
+        if (whiptail --title "Are you sure you want to delete $fa_install_dir ?"
+                     --yesno "" 12 85 --fb); then
+            echo "T1 removing $fa_install_dir"
+            rm -rf "$fa_install_dir"
+            already_fa=false
+            install_fa
+        else
+            to_log "T1 Cancels deletion of previous install."
+            already_fa=true
+            get_user_input "$fa_install_dir"
+            return
+        fi;;
+    install_faf)
+        to_log "T1 Skipping to install FAF without configuring FA"
+        install_faf_function
+        echo "installed faf only, as per user demand, nothing else to do, exiting."
+        exit 0;;
+    *)
+        to_log "Err -- Unexpected Whiptail tag provided : $what_to_do"
+        echo "An error has occured. For support, please provide the logfile"
+        exit 1;;
 esac
 }
 
