@@ -134,10 +134,10 @@ for gxti in "gnome-terminal --title -x --tab --active" \
     esac
 done
 
-if [ -z "$gtxdetected" ]; then 
-    to_log "User terminal unrecognised or unrecommended $gtxpredetected in favor of $gxtpath."
+if [ -z "$gxtdetected" ]; then 
+    to_log "User terminal unrecognised or unrecommended $gxtpredetected in favor of $gxtpath."
 else 
-    to_log "User terminal detected as $gtxdetected"
+    to_log "User terminal detected as $gxtdetected"
 fi
 
 # bengining of find missing dependencies
