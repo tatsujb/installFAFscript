@@ -9,19 +9,33 @@ Sorry, we didn't follow the right protocol. As a result, you will temporarily ha
 
 [Commit](https://github.com/tatsujb/installFAFscript/tree/030e2aad883e3d5f1d4d4717e032cbed9a1bd3d0)
 
-get the stable script :
+Get the stable script :
 ```bash
 wget https://raw.githubusercontent.com/tatsujb/installFAFscript/030e2aad883e3d5f1d4d4717e032cbed9a1bd3d0/faf.sh
 ```
 
+# What does faf.sh do?
+
+faf.sh is a bash install wizard to get [Supreme Commander Forged Alliance][FA] as well as a [Forged Alliace Forever][FAF] multiplayer client onto your Linux PC (Looking for input from Solaris & apple users). 
+
+The setup will install (at minimum) :
+
+ - [Supreme Commander Forged Alliance][FA]
+ - [Downlord's FAF client][downlord FAF]
+ - Java jdk 10 (for the faf client)
+ - Proton or Wine (to run the windows game)
+
+[Jump here](#dependencies) For a list of dependencies and other installs
+
 ## Looking for Contributors! Please apply as a github issue.
 
-
-This is a shell script that installs and configures [FA](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") + [FAF](https://faforever.com "Forged Alliace Forever") multiplayer client on linux (and soon any OS that Forged Alliance can also run on).
+We are looking to make this script run on all linux distros, and hopefully any OS that Supcom Forged Alliance runs on.
 
 ### "I don't want a script! I want a DIY!" :
 
 no problem! Foodlfg makes short work of summarizing all you need to know for how to install FAF over here : https://github.com/foodlfg/Supreme-Commander-FAF-install-guide
+
+You should also have a look at the [FAForever wiki page](https://wiki.faforever.com/index.php?title=Setting_Up_FAF_Linux)
 
 ### Run successes (by distro) :
 Distro icon should be clickable for a video-example (for the moment only had the time to record ubuntu but I coded for other distributions. feel free to share another youtube link for another distribution, I'll add it)
@@ -50,23 +64,27 @@ Version | Distro | distro+DE |  | Comment
 
 ## Pre-requisites
 
-- a steam account with Forged Alliance activated on it [(9420)](https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/ "Supreme Commander Forged Alliace") (no steam does not need to be preinstalled, it does not need to not be preinstalled either, both work)
-- your steam games are public (they no longer are by default) so if your account is relatively new and you haven't done this yet follow this guide first :  https://youtu.be/ElH4aetA5Hc
+- A steam account with [Forged Alliance][FA] activated on it
+- Your steam games must be public (No longer default). If your account is relatively new and/or you aren't sure, please follow [this guide](https://youtu.be/ElH4aetA5Hc)
 - 11.7GB of free space
 
-Do not run script as root!
+You **do not need** to have steam installed beforehand.
+
+You **do not need** to have Supreme Commander Forged Alliance installed beforehand.
+
+You should **not** run `faf.sh` as root!
 
 ### 1st
 
-click on faf.sh above, then click on "RAW", then type <kbd>Ctrl</kbd> + <kbd>S</kbd>, (you can place anywhere, in home folder is comfortable to work with), then <kbd>Enter</kbd> to save file.
+Click on faf.sh above, then click on "RAW", then type <kbd>Ctrl</kbd> + <kbd>S</kbd>, (you can place anywhere, in home folder is comfortable to work with), then <kbd>Enter</kbd> to save file.
 
 ### 2nd
 
-make it executable : (terminal) `chmod +x faf.sh`
+Make it executable : (terminal) `chmod +x faf.sh`
 
 ### 3rd
 
-run the script within a terminal : `./faf.sh`
+Run the script within a terminal : `./faf.sh`
 
 The script will begin by asking for your linux session password.
 
@@ -80,7 +98,7 @@ Switch back to the first terminal tab. (or simply wait, the sudo tab closing wil
 
 you are being asked if you do not have FA installed.
 
-if you select no you have five choices :
+If you select **No**, you have five choices :
 
 (quick tip, to reveal hidden folders and files (the ones that start with a period `.`) you can hit "Ctrl"+"H", you'll need to do this if pointing to the `~/.steam/steam` folder)
 
@@ -90,7 +108,7 @@ if you select no you have five choices :
  4. only install FAF for me.
  5. go back to the menu from before.
 
-if you select yes you are then asked whether you want to install FA to default dir and drive (SDA), at your discretion you may choose no and you will be prompted with a Gui to pick the folder.
+If you select **Yes**, you are then asked whether you want to install FA to default dir and drive (SDA), at your discretion you may choose no and you will be prompted with a Gui to pick the folder.
 
 ### 5th (I chose "yes I do not have FA installed", if not skip this step)
 
@@ -109,7 +127,7 @@ When steam restarts don't login just close both the login and steam guard window
 Then it downloads Forged Alliance. this will take a while.
 Once it's done steam starts again in order to finalize installation and then start Forged Alliance.
 
-accept terms.
+Accept terms.
 
 Forged Alliance should start, you can set a profile, then set your prefered resolution, then quit the game. do not close steam, you need an open steam instance to run FAF nowadays.
 
@@ -119,9 +137,9 @@ FAF will start, go ahead and log in.
 
 FAF will close almost immediately
 
-then start again, that was it's preferences being set by my script. you can now play, the script is now done.
+Then start again, that was it's preferences being set by my script. you can now play, the script is now done.
 
-if you want to run FAF again do not run faf.sh again (remember, it is a script to install Forged Alliance + FAF client), simply search for FAF from your start:
+If you want to run FAF again do not run faf.sh again (remember, it is a script to install Forged Alliance + FAF client), simply search for FAF from your start:
 ![faf in start menu](https://user-images.githubusercontent.com/5132359/55295519-365f4780-540e-11e9-9a9c-02a94dd70b07.png)
 
 GL HF!
@@ -204,33 +222,6 @@ possible flaws are there not being a `LD_LIBRARY_PATH` or `DEF_CMD` having a `sh
 
  5. Durring the FA start process from steam, the window for steam pre-check for Forged Alliance takes awhile then opens up too small and you get path assert failures. no panic! Simply close that window, go to your steam icon in the top left of your screen (notification's area) and open steam's library, right click on FA and click "properties", then go into the "local files" tab and click verify integrity of game files. Now try starting FA again. this time it should run. You can continue.
 
-
-#### What does faf.sh do?
-
-faf.sh sets up, on your non-windows PC, a set of software and environment settings and folder names and configs allowing you to enjoy the delights of playing [Forged Alliace Forever](https://faforever.com "Forged Alliace Forever") as you would under windows.
-
-such a setup includes (at minimum) :
-
- - [Supreme Commander Forged Alliance]("https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/")
- - (FAF) JAVA client
- - Java 10
- - Proton or Wine (to run the windows game)
-
-In the case of this script, we will have recourse to some supplementary items in order to automate our task :
-
- - curl (fetches installers from git)
- - steamCMD (downloads the game)
- - steam (installs it)
- - pv (progress indicators)
- - kill (used to stop faf in order to set settings, procps package if you don't have kill)
- - zenity (browse for folder)
- - jq (json modifier)
-
- Dependencies :
-
- - lib32gcc1 (steamCMD)
- - whiptail (contextual menus)
-
 # Un-installing :
 
 If you are in the use-case of re-running the script this is almost entirely unecessary with the current version of the script, however here are some commands you can run if you really want to clean up before or after running this script or to uninstall for good :
@@ -275,7 +266,28 @@ sudo apt install winetricks
 sudo apt remove -y python3-pip python3-setuptools python3-venv zenity procps jq pv curl
 ```
 
+### Dependencies
 
+In the case of this script, we will have recourse to some supplementary items in order to automate our task :
 
+ - curl (fetches installers from git)
+ - steamCMD (downloads the game)
+ - steam (installs it)
+ - pv (progress indicators)
+ - kill (used to stop faf in order to set settings, procps package if you don't have kill)
+ - zenity (browse for folder)
+ - jq (json modifier)
+ - Either of the following terminal emulators
+   - gnome-terminal
+   - urxvt
+   - xterm
+   - konsole
 
+ Dependencies
 
+ - lib32gcc1 (steamCMD)
+ - whiptail (contextual menus)
+
+[FA]: "https://store.steampowered.com/app/9420/Supreme_Commander_Forged_Alliance/"
+[FAF]: "https://faforever.com "Forged Alliance Forever"
+[downlord faf]: "https://faforever.github.io/downlords-faf-client/"
