@@ -191,8 +191,18 @@ to_log "T1 start of second thread did not crash first thread"
 
 function set_install_dir_function
 {
-    directory=$(zenity --file-selection --directory --title "$1")
-    to_log "T1 folder set to $directory"
+    if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" \
+                 --yesno "Current install dir : ~/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
+    then
+        default_dir=true
+        to_log "T1 default dir chosen"
+    else
+        default_dir=false
+        to_log "T1 non-standart dir chosen"
+        _title="Choose your desired Forged Alliance installation directory/folder"
+        directory=$(zenity --file-selection --directory --title "$_title")
+        to_log "T1 folder set to $directory"
+    fi
 }
 
 function install_faf_function
@@ -294,7 +304,7 @@ function extract_fa_install_dir {
     do
         if [ "$tmp_path" = "/" ] || [ "$tmp_path" = "" ]
         then
-            to_log "Err -- FA install dir not found"
+            to_log "Warning -- FA install dir not found"
             break
         else
             tmp_path=$(dirname $tmp_path)
@@ -303,23 +313,30 @@ function extract_fa_install_dir {
     if [ -d "$tmp_path/$child_path" ]
     then
         echo "$tmp_path/$child_path"
+	return 0
     else
         echo ""
+	return 1
     fi
 }
 
-function install_fa {
-    if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" \
-                 --yesno "Current install dir : ~/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
-    then
-        default_dir=true
-        to_log "T1 default dir chosen"
-    else
-        default_dir=false
-        to_log "T1 non-standart dir chosen"
-        set_install_dir_function "choose your desired Forged Alliance installation directory/folder"
-fi
+wait_for_steam_install() {
+    i=1
+    sp='/-\|'
+    no_steam=true
+    echo "waiting for dependencies to be present... "
+    while $no_steam
+    do
+      printf "\b${sp:i++%${#sp}:1}"
+      [[ $(command -v steam) ]] && no_steam=false
+      sleep 1
+    done
+    echo ""
+}
 
+function install_fa {
+    # DEPRECATED - use set_install_dir_function [zenity_title]
+    set_install_dir_function 
 }
 
 function get_user_input_function
@@ -357,7 +374,7 @@ case $what_to_do in
         default_dir=false;;
     install_fa)
         to_log "T1 install FA"
-        install_fa
+        set_install_dir_function
         already_fa=false;;
     choose_fa_dir)
         default_dir=false
@@ -376,7 +393,7 @@ case $what_to_do in
             echo "T1 removing $fa_install_dir"
             rm -rf "$fa_install_dir"
             already_fa=false
-            install_fa
+            set_install_dir_function
         else
             to_log "T1 Cancels deletion of previous install."
             already_fa=true
@@ -398,18 +415,7 @@ esac
 get_user_input_function
 
 echo ""
-i=1
-sp='/-\|'
-no_steam=true
-echo "waiting for dependencies to be present... "
-while $no_steam
-do
-  printf "\b${sp:i++%${#sp}:1}"
-  [[ $(command -v steam) ]] && no_steam=false
-  sleep 1
-done
-echo ""
-
+wait_for_steam_install
 if [ ! -f install_FA_script.sh ]
 then
     wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
