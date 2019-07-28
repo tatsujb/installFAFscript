@@ -131,13 +131,13 @@ for gxti in "gnome-terminal --title -- --tab --active" \
         gxtexec=$3
         gxtoptions="$4 $5 $6 $7 $8"
         break
-	;;
+        ;;
     esac
 done
 
-if [ -z "$gxtdetected" ]; then 
+if [ -z "$gxtdetected" ]; then
     to_log "User terminal unrecognised or unrecommended $gxtpredetected in favor of $gxtpath."
-else 
+else
     to_log "User terminal detected as $gxtdetected"
 fi
 to_log "Used terminal is $gxtpath."
@@ -189,13 +189,14 @@ fi
 
 to_log "T1 start of second thread did not crash first thread"
 
-function set_install_dir_function
+function set_fa_install_path
 {
     if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" \
                  --yesno "Current install dir : ~/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
     then
         default_dir=true
         to_log "T1 default dir chosen"
+        directory="default"
     else
         default_dir=false
         to_log "T1 non-standart dir chosen"
@@ -203,6 +204,7 @@ function set_install_dir_function
         directory=$(zenity --file-selection --directory --title "$_title")
         to_log "T1 folder set to $directory"
     fi
+    echo $directory
 }
 
 function install_faf_function
@@ -313,10 +315,10 @@ function extract_fa_install_dir {
     if [ -d "$tmp_path/$child_path" ]
     then
         echo "$tmp_path/$child_path"
-	return 0
+        return 0
     else
         echo ""
-	return 1
+        return 1
     fi
 }
 
@@ -331,28 +333,49 @@ wait_for_steam_install() {
       [[ $(command -v steam) ]] && no_steam=false
       sleep 1
     done
-    echo ""
+    return 0
+}
+
+function run_fa_script {
+    # $@ - arguments to pass to the script
+    # Typically :
+    # -l $faf_log_file -o \'$operating_system\' -u $real_user
+    # $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory
+    wait_for_steam_install
+    if [ ! -f $work_dir/install_FA_script.sh ]
+    then
+        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh -O $work_dir/install_FA_script.sh
+    fi
+    chmod +x $work_dir/install_FA_script.sh
+    # TODO Couldn't the closing line be given as an extra command when passing args to the terminal?
+    # Example $gxtpath [ run fa_script ] ; $gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client
+    # isn't it supposed to be launched as just a normal binary though?
+    echo "$gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client" >> $work_dir/install_FA_script.sh
+    _default_args="-l $faf_log_file -u $real_user"
+    $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" $gxtexec $work_dir/install_FA_script.sh $_default_args $@
+    #rm install_FA_script.sh
 }
 
 function install_fa {
-    # DEPRECATED - use set_install_dir_function [zenity_title]
-    set_install_dir_function 
+    # DEPRECATED - use set_fa_install_path
+    # Reason : Confusing name + redundant with set_fa_install_path
+    set_fa_install_path
 }
 
 function get_user_input_function
 {
 # $1 : (optional) path to a supcom install directory
-
-if [ "$(extract_fa_install_dir $1)" = "" ]
-    fa_install_dir="$(auto_detect_fa_install_dir)"
+$fa_path=$(extract_fa_install_dir $fa_path)
+if [ "$(extract_fa_install_dir $1)" = "" ] && [ "$fa_path" = "" ]
 then
-else
-    fa_install_dir="$(extract_fa_install_dir $1)"
+    fa_path="$(auto_detect_fa_install_dir)"
+elif [ "$fa_path" = "" ]
+    fa_path="$(extract_fa_install_dir $1)"
 fi
-if [ -d "$fa_install_dir" ]
+if [ -d "$fa_path" ]
 then
     what_to_do=$(whiptail --title "Supreme Commander Forged Alliance (FA)" \
-        --menu "$error_msg The game's install directory has been detected at $fa_install_dir.\nBefore installing the FAF client, would you like to " 16 60 0 \
+        --menu "$error_msg The game's install directory has been detected at $fa_path.\nBefore installing the FAF client, would you like to " 16 60 0 \
         "configure_fa"  "Configure the game for use with FAF, then install FAF" \
         "choose_fa_dir" "Choose an other game install directory (or correct it)" \
         "install_fa"    "Make a 2nd install of FA somewhere else & install FAF" \
@@ -361,7 +384,7 @@ then
         --notags --nocancel 3>&1 1>&2 2>&3)
 else
     what_to_do=$(whiptail --title "Install Forged Alliance Forever\n(Multiplayer client)" \
-        --menu "The Supreme Commander Forged Alliance (FA) install directory wasn't automatically detected. Would you like to " 10 80 0 \
+        --menu "$error_msg The Supreme Commander Forged Alliance (FA) install directory wasn't automatically detected.\nWould you like to " 10 80 0 \
         "choose_fa_dir" "Browse for the Forged Alliance game install directory" \
         "install_fa"    "Install the Forged Alliance game through steam (needs your steam login)" \
         "install_faf"   "Skip the installation/configuration of FA and ONLY install the FAF client" \
@@ -371,33 +394,43 @@ case $what_to_do in
     configure_fa)
         to_log "T1 configure current FA install"
         already_fa=true
-        default_dir=false;;
+        default_dir=false
+        run_fa_script --already-fa \
+                      --fa_base_dir $fa_path
+        ;;
     install_fa)
         to_log "T1 install FA"
-        set_install_dir_function
-        already_fa=false;;
+        _fa_path=$(set_fa_install_path)
+        if [ "$_fa_path" = "" ]; then
+             get_user_input "$fa_path"; return 0
+        fi
+        run_fa_script --install-fa \
+                      --fa_base_dir $_fa_path
+        ;;
     choose_fa_dir)
         default_dir=false
-        fa_install_dir="$(zenity --file-selection \
-                                 --directory \
-                                 --filename "$HOME" \
-                                 --height 20 \
-                                 --width  60 \
-                                 --title "Choose the FA installation directory")"
-       get_user_input "$fa_install_dir"
+        _fa_path="$(zenity --file-selection \
+                           --directory \
+                           --filename "$HOME" \
+                           --height 20 \
+                           --width  60 \
+                           --title "Choose the FA installation directory")"
+       get_user_input "$_fa_path"
        return;;# stops recursion loop from running the rest of this function
     reinstall_fa)
         to_log "T1 reinstall FA chosen"
-        if (whiptail --title "Are you sure you want to delete $fa_install_dir ?"
+        if (whiptail --title "Are you sure you want to delete $fa_path ?"
                      --yesno "" 12 85 --fb); then
-            echo "T1 removing $fa_install_dir"
-            rm -rf "$fa_install_dir"
+            echo "T1 removing $fa_path"
+            rm -rf "$fa_path"
             already_fa=false
-            set_install_dir_function
+            $_fa_path=$(set_fa_install_path)
+            run_fa_script --install-fa \
+                          --fa_base_dir $_fa_path
         else
             to_log "T1 Cancels deletion of previous install."
             already_fa=true
-            get_user_input "$fa_install_dir"
+            get_user_input "$fa_path"
             return
         fi;;
     install_faf)
@@ -413,18 +446,6 @@ esac
 }
 
 get_user_input_function
-
-echo ""
-wait_for_steam_install
-if [ ! -f install_FA_script.sh ]
-then
-    wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
-fi
-chmod +x install_FA_script.sh
-to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -o \'$operating_system\' -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
-echo "$gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client" >> install_FA_script.sh
-$gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" $gxtexec $to_run_faf_script "$to_be_installed"
-#rm install_FA_script.sh
 
 to_log "T1 start of second thread did not crash first thread"
 

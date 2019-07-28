@@ -4,12 +4,12 @@ VERBOSE=false
 DEBUG=false
 already_fa=false
 faf_log_file=""
-operating_system=""
 real_user=""
 default_dir=""
 fa_base_dir=""
 
-TEMP=`getopt -o vDfm:l:u:d:o: --long verbose,debug,logfile: \
+TEMP=`getopt -o vDfim:l:u:d: \
+             --long verbose,debug,already-fa,install-fa,logfile: \
              -n "$0" -- "$@"`
 
 if [ $? != 0 ] ; then echo " Terminating..." >&2 ; exit 1 ; fi
@@ -20,8 +20,8 @@ while true; do
     -D | --debug ) DEBUG=true; shift ;;
     --default_dir ) default_dir=true; shift ;;
     -f | --already_fa ) already_fa=true; shift ;;
+    -i | --install-fa ) already_fa=false; shift;;
     -l | --logfile ) faf_log_file=$2; shift 2 ;;
-    -o | --operating_system ) operating_system=$2; shift 2 ;;
     -u | --real_user ) real_user=$2; shift 2 ;;
     --fa_base_dir ) fa_base_dir=$2; shift 2 ;;
     -- ) shift; break ;;
@@ -40,11 +40,10 @@ to_log "T3  --debug $DEBUG"
 to_log "T3  --default_dir $default_dir"
 to_log "T3  --already_fa $already_fa"
 to_log "T3  --logfile $faf_log_file"
-to_log "T3  --operating_system $operating_system"
 to_log "T3  --real_user $real_user"
 to_log "T3  --fa_base_dir $fa_base_dir"
 
-if $default_dir
+if $default_dir || [ "$fa_base_dir" = "default" ]
 then
     origin="$HOME/.steam/steam"
 else
