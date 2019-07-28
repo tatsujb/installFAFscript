@@ -31,18 +31,18 @@ done
 
 to_log()
 {
-     echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
+     echo -e "[$(date --rfc-3339=seconds)] T2 $@" >> $faf_log_file
 }
 
-to_log "####################T3 install FA script####################"
-to_log "T3  --verbose $VERBOSE"
-to_log "T3  --debug $DEBUG"
-to_log "T3  --default_dir $default_dir"
-to_log "T3  --already_fa $already_fa"
-to_log "T3  --logfile $faf_log_file"
-to_log "T3  --operating_system $operating_system"
-to_log "T3  --real_user $real_user"
-to_log "T3  --fa_base_dir $fa_base_dir"
+to_log "#################### install FA script ####################"
+to_log " --verbose $VERBOSE"
+to_log " --debug $DEBUG"
+to_log " --default_dir $default_dir"
+to_log " --already_fa $already_fa"
+to_log " --logfile $faf_log_file"
+to_log " --operating_system $operating_system"
+to_log " --real_user $real_user"
+to_log " --fa_base_dir $fa_base_dir"
 
 if $default_dir
 then
@@ -64,7 +64,7 @@ do
 done
 
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-to_log "T1 Steam credentials entrusted to script"
+to_log "Steam credentials entrusted to script"
 if [ ! -f $HOME/the\ contents\ of\ this* ]
 then
 echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > $HOME/"the contents of this file are to be pasted in the forged alliance properties launch options"
@@ -78,18 +78,18 @@ then
     echo ""
 else
     echo -e "\n\n\n"
-    to_log "T3 running steam"
+    to_log "running steam"
     steam -login $steam_user_name $steam_password
     rm $HOME/the\ contents\ of\ this*
     if $default_dir
     then
-        to_log "T3 installing FA to default dir"
+        to_log "installing FA to default dir"
         while [ \( ! -d $HOME/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d $HOME/.steam/steam/SteamApps/common/Supreme* \) ]
         do
             steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +app_update 9420 +quit
         done
     else
-        to_log "T3 installing FA to custom dir"
+        to_log "installing FA to custom dir"
         while [ ! -d $fa_base_dir/bin ]
         do
             steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +force_install_dir $fa_base_dir +app_update 9420 +quit
@@ -99,9 +99,9 @@ else
         mv * steamapps/common/Supreme\ Commander\ Forged\ Alliance/ 2>/dev/null
         cd
     fi
-    to_log "T3 FA installed condition met"
+    to_log "FA installed condition met"
 fi
-to_log "T3 launching FA"
+to_log "launching FA"
 steam -login $steam_user_name $steam_password -applaunch 9420 &>/dev/null &
 echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
 echo "and for Forged Alliance to be shut down."
@@ -126,10 +126,10 @@ done
 echo ""
 if ! $already_fa
 then
-    to_log "T3 copying over run file"
+    to_log "copying over run file"
     cp -f /tmp/proton_"$real_user"/run $HOME/faf/
 fi
-to_log "T3 making symbolic links"
+to_log "making symbolic links"
 
 steamapps_list=("steamapps" "SteamApps")
 
@@ -143,7 +143,7 @@ do
     break
 done
 [ "$compatdata" = "" ] && \
-    to_log "T3 neither steamapps nor SteamApps compatdata was found. exiting" && \
+    to_log "neither steamapps nor SteamApps compatdata was found. exiting" && \
     exit 1
 
 cd "$fa_install_dir"
@@ -162,4 +162,4 @@ cd
 source .bashrc
 eval "$(cat .bashrc | tail -n +10)"
 echo "FA installation finished succesfully"
-to_log "T3 starting T4 and exiting T3"
+to_log "starting T4 and exiting T3"
