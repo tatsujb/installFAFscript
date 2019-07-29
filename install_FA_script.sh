@@ -31,7 +31,7 @@ done
 
 to_log()
 {
-     echo -e "[$(date --rfc-3339=seconds)] T2 $@" >> $faf_log_file
+     echo -e "[$(date --rfc-3339=seconds)] T3 $@" >> $faf_log_file
 }
 
 to_log "#################### install FA script ####################"
