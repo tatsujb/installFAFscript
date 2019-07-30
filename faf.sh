@@ -14,13 +14,21 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 cd
+
+if [ $1 = "DEBUG" ]; then
+	DEBUG=true
+else
+	DEBUG=false
+fi
+
 real_user=$(echo $HOME | cut -c 7-)
 work_dir=/tmp/faf_script_workdir
 mkdir -p $work_dir
 faf_log_file="$work_dir/faf.sh-$faf_sh_version.log"
 echo $faf_log_file
 touch $faf_log_file &>/dev/null
-cd $work_dir
+
+
 
 to_log()
 {
@@ -176,16 +184,18 @@ then
     echo "all dependencies met :)"
     to_log "all dependencies met"
 else
+    if $DEBUG; then cp ./sudo_script.sh $work_dir/; fi
+    cd $work_dir
     to_run_sudo_script="$work_dir/sudo_script.sh --logfile $faf_log_file --operating_system \'$operating_system\'"
     to_log "to be installed : $to_be_installed"
-    if [ ! -f sudo_script.sh ]
+    if [ ! -f $work_dir/sudo_script.sh ]
     then
-        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh
+        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh -O $work_dir/sudo_script.sh
     fi
-    chmod +x sudo_script.sh
+    chmod +x $work_dir/sudo_script.sh
     $gxtpath $gxtoptions $gxttitle "externalised sudo" $gxtexec $to_run_sudo_script "$to_be_installed"
 fi
-#rm sudo_script.sh
+#rm $work_dir/sudo_script.sh
 
 to_log "start of second thread did not crash first thread"
  
