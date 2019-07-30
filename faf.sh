@@ -370,6 +370,7 @@ if [ "$(extract_fa_install_dir $1)" = "" ] && [ "$fa_path" = "" ]
 then
     fa_path="$(auto_detect_fa_install_dir)"
 elif [ "$fa_path" = "" ]
+then
     fa_path="$(extract_fa_install_dir $1)"
 fi
 if [ -d "$fa_path" ]
@@ -415,8 +416,8 @@ case $what_to_do in
                            --height 20 \
                            --width  60 \
                            --title "Choose the FA installation directory")"
-       get_user_input "$_fa_path"
-       return;;# stops recursion loop from running the rest of this function
+        get_user_input "$_fa_path"
+        return;;# stops recursion loop from running the rest of this function
     reinstall_fa)
         to_log "T1 reinstall FA chosen"
         if (whiptail --title "Are you sure you want to delete $fa_path ?"

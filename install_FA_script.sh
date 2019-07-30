@@ -132,7 +132,7 @@ to_log "T3 making symbolic links"
 
 steamapps_list=("steamapps" "SteamApps")
 
-for steamapps in $steamapps_list
+for steamapps in ${steamapps_list[*]}
 do
     # It should always be possible to find this folder
     [ -d "$origin/$steamapps/common/$supcom"  ] && \
