@@ -106,7 +106,7 @@ else
             steamcmd +login "$steam_user_name" "$steam_password" +@sSteamCmdForcePlatformType windows +force_install_dir "$fa_base_dir" +app_update 9420 +quit
         done
         mkdir -p "$fa_base_dir/steamapps/common/$supcom"
-        mv "$fa_base_dir/*" "$fa_base_dir/steamapps/common/$supcom" 2>/dev/null
+        mv "$fa_base_dir"/* "$fa_base_dir/steamapps/common/$supcom" 2>/dev/null
     fi
     to_log "FA installed condition met"
 fi

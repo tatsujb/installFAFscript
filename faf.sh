@@ -368,7 +368,7 @@ to_log "start of second thread did not crash first thread"
 
 install_faf_function
 
-to_log "$(mv "$work_dir/faf/*" "$faf_path" && echo did || echo didnt) successfully move faf dir"
+to_log "$(mv "$work_dir"/faf/* "$faf_path" && echo did || echo didnt) successfully move faf dir"
 
 # wait for user to log in
 to_log "waiting"
