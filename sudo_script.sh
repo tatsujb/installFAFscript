@@ -30,7 +30,7 @@ while true; do
     * ) break ;;
   esac
 done
-to_be_installed=$@
+to_be_installed=$*
 
 to_log() { echo -e "[$(date --rfc-3339=seconds)] T2 $*" >> "$logfile"; }
 
@@ -111,7 +111,7 @@ case "$operating_system" in
         else
             to_log "did not enable partners, hoping it was already enabled."
         fi
-        sudo usermod -a -G video,audio $real_user
+        sudo usermod -a -G video,audio $(logname)
         sudo dpkg --add-architecture i386
         if   echo $to_be_installed | grep steamcmd >/dev/null \
           && getent passwd steam &>/dev/null

@@ -20,7 +20,7 @@ else
 	DEBUG=false
 fi
 
-real_user=$(echo $HOME | cut -c 7-)
+real_user=$(logname)
 cur_dir="$(pwd)"
 faf_path="$HOME/.local/share/faforever"
 faf_config_dir="$HOME/.faforever"
@@ -221,8 +221,8 @@ case "$operating_system" in
         tar -xf downlords-faf-client.tar.gz
         cd downlords-faf-client
         makepkg -si
-        cd
-        ln -s $HOME/.faforever/user
+        # cd
+        # ln -s $HOME/.faforever/user
         ;;
     *)
         faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
@@ -314,7 +314,7 @@ else
         ;;
         2)
             del_directory=$(zenity --file-selection --directory --title "select the folder you want to delete (FA)")
-            rm -rf del_directory
+            rm -rf "$del_directory"
             to_log "resintall FA chosen"
             already_fa=false
             if (whiptail --title "ReInstall Forged Alliance to default dirrectory? (SDA)" --yesno "Current install dir : $HOME/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
@@ -397,7 +397,7 @@ echo ""
 echo "restarting (FAF)"
 to_log "done waiting"
 # sleep 2
-kill -9 $(pgrep java | tail -1)
+kill -9 "$(pgrep java | tail -1)"
 # editting client.prefs :
 to_log "editing client.prefs"
 
