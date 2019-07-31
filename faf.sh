@@ -14,11 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-if [ "$1" = "DEBUG" ]; then
-	DEBUG=true
-else
-	DEBUG=false
-fi
+[ $1 = "DEBUG" ] && DEBUG=true || DEBUG=false
 
 real_user=$(logname)
 cur_dir="$(pwd)"
@@ -30,38 +26,30 @@ faf_log_file="$work_dir/faf.sh-$faf_sh_version.log"
 echo $faf_log_file
 touch $faf_log_file &>/dev/null
 
-if $DEBUG; then
-    cp ./sudo_script.sh ./install_FA_script.sh $work_dir
-fi
+to_log() { echo -e "[$(date --rfc-3339=seconds)] T1 $*" >> $faf_log_file; }
 
+log_separator() { echo "_______________________________________________________________________________________________________" >> $faf_log_file; }
 
-to_log()
-{
-    echo -e "[$(date --rfc-3339=seconds)] T1 $@" >> $faf_log_file
-}
-
-log_separator()
-{
-    echo "_______________________________________________________________________________________________________" >> $faf_log_file
-}
+$DEBUG && cp ./sudo_script.sh ./install_FA_script.sh $work_dir
+$DEBUG && to_log "DEBUG -- copied sudo and install_FA scripts into workdir $work_dir"
 
 log_separator
 # DETERMINE OS BASE :
 unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)
-to_log "New log file. fafSTACK version "$faf_sh_version" running : "$unameOut  ;;
+to_log "New log file. fafSTACK version $faf_sh_version running : $unameOut"  ;;
     Darwin*)
 echo "Mac / Apple Macintosh is not supported yet though it could technically be; as evidenced by previous examples of people running FA and even FAF on mac. Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
-to_log "New log file. fafSTACK version "$faf_sh_version". FAILIURE. MAC UNSUPPORTED. "$unameOut
+to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. MAC UNSUPPORTED. $unameOut"
 exit 1;;
     CYGWIN*)
 echo "Hello, you can go straight to : www.faforever.com and click on \"Download Client\". This script exists in order to help linux users achieve the same thing you can do out-of-the-box on your operating system. You have not the remotest use for this script :) be free, wild bird!"
-to_log "New log file. fafSTACK version "$faf_sh_version". FAILIURE. WINDOWS UNSUPPORTED. "$unameOut
+to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. WINDOWS UNSUPPORTED. $unameOut"
 exit 1;;
     MINGW*)
 echo "Hello, are can on MinGW you cannot run Forged Alliance, this script is of no use to you."
-to_log "New log file. fafSTACK version "$faf_sh_version". FAILIURE. MINGW UNSUPPORTED. "$unameOut
+to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. MINGW UNSUPPORTED. $unameOut"
 exit 1
 esac
 # DETERMINE LINUX DISTRO AND RELEASE :
@@ -71,14 +59,11 @@ if [ -f /etc/os-release ]; then
     operating_system=$NAME
     os_version=$VERSION_ID
     is_plasma="$(echo $XDG_DATA_DIRS | grep -Eo 'plasma')"
-    if [ \( "$is_plasma" == "plasma" \) -o \( "$VERSION_ID" == "Ubuntu" \) ]
-    then
+    if [ "$is_plasma" = "plasma" ] || \
+       [ "$VERSION_ID" = "Ubuntu" ]; then
         operating_system=Kubuntu
     fi
-    if [ -z "$os_version" ]
-    then
-        os_version=$(lsb_release -sr)
-    fi
+    [ -z "$os_version" ] && os_version=$(lsb_release -sr)
 elif type lsb_release &>/dev/null; then
     # linuxbase.org (older Debian / Ubuntu should be here)
     operating_system=$(lsb_release -si)
@@ -106,11 +91,11 @@ else
     os_version=$(uname -r)
 fi
 
-echo "Distribution name + version + kernel version + architecture : "$operating_system" "$os_version" "$(uname -rm) >> "$faf_log_file"
+echo "Distribution name + version + kernel version + architecture : $operating_system $os_version $(uname -rm)" >> "$faf_log_file"
 log_separator
 echo "Hard storage setup :" >> "$faf_log_file"
 log_separator
-lsblk_ouput=$(lsblk | grep -v 'loop')
+lsblk_ouput="$(lsblk | grep -v 'loop')"
 echo "$lsblk_ouput" >> "$faf_log_file"
 dfh_ouput=$(df -h --total | grep -v 'loop')
 echo "$dfh_ouput" >> "$faf_log_file"
@@ -233,7 +218,7 @@ case "$operating_system" in
         cd downlords-faf-client
         makepkg -si
         # cd
-        # ln -s $HOME/.faforever/user
+        # ln -s $faf_config_dir/user
         ;;
     *)
         faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
@@ -478,7 +463,7 @@ echo -n "\"install & run steam, steamcmd, FA\" terminal tab...  "
 while $no_login
 do
   printf "\b${sp:i++%${#sp}:1}"
-  grep --no-messages '"username": "' $HOME/.faforever/client.prefs && no_login=false
+  grep --no-messages '"username": "' "$faf_config_dir/client.prefs" && no_login=false
   sleep 1
 done
 echo ""
@@ -499,8 +484,8 @@ jq --arg installation_path "$installation_path" --arg preferences_file "$prefere
         path: ($installation_path),
         preferencesFile: ($preferences_file),
         executableDecorator: ($user_path)
-    }' $HOME/.faforever/client.prefs > $HOME/.faforever/client.prefs.tmp
-mv $HOME/.faforever/client.prefs.tmp $HOME/.faforever/client.prefs
+    }' "$faf_config_dir/client.prefs" > "$faf_config_dir/client.prefs.tmp"
+mv "$faf_config_dir/client.prefs.tmp" "$faf_config_dir/client.prefs"
 gtk-launch faforever
 
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
