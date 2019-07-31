@@ -89,31 +89,32 @@ case "$operating_system" in
         ;;
     *);;
 esac
-
-to_log "begining install of $to_be_installed"
-case "$operating_system" in
-    Arch* | Manjaro* | Antergos*)
-        sudolog pacman -Syu --noconfirm
-        sudolog pacman -Syy --noconfirm
-        sudolog pacman -Scc --noconfirm
-        sudolog pacman -Suu --noconfirm
-        sudolog pacman -S --noconfirm $to_be_installed;;
-    Fedora* | Mageia*)
-        sudolog dnf distro-sync -y
-        sudolog dnf install -y $to_be_installed
-        sudolog dnf clean all -y
-        sudolog dnf autoremove -y;;
-    CentOS*)
-        sudolog yum -y upgrade
-        sudolog yum -y install $to_be_installed
-        sudolog yum -y clean all;;
-    Ubuntu* | Debian* | *)
-        sudolog apt update -y
-        sudolog apt full-upgrade -y
-        sudolog apt install -y $to_be_installed
-        sudolog apt autoremove -y
-        sudolog apt autoclean;;
-esac
+if [ ! -z "$to_be_installed" ]; then
+    to_log "begining install of $to_be_installed"
+    case "$operating_system" in
+        Arch* | Manjaro* | Antergos*)
+            sudolog pacman -Syu --noconfirm
+            sudolog pacman -Syy --noconfirm
+            sudolog pacman -Scc --noconfirm
+            sudolog pacman -Suu --noconfirm
+            sudolog pacman -S --noconfirm $to_be_installed;;
+        Fedora* | Mageia*)
+            sudolog dnf distro-sync -y
+            sudolog dnf install -y $to_be_installed
+            sudolog dnf clean all -y
+            sudolog dnf autoremove -y;;
+        CentOS*)
+            sudolog yum -y upgrade
+            sudolog yum -y install $to_be_installed
+            sudolog yum -y clean all;;
+        Ubuntu* | Debian* | *)
+            sudolog apt update -y
+            sudolog apt full-upgrade -y
+            sudolog apt install -y $to_be_installed
+            sudolog apt autoremove -y
+            sudolog apt autoclean;;
+    esac
+fi
 to_log "post-install - Configurations"
 
 case "$operating_system" in
