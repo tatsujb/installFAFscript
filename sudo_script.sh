@@ -6,11 +6,12 @@ logfile="/tmp/faf.sh.log"
 operating_system="Ubuntu"
 
 
-TEMP=`getopt -o hvDfl:o: --long help,verbose,debug,logfile:,operating_system: \
-             -n "$0" -- "$@"`
+parse=$(getopt -o hvDfl:o: \
+               --long help,verbose,debug,logfile:,operating_system: \
+               -n "$0" -- "$@")
 
-if [ $? != 0 ] ; then echo " Terminating..." >&2 ; exit 1 ; fi
-eval set -- "$TEMP"
+if [ $parse != 0 ] ; then echo " Terminating..." >&2 ; exit 1 ; fi
+eval set -- "$parse"
 while true; do
   case "$1" in
     -h | --help )

@@ -14,8 +14,8 @@ supcom="Supreme Commander Forged Alliance"
 parse=$(getopt -o vDfm:l:u:d:o: --long verbose,debug,logfile: \
                -n "$0" -- "$@")
 
-if $parse ; then echo " Terminating..." >&2 ; exit 1 ; fi
-eval set -- "$TEMP"
+if [ $parse != 0 ]; then echo " Terminating..." >&2 ; exit 1 ; fi
+eval set -- "$parse"
 while true; do
   case "$1" in
     -v | --verbose ) VERBOSE=true; shift ;;
