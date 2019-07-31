@@ -4,7 +4,7 @@ VERBOSE=false
 DEBUG=false
 logfile="/tmp/faf.sh.log"
 operating_system="Ubuntu"
-
+tmp_sudo=will_sudo_this.sh
 
 parse=$(getopt -o hvDfl:o: \
                --long help,verbose,debug,logfile:,operating_system: \
@@ -35,66 +35,41 @@ to_be_installed=$*
 
 to_log() { echo -e "[$(date --rfc-3339=seconds)] T2 $*" >> "$logfile"; }
 
+sudolog() {
+    echo "$@" >> "$tmp_sudo"
+}
+
+rm ./$tmp_sudo
+
 to_log "#################### sudo (install X packages) script ####################"
 to_log " --verbose $VERBOSE"
 to_log " --debug $DEBUG"
 to_log " --logfile $logfile"
 to_log " --operating_system $operating_system"
 
-echo "If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies."
-echo "Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run."
-echo "At your own discretion, you may copy them, exit the script by closing all the terminal windows and execute them yourself."
-echo "Upon re-runing the script this window should not appear and you should not be prompted for sudo priveledges."
-echo ""
-echo "However, if you trust the script, you may simply type in your admin password and this script will continue."
-echo ""
-echo "Pending obtaning sudo priveledges, this windows will run the following :"
-echo ""
-_short_os=$(echo "$operating_system" | sed 's/['\''"\\]//g' | cut -c -4 )
-grep -v "to_log" $0 | \
-    awk '{if ($0 ~ /'$_short_os'[a-zA-Z]*\*/) {
-            getline;
-            while ($0 ~ /^        /) {
-              print $0;
-              getline;}}}' | \
-    sed 's/\$to_be_installed/'"$to_be_installed"'/' | \
-    sed 's/^ \{8\}/  /;s/;;//'
-
-echo -e "\n\nIf you wish to cancel installing the packages, please"
-echo -e "press Ctrl+C (multiple times) without entering your password\n"
-sudo echo ""
 to_log "preparing installs - checking sources & misc."
 case "$operating_system" in
-    Ubuntu*) 
-        for _s in "steam" "steamcmd"
-        do
-            if [ ! $(command -v $_s) ]
-            then
-                echo $_s steam/question select "I AGREE" | sudo debconf-set-selections
-                echo $_s steam/license note '' | sudo debconf-set-selections
-            fi
-        done;;
     Debian*)
         if grep -q "debian.org/debian/ stretch main contrib non-free" /etc/apt/sources.list > /dev/null
         then
             to_log "editing debian sources : stretch already correct"
         else
             to_log "editing debian sources : stretch edited"
-            sed -i "s_debian.org/debian/ stretch main contrib_debian.org/debian/ stretch main contrib non-free_" /etc/apt/sources.list
+            sudolog "sed -i \"s_debian.org/debian/ stretch main contrib_debian.org/debian/ stretch main contrib non-free_\" /etc/apt/sources.list"
         fi
         if grep -q "http://security.debian.org/debian-security stretch/updates main contrib non-free" /etc/apt/sources.list > /dev/null
         then
             to_log "editing debian sources : stretch/updates already correct"
         else
             to_log "editing debian sources : stretch/updates edited"
-            sed -i "s_http://security.debian.org/debian-security stretch/updates main contrib_http://security.debian.org/debian-security stretch/updates main contrib non-free_" /etc/apt/sources.list
+            sudolog "sed -i \"s_http://security.debian.org/debian-security stretch/updates main contrib_http://security.debian.org/debian-security stretch/updates main contrib non-free_\" /etc/apt/sources.list"
         fi
         if grep -q "debian.org/debian/ stretch-updates main contrib non-free" /etc/apt/sources.list > /dev/null
         then
             to_log "editing debian sources : stretch-updates already correct"
         else
             to_log "editing debian sources : stretch-updates edited"
-            sed -i "s_debian.org/debian/ stretch-updates main contrib_debian.org/debian/ stretch-updates main contrib non-free_" /etc/apt/sources.list
+            sudolog "sed -i \"s_debian.org/debian/ stretch-updates main contrib_debian.org/debian/ stretch-updates main contrib non-free_\" /etc/apt/sources.list"
         fi
         if grep -q "deb http://ftp.*.debian.org/debian/ stretch-proposed-updates main contrib non-free" /etc/apt/sources.list > /dev/null
         then
@@ -102,50 +77,85 @@ case "$operating_system" in
         else
             download_country=$(grep "deb http://ftp." /etc/apt/sources.list | head -1 | cut -d. -f2)
             to_log "editing debian sources : added proposed"
-            echo "deb http://ftp.$download_country.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
+            sudolog "echo \"deb http://ftp.$download_country.debian.org/debian/ stretch-proposed-updates main contrib non-free\" >> /etc/apt/sources.list"
         fi
         if grep -Fxq "# deb http://archive.canonical.com/ubuntu cosmic partner" /etc/apt/sources.list
         then
             to_log "enabled partners"
-            sudo sed -i "s/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g" /etc/apt/sources.list
+            sudolog "sed -i \"s/# deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/deb http:\/\/archive.canonical.com\/ubuntu cosmic partner/g\" /etc/apt/sources.list"
         else
             to_log "did not enable partners, hoping it was already enabled."
         fi
-        sudo usermod -a -G video,audio "$(logname)"
-        sudo dpkg --add-architecture i386
-        if   echo $to_be_installed | grep steamcmd >/dev/null \
-          && getent passwd steam &>/dev/null
-        then
-            echo "steam home already exists"
-        else
-            sudo useradd -m steam
-            sudo ln -s /usr/games/steamcmd /home/steam/steamcmd
-        fi;;
+        ;;
     *);;
 esac
 
 to_log "begining install of $to_be_installed"
 case "$operating_system" in
     Arch* | Manjaro* | Antergos*)
-        sudo pacman -Syu --noconfirm
-        sudo pacman -Syy --noconfirm
-        sudo pacman -Scc --noconfirm
-        sudo pacman -Suu --noconfirm
-        sudo pacman -S --noconfirm $to_be_installed;;
+        sudolog pacman -Syu --noconfirm
+        sudolog pacman -Syy --noconfirm
+        sudolog pacman -Scc --noconfirm
+        sudolog pacman -Suu --noconfirm
+        sudolog pacman -S --noconfirm $to_be_installed;;
     Fedora* | Mageia*)
-        sudo dnf distro-sync -y
-        sudo dnf install -y $to_be_installed
-        sudo dnf clean all -y
-        sudo dnf autoremove -y;;
+        sudolog dnf distro-sync -y
+        sudolog dnf install -y $to_be_installed
+        sudolog dnf clean all -y
+        sudolog dnf autoremove -y;;
     CentOS*)
-        sudo yum -y upgrade
-        sudo yum -y install $to_be_installed
-        sudo yum -y clean all;;
+        sudolog yum -y upgrade
+        sudolog yum -y install $to_be_installed
+        sudolog yum -y clean all;;
     Ubuntu* | Debian* | *)
-        sudo apt update -y
-        sudo apt full-upgrade -y
-        sudo apt install -y $to_be_installed
-        sudo apt autoremove -y
-        sudo apt autoclean;;
+        sudolog apt update -y
+        sudolog apt full-upgrade -y
+        sudolog apt install -y $to_be_installed
+        sudolog apt autoremove -y
+        sudolog apt autoclean;;
 esac
-to_log "finished succesfully"
+to_log "post-install - Configurations"
+
+case "$operating_system" in
+    Ubuntu*) 
+        for _s in "steam" "steamcmd"
+        do
+            if [ ! $(command -v $_s) ]
+            then
+                sudolog "echo $_s steam/question select \"I AGREE\" | sudo debconf-set-selections"
+                sudolog "echo $_s steam/license note '' | sudo debconf-set-selections"
+            fi
+        done;;
+    Debian*)
+        sudolog usermod -a -G video,audio "$(logname)"
+        sudolog dpkg --add-architecture i386
+        if   echo $to_be_installed | grep steamcmd >/dev/null \
+          && getent passwd steam &>/dev/null
+        then
+            echo "steam home already exists"
+        else
+            sudolog useradd -m steam
+            sudolog ln -s /usr/games/steamcmd /home/steam/steamcmd
+        fi;;
+esac
+
+echo 'If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies.
+Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run.
+At your own discretion, you may copy them, exit the script by closing all the terminal windows and execute them yourself.
+Upon re-runing the script this window should not appear and you should not be prompted for sudo priveledges.
+
+However, if you trust the script, you may simply type in your admin password and this script will continue.
+
+Pending ROOT priveledges, this windows will run the following commands as ROOT user:
+'
+
+cat $tmp_sudo
+
+echo '
+If you wish to cancel installing the packages or run 
+the commands yourself, please press Ctrl+C without 
+entering your password' "\n"
+
+sudo bash ./$tmp_sudo && \
+    rm ./$tmp_sudo && \
+    to_log "finished succesfully"
