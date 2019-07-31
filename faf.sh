@@ -232,7 +232,6 @@ case "$operating_system" in
         mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
         rm -rf downlords-faf-client-${faf_version_number:1}
         rm _dfc_unix_$faf_version.tar.gz
-    
         # /end Download & install FAF client
         # Java install block
         echo "Now seeing if Java was already installed by this script..."
@@ -257,11 +256,11 @@ case "$operating_system" in
 esac
 # /end Java install block
 # make faf .desktop runner
-[ ! -d $HOME/.local/share/icons ] && mkdir -p $HOME/.local/share/icons
 if [ ! -f $HOME/.local/share/icons/faf.png ]
 then
+    mkdir -p $HOME/.local/share/icons 2>/dev/null
     to_log "getting desktop launcher icon"
-    wget https://github.com/tatsujb/FAFICON/raw/master/faf.png -O $HOME/.local/share/icons
+    wget https://github.com/tatsujb/FAFICON/raw/master/faf.png -O $HOME/.local/share/icons/faf.png
 fi
 if [ ! -f $HOME/.local/share/applications/faforever.desktop ]
 then
