@@ -51,8 +51,7 @@ echo ""
 echo "Pending obtaning sudo priveledges, this windows will run the following :"
 echo ""
 _short_os=$(echo "$operating_system" | sed 's/['\''"\\]//g' | cut -c -4 )
-cat $0 | \
-    grep -v "to_log" | \
+grep -v "to_log" $0 | \
     awk '{if ($0 ~ /'$_short_os'[a-zA-Z]*\*/) {
             getline;
             while ($0 ~ /^        /) {
@@ -112,7 +111,7 @@ case "$operating_system" in
         else
             to_log "did not enable partners, hoping it was already enabled."
         fi
-        sudo usermod -a -G video,audio $(logname)
+        sudo usermod -a -G video,audio "$(logname)"
         sudo dpkg --add-architecture i386
         if   echo $to_be_installed | grep steamcmd >/dev/null \
           && getent passwd steam &>/dev/null
