@@ -129,13 +129,13 @@ for gxti in "gnome-terminal --title -- --tab --active" \
         gxtexec=$3
         gxtoptions="$4 $5 $6 $7 $8"
         break
-	;;
+        ;;
     esac
 done
 
-if [ -z "$gxtdetected" ]; then 
+if [ -z "$gxtdetected" ]; then
     to_log "User terminal unrecognised or unrecommended $gxtpredetected in favor of $gxtpath."
-else 
+else
     to_log "User terminal detected as $gxtdetected"
 fi
 to_log "Used terminal is $gxtpath."
@@ -144,15 +144,15 @@ to_log "Used terminal is $gxtpath."
 to_be_installed="lib32gcc1"
 
 if_not_then_install() {
-	# $1  is the package to be installed
-	# $2  is the condition
-	if ! $2 &>/dev/null
-	then
+        # $1  is the package to be installed
+        # $2  is the condition
+        if ! $2 &>/dev/null
+        then
                 to_log "$1 was not yet installed, installing..."
-		to_be_installed="$to_be_installed $1"
-	else
-		to_log "$1 is already installed, proceeding..."
-	fi
+                to_be_installed="$to_be_installed $1"
+        else
+                to_log "$1 is already installed, proceeding..."
+        fi
 }
 
 if_not_then_install "procps" "[ -f /bin/kill ]"
@@ -186,12 +186,12 @@ fi
 #rm $work_dir/sudo_script.sh
 
 to_log "start of second thread did not crash first thread"
- 
+
 function set_install_dir_function
 {
     directory=$(zenity --file-selection --directory --title "$1")
     to_log "folder set to $directory"
-} 
+}
 
 function install_faf_function
 {
@@ -335,25 +335,31 @@ fi
 }
 
 get_user_input_function
-echo ""	
-i=1	
-sp='/-\|'	
-no_steam=true	
-echo "waiting for dependencies to be present... "	
-while $no_steam	
-do	
-  printf "\b${sp:i++%${#sp}:1}"	
-  [[ $(command -v steam) ]] && no_steam=false	
-  sleep 1	
-done	
-echo ""	
+echo ""
+i=1
+sp='/-\|'
+no_steam=true
+echo "waiting for dependencies to be present... "
+while $no_steam
+do
+  printf "\b${sp:i++%${#sp}:1}"
+  [[ $(command -v steam) ]] && no_steam=false
+  sleep 1
+done
+echo ""
 
-if [ ! -f install_FA_script.sh ]
+if [ ! -f $work_dir/install_FA_script.sh ]
 then
-    wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
+    wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh -O $work_dir/install_FA_script.sh
 fi
 chmod +x install_FA_script.sh
-to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
+to_run_faf_script="$work_dir/install_FA_script.sh
+        -l $faf_log_file
+        -u $real_user
+        $( $already_fa && echo "-f" )
+        $( $default_dir && echo "-d" )
+        --fa_base_dir $directory
+        --faf_path $faf_path"
 echo "$gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $faf_path/downlords-faf-client" >> install_FA_script.sh
 $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" $gxtexec $to_run_faf_script "$to_be_installed"
 #rm install_FA_script.sh
@@ -366,12 +372,11 @@ to_log "$(mv "$work_dir/faf/*" "$faf_path" && echo did || echo didnt) successful
 
 # wait for user to log in
 to_log "waiting"
-echo ""
-echo ""
+echo -n '
+Please switch to opened FAF client, waiting on user to log in
+if FAF is not open yet simply switch to
+install & run steam, steamcmd, FA" terminal tab...  '
 no_login=true
-echo "Please switch to opened FAF client, waiting on user to log in"
-echo "if FAF is not open yet simply switch to"
-echo -n "\"install & run steam, steamcmd, FA\" terminal tab...  "
 while $no_login
 do
   printf "\b${sp:i++%${#sp}:1}"

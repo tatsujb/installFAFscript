@@ -139,22 +139,33 @@ case "$operating_system" in
         fi;;
 esac
 
-echo 'If you wish for this script to be able to do its task you must elevate it to sudo and it will install the needed dependencies.
-Fortunately all sudo commands have been centralized to this one window and you can know ahead of time all the sudo commands that will be run.
-At your own discretion, you may copy them, exit the script by closing all the terminal windows and execute them yourself.
-Upon re-runing the script this window should not appear and you should not be prompted for sudo priveledges.
+echo 'If you wish for this script to be able to do its task
+you must elevate it to sudo and it will install the needed
+dependencies.
 
-However, if you trust the script, you may simply type in your admin password and this script will continue.
+Fortunately all sudo commands have been centralized to this
+one window and you can know ahead of time all the sudo
+commands that will be run. At your own discretion, you may 
+copy them, exit the script by closing all the terminal 
+windows and execute them yourself.
 
-Pending ROOT priveledges, this windows will run the following commands as ROOT user:
+This window should not appear if you choose to run the 
+install script again.
+
+If you trust the script, you may type in your password and 
+this script will install all the needed dependencies.
+
+Pending ROOT priveledges, this windows will run the following 
+commands as ROOT user:
 '
 
 cat $tmp_sudo
 
 echo '
-If you wish to cancel installing the packages or run 
+If you wish to cancel installing the dependencies or run 
 the commands yourself, please press Ctrl+C without 
-entering your password' "\n"
+entering your password
+'
 
 sudo bash ./$tmp_sudo && \
     rm ./$tmp_sudo && \

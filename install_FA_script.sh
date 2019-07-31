@@ -26,6 +26,7 @@ while true; do
     -o | --operating_system ) operating_system=$2; shift 2 ;;
     -u | --real_user ) real_user=$2; shift 2 ;;
     --fa_base_dir ) fa_base_dir=$2; shift 2 ;;
+    --faf_path ) faf_path=$2; shift 2 ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -135,7 +136,7 @@ echo ""
 if ! $already_fa
 then
     to_log "copying over run file"
-    cp -f /tmp/proton_"$real_user"/run $HOME/faf/
+    cp -f "/tmp/proton_$real_user/run" "$faf_path"
 fi
 to_log "making symbolic links"
 
