@@ -137,9 +137,9 @@ for steamapps in $steamapps_list
 do
     # It should always be possible to find this folder
     [ -d "$origin/$steamapps/common/$supcom"  ] && \
-    fa_install_dir="$origin/$steamapps/common/$supcom"
+    export fa_install_dir="$origin/$steamapps/common/$supcom"
     [ -d "$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" ] && \
-    compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" && \
+    export compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" && \
     break
 done
 [ "$compatdata" = "" ] && \
@@ -153,6 +153,7 @@ ln -s "$HOME/My Games/Gas Powered Games/$supcom/Mods/" "$fa_install_dir/Mods"
 mkdir -p "$compatdata/My Documents" || \
     rm -rf "$compatdata/My Documents/*"
 ln -s "$HOME/My Games/" "$compatdata/My Documents/My Games"
+
 
 echo "FA installation finished succesfully"
 to_log "starting T4 and exiting T3"

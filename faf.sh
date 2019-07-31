@@ -401,8 +401,8 @@ kill -9 $(pgrep java | tail -1)
 # editting client.prefs :
 to_log "editing client.prefs"
 
-installation_path="$origin/$steamapps/common/Supreme Commander Forged Alliance"
-preferences_file="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
+installation_path="$fa_install_dir" # exported from install_FA_script.sh
+preferences_file="$compatdata/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs" # compatdata exported from install_FA_script.sh
 user_path="$faf_path/run %s"
 
 jq --arg installation_path "$installation_path" --arg preferences_file "$preferences_file"  --arg user_path "$user_path" '
