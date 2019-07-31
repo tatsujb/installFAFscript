@@ -13,7 +13,6 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-cd
 
 if [ $1 = "DEBUG" ]; then
 	DEBUG=true
@@ -22,12 +21,18 @@ else
 fi
 
 real_user=$(echo $HOME | cut -c 7-)
+cur_dir="$(pwd)"
+faf_path="$HOME/.local/share/faforever"
+faf_config_dir="$HOME/.faforever"
 work_dir=/tmp/faf_script_workdir
 mkdir -p $work_dir
 faf_log_file="$work_dir/faf.sh-$faf_sh_version.log"
 echo $faf_log_file
 touch $faf_log_file &>/dev/null
 
+if $DEBUG; then
+    cp ./sudo_script.sh ./install_FA_script.sh $work_dir
+fi
 
 
 to_log()
@@ -184,8 +189,6 @@ then
     echo "all dependencies met :)"
     to_log "all dependencies met"
 else
-    if $DEBUG; then cp ./sudo_script.sh $work_dir/; fi
-    cd $work_dir
     to_run_sudo_script="$work_dir/sudo_script.sh --logfile $faf_log_file --operating_system \'$operating_system\'"
     to_log "to be installed : $to_be_installed"
     if [ ! -f $work_dir/sudo_script.sh ]
@@ -212,52 +215,53 @@ echo "now moving on to installing Downlord's FAF..."
 
 to_log "installing DOWNLORD"
 cd $work_dir
-if [[ "$operating_system" = "Arch" || "$operating_system" = "Manjaro" ]]
-then
-    curl https://aur.archlinux.org/cgit/aur.git/snapshot/downlords-faf-client.tar.gz
-    tar -xf downlords-faf-client.tar.gz
-    cd downlords-faf-client
-    makepkg -si
-    cd
-    ln -s $HOME/.faforever/user
-else
-    faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
-    faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
-    wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
-    pv _dfc_unix_$faf_version.tar.gz | tar xzp -C $work_dir/faf
-    mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
-    rm -rf downlords-faf-client-${faf_version_number:1}
-    rm _dfc_unix_$faf_version.tar.gz
-
-    # /end Download & install FAF client
-    # Java install block
-    echo "Now seeing if Java was already installed by this script..."
-    to_log "Now seeing if Java was already installed by this script..."
-    if [ -d $work_dir/faf/jdk-10.0.2 ]
-    then
-        echo "Java is already installed, moving on"
-        to_log "Java already installed!"
-    else
-        # Download & install java 10 open jdk
-        echo "Java 10 installation procedure..."
-        to_log "Java 10 installing..."
-        wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
-        pv $work_dir/faf/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C $work_dir/faf
-        rm openjdk-10.0.2_linux-x64_bin.tar.gz
-        echo "" >> $HOME/.bashrc
-        echo "" >> $HOME/.bashrc
-        ! grep -q 'INSTALL4J_JAVA_HOME' $HOME/.bashrc > /dev/null && echo "export INSTALL4J_JAVA_HOME=$HOME/faf/jdk-10.0.2" >> $HOME/.bashrc
-        # /end Download & install java 10 open jdk
-    fi
-fi
+case "$operating_system" in
+    Arch*|Manjaro*)
+        curl https://aur.archlinux.org/cgit/aur.git/snapshot/downlords-faf-client.tar.gz
+        tar -xf downlords-faf-client.tar.gz
+        cd downlords-faf-client
+        makepkg -si
+        cd
+        ln -s $HOME/.faforever/user
+        ;;
+    *)
+        faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
+        faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
+        wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
+        pv _dfc_unix_$faf_version.tar.gz | tar xzp -C $work_dir/faf
+        mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
+        rm -rf downlords-faf-client-${faf_version_number:1}
+        rm _dfc_unix_$faf_version.tar.gz
+    
+        # /end Download & install FAF client
+        # Java install block
+        echo "Now seeing if Java was already installed by this script..."
+        to_log "Now seeing if Java was already installed by this script..."
+        if [ -d $faf_path/jdk-10.0.2 ]
+        then
+            echo "Java is already installed, moving on"
+            to_log "Java already installed!"
+        else
+            # Download & install java 10 open jdk
+            echo "Java 10 installation procedure..."
+            to_log "Java 10 installing..."
+            wget https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz
+            pv $work_dir/faf/openjdk-10.0.2_linux-x64_bin.tar.gz | tar xzp -C $work_dir/faf
+            rm openjdk-10.0.2_linux-x64_bin.tar.gz
+            # /end Download & install java 10 open jdk
+        fi
+        ! grep -q 'INSTALL4J_JAVA_HOME' $HOME/.profile > /dev/null && \
+            echo "\n# INSTALL4J_JAVA_HOME is used to run FAForever" >> $HOME/.profile && \
+            echo "export INSTALL4J_JAVA_HOME=$faf_path/jdk-10.0.2" >> $HOME/.profile
+        ;;
+esac
 # /end Java install block
 # make faf .desktop runner
 [ ! -d $HOME/.local/share/icons ] && mkdir -p $HOME/.local/share/icons
 if [ ! -f $HOME/.local/share/icons/faf.png ]
 then
     to_log "getting desktop launcher icon"
-    cd $HOME/.local/share/icons
-    wget https://github.com/tatsujb/FAFICON/raw/master/faf.png
+    wget https://github.com/tatsujb/FAFICON/raw/master/faf.png -O $HOME/.local/share/icons
 fi
 if [ ! -f $HOME/.local/share/applications/faforever.desktop ]
 then
@@ -267,13 +271,13 @@ then
     echo "[Desktop Entry]" >> faforever.desktop
     echo "Version=$faf_version" >> faforever.desktop
     echo "Type=Application" >> faforever.desktop
-    echo 'Exec=bash -c "cd $HOME/faf; export INSTALL4J_JAVA_HOME=$HOME/faf/jdk-10.0.2; ./downlords-faf-client"' >> faforever.desktop
+    echo "Exec=$faf_path/downlords-faf-client" >> faforever.desktop
     echo "Name=FAF" >> faforever.desktop
     echo "Comment=Forged Alliance Forever Client" >> faforever.desktop
     echo "Icon=$HOME/.local/share/icons/faf.png" >> faforever.desktop
     chmod +x faforever.desktop
 fi
-cd $work_dir
+cd $work_ir
 # /end make faf .desktop runner
 }
 
@@ -364,8 +368,8 @@ then
     wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
 fi
 chmod +x install_FA_script.sh
-to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -o \'$operating_system\' -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
-echo "$gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client" >> install_FA_script.sh
+to_run_faf_script="$work_dir/install_FA_script.sh -l $faf_log_file -u $real_user $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory"
+echo "$gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $faf_path/downlords-faf-client" >> install_FA_script.sh
 $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" $gxtexec $to_run_faf_script "$to_be_installed"
 #rm install_FA_script.sh
 
@@ -373,8 +377,7 @@ to_log "start of second thread did not crash first thread"
 
 install_faf_function
 
-mv "$work_dir/faf/" "$HOME/"
-to_log "$([[ -d $HOME/faf ]] && echo did || echo didnt) successfully move faf dir"
+to_log "$(mv "$work_dir/faf/*" "$faf_path" && echo did || echo didnt) successfully move faf dir"
 
 # wait for user to log in
 to_log "waiting"
@@ -400,7 +403,7 @@ to_log "editing client.prefs"
 
 installation_path="$origin/$steamapps/common/Supreme Commander Forged Alliance"
 preferences_file="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
-user_path="$HOME/faf/run %s"
+user_path="$faf_path/run %s"
 
 jq --arg installation_path "$installation_path" --arg preferences_file "$preferences_file"  --arg user_path "$user_path" '
     .forgedAlliance += {
