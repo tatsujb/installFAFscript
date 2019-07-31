@@ -146,20 +146,13 @@ done
     to_log "neither steamapps nor SteamApps compatdata was found. exiting" && \
     exit 1
 
-cd "$fa_install_dir"
-rm -rf Maps
-rm -rf Mods
-ln -s $HOME/My\ Games/Gas\ Powered\ Games/$supcom/Maps/ Maps
-ln -s $HOME/My\ Games/Gas\ Powered\ Games/$supcom/Mods/ Mods
+rm -rf "$fa_install_dir/{Maps,Mods}"
+ln -s "$HOME/My Games/Gas Powered Games/$supcom/Maps/" "$fa_install_dir/Maps"
+ln -s "$HOME/My Games/Gas Powered Games/$supcom/Mods/" "$fa_install_dir/Mods"
 
-cd "$compatdata"
-rm -rf My\ Documents
-mkdir My\ Documents
-cd My\ Documents
-ln -s $HOME/My\ Games/ My\ Games
+mkdir -p "$compatdata/My Documents" || \
+    rm -rf "$compatdata/My Documents/*"
+ln -s "$HOME/My Games/" "$compatdata/My Documents/My Games"
 
-cd
-source .bashrc
-eval "$(cat .bashrc | tail -n +10)"
 echo "FA installation finished succesfully"
 to_log "starting T4 and exiting T3"

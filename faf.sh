@@ -251,7 +251,8 @@ case "$operating_system" in
         fi
         ! grep -q 'INSTALL4J_JAVA_HOME' $HOME/.profile > /dev/null && \
             echo "\n# INSTALL4J_JAVA_HOME is used to run FAForever" >> $HOME/.profile && \
-            echo "export INSTALL4J_JAVA_HOME=$faf_path/jdk-10.0.2" >> $HOME/.profile
+            echo "export INSTALL4J_JAVA_HOME=$faf_path/jdk-10.0.2" >> $HOME/.profile && \
+            $(tail -n 1 $HOME/.profile) # make the Java env var available immediatly
         ;;
 esac
 # /end Java install block
@@ -276,7 +277,7 @@ then
     echo "Icon=$HOME/.local/share/icons/faf.png" >> faforever.desktop
     chmod +x faforever.desktop
 fi
-cd $work_ir
+cd $work_dir
 # /end make faf .desktop runner
 }
 
