@@ -25,6 +25,7 @@ while true; do
     -l | --logfile ) faf_log_file=$2; shift 2 ;;
     -u | --real_user ) real_user=$2; shift 2 ;;
     --fa_base_dir ) fa_base_dir=$2; shift 2 ;;
+    --faf_path ) faf_path=$2; shift 2 ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -102,7 +103,7 @@ else
             steamcmd +login "$steam_user_name" "$steam_password" +@sSteamCmdForcePlatformType windows +force_install_dir "$fa_base_dir" +app_update 9420 +quit
         done
         mkdir -p "$fa_base_dir/steamapps/common/$supcom"
-        mv "$fa_base_dir/*" "$fa_base_dir/steamapps/common/$supcom" 2>/dev/null
+        mv "$fa_base_dir"/* "$fa_base_dir/steamapps/common/$supcom" 2>/dev/null
     fi
     to_log "FA installed condition met"
 fi
@@ -118,21 +119,21 @@ sp='/-\|'
 no_config=true
 while $no_config
 do
-    printf "\b${sp:i++%${#sp}:1}";
+    printf "\b${sp:i++%${#sp}:1}"
     if { [ ! "$(pidof SupremeCommande)" ] && \
          [ -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; } || \
        [ "$typed_continue" = "c" ]
     then
         no_config=false
     fi
-    sleep 1
+    # sleep 1
     read -s -r -t 1 typed_continue
 done
 echo ""
 if ! $already_fa
 then
     to_log "copying over run file"
-    cp -f /tmp/proton_"$real_user"/run $HOME/faf/
+    cp -f "/tmp/proton_$real_user/run" "$faf_path"
 fi
 to_log "making symbolic links"
 

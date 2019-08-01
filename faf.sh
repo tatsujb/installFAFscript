@@ -30,8 +30,8 @@ to_log() { echo -e "[$(date --rfc-3339=seconds)] T1 $*" >> $faf_log_file; }
 
 log_separator() { echo "_______________________________________________________________________________________________________" >> $faf_log_file; }
 
-$DEBUG && cp ./sudo_script.sh ./install_FA_script.sh $work_dir
-$DEBUG && to_log "DEBUG -- copied sudo and install_FA scripts into workdir $work_dir"
+$DEBUG && cp ./sudo_script.sh ./install_FA_script.sh $work_dir \
+       && to_log "DEBUG -- copied sudo and install_FA scripts into workdir $work_dir"
 
 log_separator
 # DETERMINE OS BASE :
@@ -164,7 +164,7 @@ if_not_then_install "jq" "[ $(command -v jq) ]"
 if_not_then_install "zenity" "[ $(command -v zenity) ]"
 [[ "$operating_system" = "Ubuntu" ]] && if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]" # TODO Deprecated? Redundant?
 if_not_then_install "steam" "[ $(command -v steam) ]"
-if_not_then_install "steamcmd" "[ $(command -v steamcmd) ]"
+if_not_then_install "steamcmd" "[ $(command -v stamcmd) ]"
 
 # end of find missing dependencies
 
@@ -174,14 +174,17 @@ then
     echo "all dependencies met :)"
     to_log "all dependencies met"
 else
-    to_run_sudo_script="$work_dir/sudo_script.sh --logfile $faf_log_file --operating_system \'$operating_system\'"
     to_log "to be installed : $to_be_installed"
     if [ ! -f $work_dir/sudo_script.sh ]
     then
         wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/sudo_script.sh -O $work_dir/sudo_script.sh
     fi
     chmod +x $work_dir/sudo_script.sh
-    $gxtpath $gxtoptions $gxttitle "externalised sudo" $gxtexec $to_run_sudo_script "$to_be_installed"
+    $gxtpath $gxtoptions $gxttitle "Configure and Install Dependencies" \
+             $gxtexec $work_dir/sudo_script.sh \
+                      --logfile $faf_log_file \
+                      --operating_system "$operating_system" \
+                      "$to_be_installed"
 fi
 #rm $work_dir/sudo_script.sh
 
@@ -273,24 +276,23 @@ then
     echo "Icon=$HOME/.local/share/icons/faf.png" >> faforever.desktop
     chmod +x faforever.desktop
 fi
-cd $work_dir
 # /end make faf .desktop runner
 }
 
 function auto_detect_fa_install_dir
 {
-steam_def_folders=("$HOME/.local/share/Steam/steamapps/common"
-                   "$HOME/.steam/steam/steamapps/common"
-                   "$HOME/.steam/steam/SteamApps/common")
-for f in ${steam_def_folders[*]}
-do
-    if [ -d "$f/Supreme Commander Forged Alliance" ]
-    then
-        echo "$f/Supreme Commander Forged Alliance"
-        return 0
-    fi
-done
-return 1 # no folder found
+    steam_def_folders=("$HOME/.local/share/Steam/steamapps/common"
+                       "$HOME/.steam/steam/steamapps/common"
+                       "$HOME/.steam/steam/SteamApps/common")
+    for f in ${steam_def_folders[*]}
+    do
+        if [ -d "$f/Supreme Commander Forged Alliance" ]
+        then
+            echo "$f/Supreme Commander Forged Alliance"
+            return 0
+        fi
+    done
+    return 1 # no folder found
 }
 
 function extract_fa_install_dir {
@@ -307,7 +309,7 @@ function extract_fa_install_dir {
             to_log "Warning -- FA install dir not found"
             break
         else
-            tmp_path=$(dirname $tmp_path)
+            tmp_path=$(dirname "$tmp_path")
         fi
     done
     if [ -d "$tmp_path/$child_path" ]
@@ -324,7 +326,7 @@ wait_for_steam_install() {
     i=1
     sp='/-\|'
     no_steam=true
-    echo "waiting for dependencies to be present... "
+    printf "waiting for steam to finish installing... "
     while $no_steam
     do
       printf "\b${sp:i++%${#sp}:1}"
@@ -347,10 +349,15 @@ function run_fa_script {
     chmod +x $work_dir/install_FA_script.sh
     # TODO Couldn't the closing line be given as an extra command when passing args to the terminal?
     # Example $gxtpath [ run fa_script ] ; $gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client
-    # isn't it supposed to be launched as just a normal binary though?
+    # isn't downlords-faf-client supposed to be launched as just a normal binary though?
     echo "$gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client" >> $work_dir/install_FA_script.sh
-    _default_args="-l $faf_log_file -u $real_user"
-    $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" $gxtexec $work_dir/install_FA_script.sh $_default_args $@
+    _default_args=""
+    $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" \
+             $gxtexec $work_dir/install_FA_script.sh \
+             -l $faf_log_file \
+             -u $real_user \
+             --faf_path "$faf_path" \
+             $@
     #rm install_FA_script.sh
 }
 
@@ -360,16 +367,14 @@ function install_fa {
     set_fa_install_path
 }
 
-function get_user_input_function
-{
-# $1 : (optional) path to a supcom install directory
-$fa_path=$(extract_fa_install_dir $fa_path)
-if [ "$(extract_fa_install_dir $1)" = "" ] && [ "$fa_path" = "" ]
-then
+function get_user_input_function {
+    # $1 : (optional) path to a supcom install directory
+
+fa_path=$(extract_fa_install_dir "$fa_path")
+if [ "$(extract_fa_install_dir $1)" = "" ] && [ "$fa_path" = "" ]; then
     fa_path="$(auto_detect_fa_install_dir)"
-elif [ "$fa_path" = "" ]
-then
-    fa_path="$(extract_fa_install_dir $1)"
+elif [ "$fa_path" = "" ]; then
+    fa_path="$(extract_fa_install_dir "$1")"
 fi
 if [ -d "$fa_path" ]
 then
@@ -395,7 +400,7 @@ case $what_to_do in
         already_fa=true
         default_dir=false
         run_fa_script --already-fa \
-                      --fa_base_dir $fa_path
+                      --fa_base_dir "$fa_path"
         ;;
     install_fa)
         to_log "T1 install FA"
@@ -404,28 +409,23 @@ case $what_to_do in
              get_user_input "$fa_path"; return 0
         fi
         run_fa_script --install-fa \
-                      --fa_base_dir $_fa_path
+                      --fa_base_dir "$_fa_path"
         ;;
     choose_fa_dir)
         default_dir=false
-        _fa_path="$(zenity --file-selection \
-                           --directory \
-                           --filename "$HOME" \
-                           --height 20 \
-                           --width  60 \
-                           --title "Choose the FA installation directory")"
+        _fa_path="$(set_fa_install_path)"
         get_user_input "$_fa_path"
         return;;# stops recursion loop from running the rest of this function
     reinstall_fa)
         to_log "T1 reinstall FA chosen"
-        if (whiptail --title "Are you sure you want to delete $fa_path ?"
+        if (whiptail --title "Are you sure you want to delete $fa_path ?"\
                      --yesno "" 12 85 --fb); then
             echo "T1 removing $fa_path"
             rm -rf "$fa_path"
             already_fa=false
-            $_fa_path=$(set_fa_install_path)
+            _fa_path="$(set_fa_install_path)"
             run_fa_script --install-fa \
-                          --fa_base_dir $_fa_path
+                          --fa_base_dir "$_fa_path"
         else
             to_log "T1 Cancels deletion of previous install."
             already_fa=true
@@ -450,35 +450,37 @@ to_log "start of second thread did not crash first thread"
 
 install_faf_function
 
-to_log "$(mv "$work_dir/faf/*" "$faf_path" && echo did || echo didnt) successfully move faf dir"
+to_log "$(mv "$work_dir"/faf/* "$faf_path" && echo did || echo didnt) \
+        successfully move faf dir"
 
 # wait for user to log in
-to_log "waiting"
-echo ""
-echo ""
+to_log "waiting for user to log into FAF"
+printf '
+Please switch to opened FAF client.
+
+If FAF is not open yet, please switch to the terminal tab named "install & run steam, steamcmd, FA"
+
+Waiting on user to log in... '
 no_login=true
-echo "Please switch to opened FAF client, waiting on user to log in"
-echo "if FAF is not open yet simply switch to"
-echo -n "\"install & run steam, steamcmd, FA\" terminal tab...  "
-while $no_login
+while ! grep --no-messages '"username": "' "$faf_config_dir/client.prefs" 1>/dev/null
 do
   printf "\b${sp:i++%${#sp}:1}"
-  grep --no-messages '"username": "' "$faf_config_dir/client.prefs" && no_login=false
   sleep 1
 done
-echo ""
-echo "restarting (FAF)"
+echo -e "\nRestarting (FAF)"
 to_log "done waiting"
-# sleep 2
 kill -9 "$(pgrep java | tail -1)"
 # editting client.prefs :
 to_log "editing client.prefs"
 
+# TODO installation_path=$fa_path, unless there is a default install :)
 installation_path="$fa_install_dir" # exported from install_FA_script.sh
 preferences_file="$compatdata/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs" # compatdata exported from install_FA_script.sh
 user_path="$faf_path/run %s"
 
-jq --arg installation_path "$installation_path" --arg preferences_file "$preferences_file"  --arg user_path "$user_path" '
+jq --arg installation_path "$installation_path"\
+   --arg preferences_file "$preferences_file"\
+   --arg user_path "$user_path" '
     .forgedAlliance += {
         installationPath: ($installation_path),
         path: ($installation_path),
