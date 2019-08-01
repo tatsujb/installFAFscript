@@ -396,14 +396,14 @@ else
 fi
 case $what_to_do in
     configure_fa)
-        to_log "T1 configure current FA install"
+        to_log "configure current FA install"
         already_fa=true
         default_dir=false
         run_fa_script --already-fa \
                       --fa_base_dir "$fa_path"
         ;;
     install_fa)
-        to_log "T1 install FA"
+        to_log "install FA"
         _fa_path=$(set_fa_install_path)
         if [ "$_fa_path" = "" ]; then
              get_user_input "$fa_path"; return 0
@@ -417,7 +417,7 @@ case $what_to_do in
         get_user_input "$_fa_path"
         return;;# stops recursion loop from running the rest of this function
     reinstall_fa)
-        to_log "T1 reinstall FA chosen"
+        to_log "reinstall FA chosen"
         if (whiptail --title "Are you sure you want to delete $fa_path ?"\
                      --yesno "" 12 85 --fb); then
             echo "T1 removing $fa_path"
@@ -427,13 +427,13 @@ case $what_to_do in
             run_fa_script --install-fa \
                           --fa_base_dir "$_fa_path"
         else
-            to_log "T1 Cancels deletion of previous install."
+            to_log "Cancels deletion of previous install."
             already_fa=true
             get_user_input "$fa_path"
             return
         fi;;
     install_faf)
-        to_log "T1 Skipping to install FAF without configuring FA"
+        to_log "Skipping to install FAF without configuring FA"
         install_faf_function
         echo "installed faf only, as per user demand, nothing else to do, exiting."
         exit 0;;
