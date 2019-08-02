@@ -6,7 +6,7 @@ already_fa=false
 faf_log_file=""
 real_user=""
 default_dir=""
-fa_base_dir=""
+fa_path=""
 supcom="Supreme Commander Forged Alliance"
 
 parse=$(getopt -o vDfim:l:u:d: \
@@ -19,12 +19,12 @@ while true; do
   case "$1" in
     -v | --verbose ) VERBOSE=true; shift ;;
     -D | --debug ) DEBUG=true; shift ;;
-    --default_dir ) default_dir=true; shift ;;
-    -f | --already_fa ) already_fa=true; shift ;;
+    --default_dir ) default_dir=true; fa_path="default"; shift ;;
+    -f | --already-fa ) already_fa=true; shift ;;
     -i | --install-fa ) already_fa=false; shift;;
     -l | --logfile ) faf_log_file=$2; shift 2 ;;
     -u | --real_user ) real_user=$2; shift 2 ;;
-    --fa_base_dir ) fa_base_dir=$2; shift 2 ;;
+    --fa_path ) fa_path=$2; shift 2 ;;
     --faf_path ) faf_path=$2; shift 2 ;;
     -- ) shift; break ;;
     * ) break ;;
@@ -39,17 +39,18 @@ to_log " --default_dir $default_dir"
 to_log " --already_fa $already_fa"
 to_log " --logfile $faf_log_file"
 to_log " --real_user $real_user"
-to_log " --fa_base_dir $fa_base_dir"
+to_log " --fa_path $fa_path"
 
-if $default_dir || [ "$fa_base_dir" = "default" ]
+if $default_dir || [ "$fa_path" = "default" ]
 then
+    default_dir=true
     origin="$HOME/.steam/steam"
 else
-    origin=$fa_base_dir
+    origin=$fa_path
 fi
 
 for _steamapps in "steamapps" "SteamApps"; do
-    [ -d "$HOME/$_steamapps/.steam/steam/$steamapps" ] && \
+    [ -d "$HOME/.steam/steam/$_steamapps" ] && \
     steamapps=$_steamapps
     break
 done
@@ -58,13 +59,11 @@ done
     exit 1
 
 bind 'TAB: accept-line' &>/dev/null
-while [ -z "$steam_user_name" ]
-do
+while [ -z "$steam_username" ]; do
     echo "steam user name :"
-    IFS= read -e -r steam_user_name
+    IFS= read -e -r steam_username
 done
-while [ -z "$steam_password" ]
-do
+while [ -z "$steam_password" ]; do
     echo "steam password :"
     IFS= read -e -r -s steam_password
 done
@@ -79,36 +78,32 @@ fi
 
 echo "expecting you to type in Forged Alliances Launch options"
 echo "reminder : look in your home folder, theres a file there with the contents to be pasted"
-echo "once thats done edit steam settings in order to enable Proton for all games"
+echo "once that's done edit steam settings in order to enable Proton for all games"
 
-if $already_fa
-then
-    echo ""
-else
+if ! $already_fa; then
     echo -e "\n\n\n"
     to_log "running steam"
-    steam -login "$steam_user_name" "$steam_password"
-    rm "$launch_options_file"
+    steam -login "$steam_username" "$steam_password"
     if $default_dir
     then
         to_log "installing FA to default dir"
         while [ ! -d "$HOME/.steam/steam/$steamapps/common/$supcom" ]
         do
-            steamcmd +login "$steam_user_name" "$steam_password" +@sSteamCmdForcePlatformType windows +app_update 9420 +quit
+            steamcmd +login "$steam_username" "$steam_password" +@sSteamCmdForcePlatformType windows +app_update 9420 +quit
         done
     else
         to_log "installing FA to custom dir"
-        while [ ! -d "$fa_base_dir/bin" ]
+        while [ ! -d "$fa_path/bin" ]
         do
-            steamcmd +login "$steam_user_name" "$steam_password" +@sSteamCmdForcePlatformType windows +force_install_dir "$fa_base_dir" +app_update 9420 +quit
+            steamcmd +login "$steam_username" "$steam_password" +@sSteamCmdForcePlatformType windows +force_install_dir "$fa_path" +app_update 9420 +quit
         done
-        mkdir -p "$fa_base_dir/steamapps/common/$supcom"
-        mv "$fa_base_dir"/* "$fa_base_dir/steamapps/common/$supcom" 2>/dev/null
+        mkdir -p "$fa_path/steamapps/common/$supcom"
+        mv "$fa_path"/* "$fa_path/steamapps/common/$supcom" 2>/dev/null
     fi
     to_log "FA installed condition met"
 fi
 to_log "launching FA"
-steam -login "$steam_user_name" "$steam_password" -applaunch 9420 &>/dev/null &
+steam -login "$steam_username" "$steam_password" -applaunch 9420 &>/dev/null &
 echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
 echo "and for Forged Alliance to be shut down."
 echo "You may also type \"c\" (and enter/return) to exit this loop"
@@ -117,16 +112,11 @@ echo -n "have already been adequately met... "
 i=1
 sp='/-\|'
 no_config=true
-while $no_config
+while { [ $(pidof SupremeCommande) ] || \
+        [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; } && \
+      [ "$typed_continue" != "c" ]
 do
     printf "\b${sp:i++%${#sp}:1}"
-    if { [ ! "$(pidof SupremeCommande)" ] && \
-         [ -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; } || \
-       [ "$typed_continue" = "c" ]
-    then
-        no_config=false
-    fi
-    # sleep 1
     read -s -r -t 1 typed_continue
 done
 echo ""

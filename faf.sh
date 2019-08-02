@@ -22,13 +22,13 @@ faf_path="$HOME/.local/share/faforever"
 faf_config_dir="$HOME/.faforever"
 work_dir=/tmp/faf_script_workdir
 mkdir -p $work_dir
-faf_log_file="$work_dir/faf.sh-$faf_sh_version.log"
-echo $faf_log_file
-touch $faf_log_file &>/dev/null
+faf_log="$work_dir/faf.sh-$faf_sh_version.log"
+echo $faf_log
+touch $faf_log &>/dev/null
 
-to_log() { echo -e "[$(date --rfc-3339=seconds)] T1 $*" >> $faf_log_file; }
+to_log() { echo -e "[$(date --rfc-3339=seconds)] T1 $*" >> $faf_log; }
 
-log_separator() { echo "_______________________________________________________________________________________________________" >> $faf_log_file; }
+log_separator() { echo "_______________________________________________________________________________________________________" >> $faf_log; }
 
 $DEBUG && cp ./sudo_script.sh ./install_FA_script.sh $work_dir \
        && to_log "DEBUG -- copied sudo and install_FA scripts into workdir $work_dir"
@@ -91,16 +91,16 @@ else
     os_version=$(uname -r)
 fi
 
-echo "Distribution name + version + kernel version + architecture : $operating_system $os_version $(uname -rm)" >> "$faf_log_file"
+echo "Distribution name + version + kernel version + architecture : $operating_system $os_version $(uname -rm)" >> "$faf_log"
 log_separator
-echo "Hard storage setup :" >> "$faf_log_file"
+echo "Hard storage setup :" >> "$faf_log"
 log_separator
 lsblk_ouput="$(lsblk | grep -v 'loop')"
-echo "$lsblk_ouput" >> "$faf_log_file"
+echo "$lsblk_ouput" >> "$faf_log"
 dfh_ouput=$(df -h --total | grep -v 'loop')
-echo "$dfh_ouput" >> "$faf_log_file"
+echo "$dfh_ouput" >> "$faf_log"
 log_separator
-echo "" >> "$faf_log_file"
+echo "" >> "$faf_log"
 
 # Get the name and execute switch for a useful terminal emulator
 #
@@ -146,8 +146,7 @@ to_be_installed="lib32gcc1"
 if_not_then_install() {
     # $1  is the package to be installed
     # $2  is the condition
-    if ! $2 &>/dev/null
-    then
+    if ! $2 &>/dev/null; then
         to_log "$1 was not yet installed, installing..."
         to_be_installed="$to_be_installed $1"
     else
@@ -182,29 +181,27 @@ else
     chmod +x $work_dir/sudo_script.sh
     $gxtpath $gxtoptions $gxttitle "Configure and Install Dependencies" \
              $gxtexec $work_dir/sudo_script.sh \
-                      --logfile $faf_log_file \
+                      --logfile $faf_log \
                       --operating_system "$operating_system" \
-                      "$to_be_installed"
+                      $to_be_installed
 fi
-#rm $work_dir/sudo_script.sh
 
 to_log "start of second thread did not crash first thread"
 
-function set_fa_install_path
+function set_fa_path
 {
     if (whiptail --title "Install Forged Alliance to default dirrectory? (SDA)" \
                  --yesno "Current install dir : ~/.steam/steam/steamapps/common/Supreme Commander Forged Alliance\n(default)" 12 85 --fb)
     then
-        default_dir=true && directory="default"
+        echo "default"
         to_log "default FA install path chosen"
     else
-        default_dir=false
         to_log "non-standart dir chosen"
         _title="Choose your desired Forged Alliance installation directory/folder"
-        directory=$(zenity --file-selection --directory --title "$_title")
+        echo "$(zenity --file-selection --directory --title "$_title")"
         to_log "FA install path set to : $directory"
     fi
-    echo $directory
+    return 0
 }
 
 function install_faf_function
@@ -279,7 +276,7 @@ fi
 # /end make faf .desktop runner
 }
 
-function auto_detect_fa_install_dir
+function auto_detect_fa_path
 {
     steam_def_folders=("$HOME/.local/share/Steam/steamapps/common"
                        "$HOME/.steam/steam/steamapps/common"
@@ -295,7 +292,7 @@ function auto_detect_fa_install_dir
     return 1 # no folder found
 }
 
-function extract_fa_install_dir {
+function extract_fa_path {
     # Tries to find the FA install dir from $1
     # in case the user selects the SupCom dir directly
     # Echoes the full path of the installed dir if found
@@ -337,14 +334,11 @@ wait_for_steam_install() {
 }
 
 function run_fa_script {
-    # $@ - arguments to pass to the script
-    # Typically :
-    # -l $faf_log_file -o \'$operating_system\' -u $real_user
-    # $( $already_fa && echo "-f" ) $( $default_dir && echo "-d" ) --fa_base_dir $directory
+    # $@ - extra arguments to pass to the script
     wait_for_steam_install
-    if [ ! -f $work_dir/install_FA_script.sh ]
-    then
-        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh -O $work_dir/install_FA_script.sh
+    if [ ! -f $work_dir/install_FA_script.sh ]; then
+        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
+             -O $work_dir/install_FA_script.sh
     fi
     chmod +x $work_dir/install_FA_script.sh
     # TODO Couldn't the closing line be given as an extra command when passing args to the terminal?
@@ -354,27 +348,20 @@ function run_fa_script {
     _default_args=""
     $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" \
              $gxtexec $work_dir/install_FA_script.sh \
-             -l $faf_log_file \
+             -l $faf_log \
              -u $real_user \
              --faf_path "$faf_path" \
              $@
-    #rm install_FA_script.sh
-}
-
-function install_fa {
-    # DEPRECATED - use set_fa_install_path
-    # Reason : Confusing name + redundant with set_fa_install_path
-    set_fa_install_path
 }
 
 function get_user_input_function {
     # $1 : (optional) path to a supcom install directory
 
-fa_path=$(extract_fa_install_dir "$fa_path")
-if [ "$(extract_fa_install_dir $1)" = "" ] && [ "$fa_path" = "" ]; then
-    fa_path="$(auto_detect_fa_install_dir)"
+fa_path=$(extract_fa_path "$fa_path")
+if [ "$(extract_fa_path $1)" = "" ] && [ "$fa_path" = "" ]; then
+    fa_path="$(auto_detect_fa_path)"
 elif [ "$fa_path" = "" ]; then
-    fa_path="$(extract_fa_install_dir "$1")"
+    fa_path="$(extract_fa_path "$1")"
 fi
 if [ -d "$fa_path" ]
 then
@@ -397,14 +384,12 @@ fi
 case $what_to_do in
     configure_fa)
         to_log "configure current FA install"
-        already_fa=true
-        default_dir=false
         run_fa_script --already-fa \
                       --fa_base_dir "$fa_path"
         ;;
     install_fa)
         to_log "install FA"
-        _fa_path=$(set_fa_install_path)
+        _fa_path=$(set_fa_path)
         if [ "$_fa_path" = "" ]; then
              get_user_input "$fa_path"; return 0
         fi
@@ -412,8 +397,7 @@ case $what_to_do in
                       --fa_base_dir "$_fa_path"
         ;;
     choose_fa_dir)
-        default_dir=false
-        _fa_path="$(set_fa_install_path)"
+        _fa_path="$(set_fa_path)"
         get_user_input "$_fa_path"
         return;;# stops recursion loop from running the rest of this function
     reinstall_fa)
@@ -422,13 +406,11 @@ case $what_to_do in
                      --yesno "" 12 85 --fb); then
             echo "T1 removing $fa_path"
             rm -rf "$fa_path"
-            already_fa=false
-            _fa_path="$(set_fa_install_path)"
+            _fa_path="$(set_fa_path)"
             run_fa_script --install-fa \
                           --fa_base_dir "$_fa_path"
         else
             to_log "Cancels deletion of previous install."
-            already_fa=true
             get_user_input "$fa_path"
             return
         fi;;
