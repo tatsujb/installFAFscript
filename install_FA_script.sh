@@ -149,16 +149,6 @@ then
     to_log "copying over run file"
     cp -f "/tmp/proton_$real_user/run" "$faf_path"
 fi
-to_log "making symbolic links"
-
-rm -rf "$fa_install_dir/{Maps,Mods}"
-ln -s "$HOME/My Games/Gas Powered Games/$supcom/Maps/" "$fa_install_dir/Maps"
-ln -s "$HOME/My Games/Gas Powered Games/$supcom/Mods/" "$fa_install_dir/Mods"
-
-mkdir -p "$compatdata/My Documents" || \
-    rm -rf "$compatdata/My Documents/*"
-ln -s "$HOME/My Games/" "$compatdata/My Documents/My Games"
-
 
 echo "FA installation finished succesfully"
 to_log "starting T4 and exiting T3"
