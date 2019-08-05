@@ -18,15 +18,15 @@ eval set -- "$parse"
 while true; do
   case "$1" in
     -v | --verbose ) VERBOSE=true; shift ;;
-    -D | --debug ) DEBUG=true; shift ;;
-    --default_dir ) default_dir=true; fa_path="default"; shift ;;
-    -f | --already-fa ) already_fa=true;
-                        fa_path=$2; shift 2 ;;
+    -D | --debug )   DEBUG=true; shift ;;
+    --default_dir )  default_dir=true; 
+                     fa_path="default"; shift ;;
+    -f | --already-fa | --fa_path ) already_fa=true;
+                                    fa_path=$2; shift 2 ;;
     -i | --install-fa ) already_fa=false; 
                         install_fa_path=$2; shift 2 ;;
     -l | --logfile ) faf_log_file=$2; shift 2 ;;
     -u | --real_user ) real_user=$2; shift 2 ;;
-    --fa_path ) fa_path=$2; shift 2 ;;
     --faf_path ) faf_path=$2; shift 2 ;;
     -- ) shift; break ;;
     * ) break ;;
@@ -55,15 +55,21 @@ else
     to_log "Err -- Invalid input"
     exit 2
 fi
+if $default_dir; then
+    for _steamapps in "steamapps" "SteamApps"; do
+        [ -d "$HOME/.steam/steam/$_steamapps" ] && \
+        steamapps=$_steamapps && \
+        break
+    done
+    [ "$steamapps" = "" ] && \
+        to_log "Err -- neither steamapps nor SteamApps was found in home dir. exiting" && \
+        exit 1
+else
+    steamapps="steamapps"
+fi
 
-for _steamapps in "steamapps" "SteamApps"; do
-    [ -d "$HOME/.steam/steam/$_steamapps" ] && \
-    steamapps=$_steamapps && \
-    break
-done
-[ "$steamapps" = "" ] && \
-    to_log "Err -- neither steamapps nor SteamApps was found in home dir. exiting" && \
-    exit 1
+export compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser"
+export fa_install_dir="$origin/$steamapps/common/$supcom"
 
 bind 'TAB: accept-line' &>/dev/null
 while [ -z "$steam_username" ]; do
@@ -91,18 +97,17 @@ if ! $already_fa; then
     echo -e "\n\n\n"
     to_log "running steam"
     steam -login "$steam_username" "$steam_password"
+    fa_path="$origin/$steamapps/common/$supcom"
+    to_log "Installing FA to $fa_path"
     if $default_dir
     then
-        to_log "installing FA to default dir"
-        fa_path="$origin/$steamapps/common/$supcom"
         while [ ! -d "$fa_path" ]; do
             steamcmd +login "$steam_username" "$steam_password" \
                      +@sSteamCmdForcePlatformType windows \
+		     $( $default_dir || echo "+force_install_dir \"$origin\"") \
                      +app_update 9420 +quit
         done
     else
-        to_log "installing FA to custom dir"
-        fa_path="$origin/steamapps/common/$supcom"
         while [ ! -d "$fa_path/bin" ]; do
             steamcmd +login "$steam_username" "$steam_password" \
                      +@sSteamCmdForcePlatformType windows \
@@ -114,42 +119,37 @@ if ! $already_fa; then
     fi
     to_log "FA installed condition met"
 fi
+
+[ ! -d "$compatdata" ] && \
+    to_log "neither steamapps nor SteamApps compatdata was found. exiting" && \
+    exit 1
+
 if [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; then
-to_log "launching FA"
-steam -login "$steam_username" "$steam_password" -applaunch 9420 &>/dev/null &
-echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
-echo "and for Forged Alliance to be shut down."
-echo "You may also type \"c\" (and enter/return) to exit this loop"
-echo "if you feel the conditions for continuing sucessfully"
-echo -n "have already been adequately met... "
-i=1
-sp='/-\|'
-no_config=true
-while { [ $(pidof SupremeCommande) ] || \
-        [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; } && \
-      [ "$typed_continue" != "c" ]
-do
-    printf "\b${sp:i++%${#sp}:1}"
-    read -s -r -t 1 typed_continue
-done
-echo ""
+    to_log "Game.prefs not detected - launching FA"
+    steam -login "$steam_username" "$steam_password" -applaunch 9420 &>/dev/null &
+    echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
+    echo "and for Forged Alliance to be shut down."
+    echo "You may also type \"c\" (and enter/return) to exit this loop"
+    echo "if you feel the conditions for continuing sucessfully"
+    echo -n "have already been adequately met... "
+    i=1
+    sp='/-\|'
+    no_config=true
+    while { [ $(pidof SupremeCommande) ] || \
+            [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; } && \
+          [ "$typed_continue" != "c" ]
+    do
+        printf "\b${sp:i++%${#sp}:1}"
+        read -s -r -t 1 typed_continue
+    done
+fi
+
 if ! $already_fa
 then
     to_log "copying over run file"
     cp -f "/tmp/proton_$real_user/run" "$faf_path"
 fi
 to_log "making symbolic links"
-
-for _steamapps in "steamapps" "SteamApps"; do
-    [ -d "$origin/$steamapps/common/$supcom"  ] && \
-        export fa_install_dir="$origin/$steamapps/common/$supcom"
-    [ -d "$origin/$_steamapps/compatdata/9420/pfx/drive_c/users/steamuser" ] && \
-    export compatdata="$origin/$_steamapps/compatdata/9420/pfx/drive_c/users/steamuser" && \
-    break
-done
-[ "$compatdata" = "" ] && \
-    to_log "neither steamapps nor SteamApps compatdata was found. exiting" && \
-    exit 1
 
 rm -rf "$fa_install_dir/{Maps,Mods}"
 ln -s "$HOME/My Games/Gas Powered Games/$supcom/Maps/" "$fa_install_dir/Maps"
