@@ -9,8 +9,8 @@ default_dir=""
 fa_path=""
 supcom="Supreme Commander Forged Alliance"
 
-parse=$(getopt -o vDfim:l:u:d: \
-               --long verbose,debug,already-fa,install-fa,logfile: \
+parse=$(getopt -o vDf:i:m:l:u:d: \
+               --long verbose,debug,already-fa:,install-fa:,logfile:,fa_path:,faf_path:,real_user:\
                -n "$0" -- "$@")
 
 if [ $parse != 0 ]; then echo " Terminating..." >&2 ; exit 1 ; fi
@@ -20,8 +20,10 @@ while true; do
     -v | --verbose ) VERBOSE=true; shift ;;
     -D | --debug ) DEBUG=true; shift ;;
     --default_dir ) default_dir=true; fa_path="default"; shift ;;
-    -f | --already-fa ) already_fa=true; shift ;;
-    -i | --install-fa ) already_fa=false; shift;;
+    -f | --already-fa ) already_fa=true;
+                        fa_path=$2; shift 2 ;;
+    -i | --install-fa ) already_fa=false; 
+                        install_fa_path=$2; shift 2 ;;
     -l | --logfile ) faf_log_file=$2; shift 2 ;;
     -u | --real_user ) real_user=$2; shift 2 ;;
     --fa_path ) fa_path=$2; shift 2 ;;
@@ -36,26 +38,31 @@ to_log "#################### install FA script ####################"
 to_log " --verbose $VERBOSE"
 to_log " --debug $DEBUG"
 to_log " --default_dir $default_dir"
-to_log " --already_fa $already_fa"
+to_log " --already_fa $fa_path"
+to_log " --install_fa $install_fa_path"
 to_log " --logfile $faf_log_file"
 to_log " --real_user $real_user"
 to_log " --fa_path $fa_path"
 
-if $default_dir || [ "$fa_path" = "default" ]
-then
+if $default_dir || [ "$install_fa_path" = "default" ]; then
     default_dir=true
     origin="$HOME/.steam/steam"
+elif [ ! -z "$install_fa_path" ]; then
+    origin="$install_fa_path"
+elif [ ! -z "$fa_path" ]
+    origin=$(dirname $(dirname $(dirname $fa_path)))
 else
-    origin=$fa_path
+    to_log "Err -- Invalid input"
+    exit 2
 fi
 
 for _steamapps in "steamapps" "SteamApps"; do
     [ -d "$HOME/.steam/steam/$_steamapps" ] && \
-    steamapps=$_steamapps
+    steamapps=$_steamapps && \
     break
 done
 [ "$steamapps" = "" ] && \
-    to_log "neither steamapps nor SteamApps was found. exiting" && \
+    to_log "Err -- neither steamapps nor SteamApps was found in home dir. exiting" && \
     exit 1
 
 bind 'TAB: accept-line' &>/dev/null
@@ -67,18 +74,18 @@ while [ -z "$steam_password" ]; do
     echo "steam password :"
     IFS= read -e -r -s steam_password
 done
+to_log "Steam credentials entrusted to script"
 
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-to_log "Steam credentials entrusted to script"
 launch_options_file="$HOME/Paste this into the Forged Alliance steam launch options"
-if [ ! -f "$launch_options_file" ]
-then
-echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > "$launch_options_file"
-fi
+launch_options='PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%'
+echo "$launch_options" > "$launch_options_file"
 
-echo "expecting you to type in Forged Alliances Launch options"
-echo "reminder : look in your home folder, theres a file there with the contents to be pasted"
-echo "once that's done edit steam settings in order to enable Proton for all games"
+echo "### Two necessary manual steps needed to continue ###"
+echo "1. Enable Proton for all games in the steam settings."
+echo -e "2. Type/copy pasta this line into the Forged Alliances Launch options\n"
+echo -e " $launch_options\n"
+echo "You can also find a file in you HOME folder with the content to be pasted."
 
 if ! $already_fa; then
     echo -e "\n\n\n"
@@ -87,21 +94,27 @@ if ! $already_fa; then
     if $default_dir
     then
         to_log "installing FA to default dir"
-        while [ ! -d "$HOME/.steam/steam/$steamapps/common/$supcom" ]
-        do
-            steamcmd +login "$steam_username" "$steam_password" +@sSteamCmdForcePlatformType windows +app_update 9420 +quit
+        fa_path="$origin/$steamapps/common/$supcom"
+        while [ ! -d "$fa_path" ]; do
+            steamcmd +login "$steam_username" "$steam_password" \
+                     +@sSteamCmdForcePlatformType windows \
+                     +app_update 9420 +quit
         done
     else
         to_log "installing FA to custom dir"
-        while [ ! -d "$fa_path/bin" ]
-        do
-            steamcmd +login "$steam_username" "$steam_password" +@sSteamCmdForcePlatformType windows +force_install_dir "$fa_path" +app_update 9420 +quit
+        fa_path="$origin/steamapps/common/$supcom"
+        while [ ! -d "$fa_path/bin" ]; do
+            steamcmd +login "$steam_username" "$steam_password" \
+                     +@sSteamCmdForcePlatformType windows \
+                     +force_install_dir "$origin" \
+                     +app_update 9420 +quit
         done
         mkdir -p "$fa_path/steamapps/common/$supcom"
         mv "$fa_path"/* "$fa_path/steamapps/common/$supcom" 2>/dev/null
     fi
     to_log "FA installed condition met"
 fi
+if [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; then
 to_log "launching FA"
 steam -login "$steam_username" "$steam_password" -applaunch 9420 &>/dev/null &
 echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
