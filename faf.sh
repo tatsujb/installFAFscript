@@ -21,16 +21,18 @@ cur_dir="$(pwd)"
 faf_path="$HOME/.local/share/faforever"
 faf_config_dir="$HOME/.faforever"
 work_dir=/tmp/faf_script_workdir
-mkdir -p $work_dir
 faf_log="$work_dir/faf.sh-$faf_sh_version.log"
-echo $faf_log
+
+mkdir -p $work_dir 2>/dev/null
+echo "Find the logfile here : $faf_log"
 touch $faf_log &>/dev/null
 
 to_log() { echo -e "[$(date --rfc-3339=seconds)] T1 $*" >> $faf_log; }
+echolog() { echo -e $1 ; to_log $1; }
 
 log_separator() { echo "_______________________________________________________________________________________________________" >> $faf_log; }
 
-$DEBUG && cp ./sudo_script.sh ./install_FA_script.sh $work_dir \
+$DEBUG && cp ./sudo_script.sh ./install_FA_script.sh "$work_dir" \
        && to_log "DEBUG -- copied sudo and install_FA scripts into workdir $work_dir"
 
 log_separator
@@ -38,19 +40,19 @@ log_separator
 unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)
-to_log "New log file. fafSTACK version $faf_sh_version running : $unameOut"  ;;
+        to_log "New log file. fafSTACK version $faf_sh_version running : $unameOut";;
     Darwin*)
-echo "Mac / Apple Macintosh is not supported yet though it could technically be; as evidenced by previous examples of people running FA and even FAF on mac. Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
-to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. MAC UNSUPPORTED. $unameOut"
-exit 1;;
+        echo "Mac / Apple Macintosh is not supported yet though it could technically be; as evidenced by previous examples of people running FA and even FAF on mac. Feel free to contribute at : https://github.com/tatsujb/installFAFscript"
+        to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. MAC UNSUPPORTED. $unameOut"
+        exit 1;;
     CYGWIN*)
-echo "Hello, you can go straight to : www.faforever.com and click on \"Download Client\". This script exists in order to help linux users achieve the same thing you can do out-of-the-box on your operating system. You have not the remotest use for this script :) be free, wild bird!"
-to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. WINDOWS UNSUPPORTED. $unameOut"
-exit 1;;
+        echo "Hello, you can go straight to : www.faforever.com and click on \"Download Client\". This script exists in order to help linux users achieve the same thing you can do out-of-the-box on your operating system. You have not the remotest use for this script :) be free, wild bird!"
+        to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. WINDOWS UNSUPPORTED. $unameOut"
+        exit 1;;
     MINGW*)
-echo "Hello, are can on MinGW you cannot run Forged Alliance, this script is of no use to you."
-to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. MINGW UNSUPPORTED. $unameOut"
-exit 1
+        echo "Hello, are can on MinGW you cannot run Forged Alliance, this script is of no use to you."
+        to_log "New log file. fafSTACK version $faf_sh_version. FAILURE. MINGW UNSUPPORTED. $unameOut"
+        exit 1;;
 esac
 # DETERMINE LINUX DISTRO AND RELEASE :
 if [ -f /etc/os-release ]; then
@@ -93,12 +95,10 @@ fi
 
 echo "Distribution name + version + kernel version + architecture : $operating_system $os_version $(uname -rm)" >> "$faf_log"
 log_separator
+# Logging available system resources
 echo "Hard storage setup :" >> "$faf_log"
 log_separator
-lsblk_ouput="$(lsblk | grep -v 'loop')"
-echo "$lsblk_ouput" >> "$faf_log"
-dfh_ouput=$(df -h --total | grep -v 'loop')
-echo "$dfh_ouput" >> "$faf_log"
+df -h --total | grep -E 'Filesystem|sd.[0-9]' >> "$faf_log"
 log_separator
 echo "" >> "$faf_log"
 
@@ -161,9 +161,8 @@ if_not_then_install "pv" "[ $(command -v pv) ]"
 if_not_then_install "curl" "[ $(command -v curl) ]"
 if_not_then_install "jq" "[ $(command -v jq) ]"
 if_not_then_install "zenity" "[ $(command -v zenity) ]"
-[[ "$operating_system" = "Ubuntu" ]] && if_not_then_install "gnome-terminal" "[ $(command -v gnome-terminal) ]" # TODO Deprecated? Redundant?
 if_not_then_install "steam" "[ $(command -v steam) ]"
-if_not_then_install "steamcmd" "[ $(command -v stamcmd) ]"
+if_not_then_install "steamcmd" "[ $(command -v steamcmd) ]"
 
 # end of find missing dependencies
 
@@ -183,7 +182,7 @@ else
              $gxtexec $work_dir/sudo_script.sh \
                       --logfile $faf_log \
                       --operating_system "$operating_system" \
-                      $to_be_installed
+                      $to_be_installed &
 fi
 
 to_log "start of second thread did not crash first thread"
@@ -248,7 +247,7 @@ case "$operating_system" in
         ! grep -q 'INSTALL4J_JAVA_HOME' $HOME/.profile > /dev/null && \
             echo "\n# INSTALL4J_JAVA_HOME is used to run FAForever" >> $HOME/.profile && \
             echo "export INSTALL4J_JAVA_HOME=$faf_path/jdk-10.0.2" >> $HOME/.profile && \
-            $(tail -n 1 $HOME/.profile) # make the Java env var available immediatly
+            $(tail -n 1 $HOME/.profile) # make the Java env var available immediatly ?
         ;;
 esac
 # /end Java install block
@@ -385,7 +384,7 @@ case $what_to_do in
     configure_fa)
         to_log "configure current FA install"
         run_fa_script --already-fa \
-                      --fa_base_dir "$fa_path"
+                      --fa_base_dir "$fa_path" &
         ;;
     install_fa)
         to_log "install FA"
@@ -394,7 +393,7 @@ case $what_to_do in
              get_user_input "$fa_path"; return 0
         fi
         run_fa_script --install-fa \
-                      --fa_base_dir "$_fa_path"
+                      --fa_base_dir "$_fa_path" &
         ;;
     choose_fa_dir)
         _fa_path="$(set_fa_path)"
@@ -404,11 +403,11 @@ case $what_to_do in
         to_log "reinstall FA chosen"
         if (whiptail --title "Are you sure you want to delete $fa_path ?"\
                      --yesno "" 12 85 --fb); then
-            echo "T1 removing $fa_path"
+            echo "Removing $fa_path"
             rm -rf "$fa_path"
             _fa_path="$(set_fa_path)"
             run_fa_script --install-fa \
-                          --fa_base_dir "$_fa_path"
+                          --fa_base_dir "$_fa_path" &
         else
             to_log "Cancels deletion of previous install."
             get_user_input "$fa_path"
@@ -432,8 +431,8 @@ to_log "start of second thread did not crash first thread"
 
 install_faf_function
 
-to_log "$(mv "$work_dir"/faf/* "$faf_path" && echo did || echo didnt) \
-        successfully move faf dir"
+to_log "$(mv "$work_dir"/faf/* "$faf_path" && echo did || echo didnt) " \
+       "successfully move faf dir"
 
 # wait for user to log in
 to_log "waiting for user to log into FAF"
