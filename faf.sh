@@ -22,7 +22,7 @@ faf_path="$HOME/.local/share/faforever"
 faf_config_dir="$HOME/.faforever"
 work_dir=/tmp/faf_script_workdir
 faf_log="$work_dir/faf.sh-$faf_sh_version.log"
-
+installFAtmpfile="$workdir/tmpInstallFA"
 mkdir -p $work_dir 2>/dev/null
 echo "Find the logfile here : $faf_log"
 touch $faf_log &>/dev/null
@@ -455,16 +455,18 @@ kill -9 "$(pgrep java | tail -1)"
 to_log "editing client.prefs"
 
 # TODO installation_path=$fa_path, unless there is a default install :)
-installation_path="$fa_install_dir" # exported from install_FA_script.sh
-preferences_file="$compatdata/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs" # compatdata exported from install_FA_script.sh
+
+fa_path="$(tail -n 1 $installFAtmpfile)"
+compatdata="$(tail -n 3 $installFAtmpfile | head -n 1)"
+preferences_file="$compatdata/Local Settings/Application Data/Gas Powered Games/Supreme Commander Forged Alliance/Game.prefs"
 user_path="$faf_path/run %s"
 
-jq --arg installation_path "$installation_path"\
+jq --arg fa_path "$fa_path"\
    --arg preferences_file "$preferences_file"\
    --arg user_path "$user_path" '
     .forgedAlliance += {
-        installationPath: ($installation_path),
-        path: ($installation_path),
+        installationPath: ($fa_path),
+        path: ($fa_path),
         preferencesFile: ($preferences_file),
         executableDecorator: ($user_path)
     }' "$faf_config_dir/client.prefs" > "$faf_config_dir/client.prefs.tmp"

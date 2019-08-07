@@ -4,6 +4,7 @@ VERBOSE=false
 DEBUG=false
 already_fa=false
 faf_log_file=""
+tmpfile="./tmpInstallFA"
 real_user=""
 default_dir=""
 fa_path=""
@@ -67,9 +68,11 @@ if $default_dir; then
 else
     steamapps="steamapps"
 fi
+[ -z "$fa_path" ] && fa_path="$origin/$steamapps/common/$supcom"
+compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser"
 
-export compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser"
-export fa_install_dir="$origin/$steamapps/common/$supcom"
+to_log "Putting compatdata and fa_install_dir in tmpfile."
+echo -e "compatdata\n$compatdata\nfa_path\n$fa_path" >> $tmpfile
 
 bind 'TAB: accept-line' &>/dev/null
 while [ -z "$steam_username" ]; do
@@ -97,7 +100,6 @@ if ! $already_fa; then
     echo -e "\n\n\n"
     to_log "running steam"
     steam -login "$steam_username" "$steam_password"
-    fa_path="$origin/$steamapps/common/$supcom"
     to_log "Installing FA to $fa_path"
     if $default_dir
     then
@@ -150,5 +152,7 @@ then
     cp -f "/tmp/proton_$real_user/run" "$faf_path"
 fi
 
+
 echo "FA installation finished succesfully"
 to_log "starting T4 and exiting T3"
+
