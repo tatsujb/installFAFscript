@@ -23,6 +23,9 @@ faf_config_dir="$HOME/.faforever"
 work_dir=/tmp/faf_script_workdir
 faf_log="$work_dir/faf.sh-$faf_sh_version.log"
 installFAtmpfile="$workdir/tmpInstallFA"
+#spinner vars
+i=1
+sp='/-\|'
 mkdir -p $work_dir 2>/dev/null
 echo "Find the logfile here : $faf_log"
 touch $faf_log &>/dev/null
@@ -31,6 +34,8 @@ to_log() { echo -e "[$(date --rfc-3339=seconds)] T1 $*" >> $faf_log; }
 echolog() { echo -e $1 ; to_log $1; }
 
 log_separator() { echo "_______________________________________________________________________________________________________" >> $faf_log; }
+
+spin() { printf "\b${sp:i++%${#sp}:1}" }
 
 $DEBUG && cp ./sudo_script.sh ./install_FA_script.sh "$work_dir" \
        && to_log "DEBUG -- copied sudo and install_FA scripts into workdir $work_dir"
@@ -319,15 +324,11 @@ function extract_fa_path {
 }
 
 wait_for_steam_install() {
-    i=1
-    sp='/-\|'
     no_steam=true
     printf "waiting for steam to finish installing... "
-    while $no_steam
-    do
-      printf "\b${sp:i++%${#sp}:1}"
-      [[ $(command -v steam) ]] && no_steam=false
-      sleep 1
+    while ! command -v steam &>/dev/null; do
+        spin
+        sleep 1
     done
     return 0
 }
@@ -343,7 +344,6 @@ function run_fa_script {
     # TODO Couldn't the closing line be given as an extra command when passing args to the terminal?
     # Example $gxtpath [ run fa_script ] ; $gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client
     # isn't downlords-faf-client supposed to be launched as just a normal binary though?
-    echo "$gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client" >> $work_dir/install_FA_script.sh
     _default_args=""
     $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" \
              $gxtexec $work_dir/install_FA_script.sh \
@@ -351,7 +351,14 @@ function run_fa_script {
              -u $real_user \
              --faf_path "$faf_path" \
              $@
+    [ -f "$faf_path/downlords-faf-client" ] || printf "Waiting for the FAF client to finish installing ... "
+    while [ ! -f "$faf_path/downlords-faf-client" ]; do
+        spin
+        sleep 1
+    done
+    "$faf_path"/downlords-faf-client
 }
+
 
 function get_user_input_function {
     # $1 : (optional) path to a supcom install directory
@@ -445,8 +452,8 @@ Waiting on user to log in... '
 no_login=true
 while ! grep --no-messages '"username": "' "$faf_config_dir/client.prefs" 1>/dev/null
 do
-  printf "\b${sp:i++%${#sp}:1}"
-  sleep 1
+    spin
+    sleep 1
 done
 echo -e "\nRestarting (FAF)"
 to_log "done waiting"
@@ -471,7 +478,10 @@ jq --arg fa_path "$fa_path"\
         executableDecorator: ($user_path)
     }' "$faf_config_dir/client.prefs" > "$faf_config_dir/client.prefs.tmp"
 mv "$faf_config_dir/client.prefs.tmp" "$faf_config_dir/client.prefs"
-gtk-launch faforever
+if command -v "gtk-launch"; then
+    gtk-launch faforever
+else
+    $faf_path/downlords-faf-client
 
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
 to_log "Finished thread one. (proton/downlord/open-jdk/bashrc)"
