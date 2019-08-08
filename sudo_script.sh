@@ -107,7 +107,10 @@ if [ ! -z "$to_be_installed" ]; then
             sudolog yum -y upgrade
             sudolog yum -y install $to_be_installed
             sudolog yum -y clean all;;
-        Ubuntu* | Debian* | *)
+        *[Ss]olus*)
+            sudolog eopkg up
+	    sudolog eopkg install $to_be_installed
+	*[Uu]buntu* | Debian* | *)
             sudolog apt update -y
             sudolog apt full-upgrade -y
             sudolog apt install -y $to_be_installed
@@ -118,7 +121,7 @@ fi
 to_log "post-install - Configurations"
 
 case "$operating_system" in
-    Ubuntu*)
+    *[Uu]buntu*)
         for _s in "steam" "steamcmd"
         do
             if [ ! $(command -v $_s) ]
