@@ -13,9 +13,6 @@ supcom="Supreme Commander Forged Alliance"
 parse=$(getopt -o vDf:i:m:l:u:d: \
                --long verbose,debug,already-fa:,install-fa:,logfile:,fa_path:,faf_path:,real_user:\
                -n "$0" -- "$@")
-
-if [ $parse != 0 ]; then echo " Terminating..." >&2 ; exit 1 ; fi
-eval set -- "$parse"
 while true; do
   case "$1" in
     -v | --verbose ) VERBOSE=true; shift ;;
@@ -23,16 +20,18 @@ while true; do
     --default_dir )  default_dir=true; 
                      fa_path="default"; shift ;;
     -f | --already-fa | --fa_path ) already_fa=true;
-                                    fa_path=$2; shift 2 ;;
+                                    fa_path="$2"; shift 2 ;;
     -i | --install-fa ) already_fa=false; 
-                        install_fa_path=$2; shift 2 ;;
-    -l | --logfile ) faf_log_file=$2; shift 2 ;;
-    -u | --real_user ) real_user=$2; shift 2 ;;
-    --faf_path ) faf_path=$2; shift 2 ;;
+                        install_fa_path="$2"; shift 2 ;;
+    -l | --logfile ) faf_log_file="$2"; shift 2 ;;
+    -u | --real_user ) real_user="$2"; shift 2 ;;
+    --faf_path ) faf_path="$2"; shift 2 ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
 done
+
+$DEBUG && echo -e "Parsed arguments from the command line :\n$parse"
 
 to_log() { echo -e "[$(date --rfc-3339=seconds)] T3 $*" >> "$faf_log_file"; }
 to_log "#################### install FA script ####################"

@@ -119,8 +119,8 @@ echo "" >> "$faf_log"
 # compatibility with the script
 gxtpredetected="$(ps -p $(ps -p $(ps -p $$ -o ppid=) -o ppid=) o args= | awk '{print $1}' )"
 for gxti in "gnome-terminal --title -- --tab --active" \
-                "xterm -T -e" \
-                "urxvt -T -e" \
+                "xterm -T -e -hold" \
+                "urxvt -T -e -hold" \
                 "konsole --title -e" \
                 "mate-terminal --title -x" \
                 "rxvt -T -e"; do
@@ -217,7 +217,7 @@ to_log "installing DOWNLORD"
 cd $work_dir
 case "$operating_system" in
     Arch*|Manjaro*)
-        curl https://aur.archlinux.org/cgit/aur.git/snapshot/downlords-faf-client.tar.gz
+        wget https://aur.archlinux.org/cgit/aur.git/snapshot/downlords-faf-client.tar.gz
         tar -xf downlords-faf-client.tar.gz
         cd downlords-faf-client
         makepkg -si
@@ -324,33 +324,35 @@ function extract_fa_path {
 }
 
 wait_for_steam_install() {
-    no_steam=true
     printf "waiting for steam to finish installing... "
     while ! command -v steam &>/dev/null; do
         spin
         sleep 1
     done
+    echo ""
     return 0
 }
 
-function run_fa_script {
-    # $@ - extra arguments to pass to the script
-    wait_for_steam_install
+function checkforfascript {
     if [ ! -f $work_dir/install_FA_script.sh ]; then
         wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh \
              -O $work_dir/install_FA_script.sh
     fi
     chmod +x $work_dir/install_FA_script.sh
+}
+
+function run_fa_script {
+    # $@ - extra arguments to pass to the script
+    wait_for_steam_install
     # TODO Couldn't the closing line be given as an extra command when passing args to the terminal?
     # Example $gxtpath [ run fa_script ] ; $gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client
     # isn't downlords-faf-client supposed to be launched as just a normal binary though?
-    _default_args=""
     $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" \
              $gxtexec $work_dir/install_FA_script.sh \
-             -l $faf_log \
+             -l "$faf_log" \
              -u $real_user \
-             --faf_path "$faf_path" \
-             $@
+             --faf_path "$(echo "$faf_path" | sed 's/ /\\u/g')" \
+             "$@"
 }
 
 
@@ -384,8 +386,8 @@ fi
 case $what_to_do in
     configure_fa)
         to_log "configure current FA install"
-        run_fa_script --already-fa \
-                      --fa_base_dir "$fa_path" &
+        checkforfascript
+        run_fa_script --already-fa "$fa_path" $($DEBUG && echo "-D") &
         sleep 1
         ;;
     install_fa)
@@ -395,8 +397,8 @@ case $what_to_do in
         if [ "$_fa_path" = "" ]; then
              get_user_input "$fa_path"; return 0
         fi
-        run_fa_script --install-fa \
-                      --fa_base_dir "$_fa_path" &
+        checkforfascript
+        run_fa_script --install-fa "$_fa_path" $($DEBUG && echo "-D") &
         sleep 1
         ;;
     choose_fa_dir)
@@ -412,8 +414,8 @@ case $what_to_do in
             rm -rf "$fa_path"
             _fa_path="$(set_fa_path)"
             to_log "FA install path set to : $_fa_path"
-            run_fa_script --install-fa \
-                          --fa_base_dir "$_fa_path" &
+            checkforfascript
+            run_fa_script --install-fa "$_fa_path" $($DEBUG && echo "-D") &
             sleep 1
         else
             to_log "Cancels deletion of previous install."
