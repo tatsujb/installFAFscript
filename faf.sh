@@ -35,7 +35,7 @@ echolog() { echo -e $1 ; to_log $1; }
 
 log_separator() { echo "_______________________________________________________________________________________________________" >> $faf_log; }
 
-spin() { printf "\b${sp:i++%${#sp}:1}" }
+spin() { printf "\b${sp:i++%${#sp}:1}"; }
 
 $DEBUG && cp ./sudo_script.sh ./install_FA_script.sh "$work_dir" \
        && to_log "DEBUG -- copied sudo and install_FA scripts into workdir $work_dir"
@@ -351,12 +351,6 @@ function run_fa_script {
              -u $real_user \
              --faf_path "$faf_path" \
              $@
-    [ -f "$faf_path/downlords-faf-client" ] || printf "Waiting for the FAF client to finish installing ... "
-    while [ ! -f "$faf_path/downlords-faf-client" ]; do
-        spin
-        sleep 1
-    done
-    "$faf_path"/downlords-faf-client
 }
 
 
@@ -482,6 +476,6 @@ if command -v "gtk-launch"; then
     gtk-launch faforever
 else
     $faf_path/downlords-faf-client
-
+fi
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
 to_log "Finished thread one. (proton/downlord/open-jdk/bashrc)"

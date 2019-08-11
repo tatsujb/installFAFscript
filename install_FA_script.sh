@@ -50,7 +50,7 @@ if $default_dir || [ "$install_fa_path" = "default" ]; then
     origin="$HOME/.steam/steam"
 elif [ ! -z "$install_fa_path" ]; then
     origin="$install_fa_path"
-elif [ ! -z "$fa_path" ]
+elif [ ! -z "$fa_path" ]; then
     origin=$(dirname $(dirname $(dirname $fa_path)))
 else
     to_log "Err -- Invalid input"
@@ -154,5 +154,11 @@ fi
 
 
 echo "FA installation finished succesfully"
+[ -f "$faf_path/downlords-faf-client" ] || printf "Waiting for the FAF client to finish installing ... "
+while [ ! -f "$faf_path/downlords-faf-client" ]; do
+    spin
+    sleep 1
+done
 to_log "starting T4 and exiting T3"
+"$faf_path"/downlords-faf-client
 

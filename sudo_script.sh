@@ -109,7 +109,7 @@ if [ ! -z "$to_be_installed" ]; then
             sudolog yum -y clean all;;
         *[Ss]olus*)
             sudolog eopkg up
-	    sudolog eopkg install $to_be_installed
+	    sudolog eopkg install $to_be_installed;;
 	*[Uu]buntu* | Debian* | *)
             sudolog apt update -y
             sudolog apt full-upgrade -y
