@@ -188,6 +188,7 @@ else
                       --logfile $faf_log \
                       --operating_system "$operating_system" \
                       $to_be_installed &
+    sleep 1
 fi
 
 to_log "start of second thread did not crash first thread"
@@ -374,10 +375,10 @@ then
         "install_faf"   "Skip the FA configuration and ONLY install FAF" \
         --notags --nocancel 3>&1 1>&2 2>&3)
 else
-    what_to_do=$(whiptail --title "Install Forged Alliance Forever\n(Multiplayer client)" \
+    what_to_do=$(whiptail --title "Install Forged Alliance Forever (Multiplayer client)" \
         --menu "$error_msg The Supreme Commander Forged Alliance (FA) install directory wasn't automatically detected.\nWould you like to " 10 80 0 \
-        "choose_fa_dir" "Browse for the Forged Alliance game install directory" \
         "install_fa"    "Install the Forged Alliance game through steam (needs your steam login)" \
+        "choose_fa_dir" "Browse for the Forged Alliance game install directory" \
         "install_faf"   "Skip the installation/configuration of FA and ONLY install the FAF client" \
         --notags --nocancel 3>&1 1>&2 2>&3)
 fi
@@ -386,6 +387,7 @@ case $what_to_do in
         to_log "configure current FA install"
         run_fa_script --already-fa \
                       --fa_base_dir "$fa_path" &
+        sleep 1
         ;;
     install_fa)
         to_log "install FA"
@@ -395,6 +397,7 @@ case $what_to_do in
         fi
         run_fa_script --install-fa \
                       --fa_base_dir "$_fa_path" &
+        sleep 1
         ;;
     choose_fa_dir)
         _fa_path="$(set_fa_path)"
@@ -409,6 +412,7 @@ case $what_to_do in
             _fa_path="$(set_fa_path)"
             run_fa_script --install-fa \
                           --fa_base_dir "$_fa_path" &
+            sleep 1
         else
             to_log "Cancels deletion of previous install."
             get_user_input "$fa_path"
