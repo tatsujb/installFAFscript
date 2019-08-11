@@ -35,7 +35,7 @@ echolog() { echo -e $1 ; to_log $1; }
 
 log_separator() { echo "_______________________________________________________________________________________________________" >> $faf_log; }
 
-spin() { printf "\b${sp:i++%${#sp}:1}" }
+spin() { printf "\b${sp:i++%${#sp}:1}"; }
 
 $DEBUG && cp ./sudo_script.sh ./install_FA_script.sh "$work_dir" \
        && to_log "DEBUG -- copied sudo and install_FA scripts into workdir $work_dir"
@@ -188,6 +188,7 @@ else
                       --logfile $faf_log \
                       --operating_system "$operating_system" \
                       $to_be_installed &
+    sleep 1
 fi
 
 to_log "start of second thread did not crash first thread"
@@ -351,6 +352,7 @@ function run_fa_script {
              -u $real_user \
              --faf_path "$faf_path" \
              $@
+    sleep 1
     [ -f "$faf_path/downlords-faf-client" ] || printf "Waiting for the FAF client to finish installing ... "
     while [ ! -f "$faf_path/downlords-faf-client" ]; do
         spin
@@ -380,10 +382,10 @@ then
         "install_faf"   "Skip the FA configuration and ONLY install FAF" \
         --notags --nocancel 3>&1 1>&2 2>&3)
 else
-    what_to_do=$(whiptail --title "Install Forged Alliance Forever\n(Multiplayer client)" \
+    what_to_do=$(whiptail --title "Install Forged Alliance Forever (Multiplayer client)" \
         --menu "$error_msg The Supreme Commander Forged Alliance (FA) install directory wasn't automatically detected.\nWould you like to " 10 80 0 \
-        "choose_fa_dir" "Browse for the Forged Alliance game install directory" \
         "install_fa"    "Install the Forged Alliance game through steam (needs your steam login)" \
+        "choose_fa_dir" "Browse for the Forged Alliance game install directory" \
         "install_faf"   "Skip the installation/configuration of FA and ONLY install the FAF client" \
         --notags --nocancel 3>&1 1>&2 2>&3)
 fi
@@ -482,6 +484,6 @@ if command -v "gtk-launch"; then
     gtk-launch faforever
 else
     $faf_path/downlords-faf-client
-
+fi
 echo "Finished thread one (proton/downlord/open-jdk/bashrc) without issue..."
 to_log "Finished thread one. (proton/downlord/open-jdk/bashrc)"
