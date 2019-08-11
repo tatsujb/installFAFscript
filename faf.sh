@@ -22,7 +22,7 @@ faf_path="$HOME/.local/share/faforever"
 faf_config_dir="$HOME/.faforever"
 work_dir=/tmp/faf_script_workdir
 faf_log="$work_dir/faf.sh-$faf_sh_version.log"
-installFAtmpfile="$workdir/tmpInstallFA"
+installFAtmpfile="$work_dir/tmpInstallFA"
 #spinner vars
 i=1
 sp='/-\|'
@@ -204,7 +204,6 @@ function set_fa_path
         to_log "non-standart dir chosen"
         _title="Choose your desired Forged Alliance installation directory/folder"
         echo "$(zenity --file-selection --directory --title "$_title")"
-        to_log "FA install path set to : $directory"
     fi
     return 0
 }
@@ -338,7 +337,7 @@ function run_fa_script {
     # $@ - extra arguments to pass to the script
     wait_for_steam_install
     if [ ! -f $work_dir/install_FA_script.sh ]; then
-        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh
+        wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh \
              -O $work_dir/install_FA_script.sh
     fi
     chmod +x $work_dir/install_FA_script.sh
@@ -391,7 +390,8 @@ case $what_to_do in
         ;;
     install_fa)
         to_log "install FA"
-        _fa_path=$(set_fa_path)
+        _fa_path="$(set_fa_path)"
+        to_log "FA install path set to : $_fa_path"
         if [ "$_fa_path" = "" ]; then
              get_user_input "$fa_path"; return 0
         fi
@@ -401,6 +401,7 @@ case $what_to_do in
         ;;
     choose_fa_dir)
         _fa_path="$(set_fa_path)"
+        to_log "FA install path set to : $_fa_path"
         get_user_input "$_fa_path"
         return;;# stops recursion loop from running the rest of this function
     reinstall_fa)
@@ -410,6 +411,7 @@ case $what_to_do in
             echo "Removing $fa_path"
             rm -rf "$fa_path"
             _fa_path="$(set_fa_path)"
+            to_log "FA install path set to : $_fa_path"
             run_fa_script --install-fa \
                           --fa_base_dir "$_fa_path" &
             sleep 1
