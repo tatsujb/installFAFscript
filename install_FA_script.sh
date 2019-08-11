@@ -55,6 +55,14 @@ else
     to_log "Err -- Invalid input"
     exit 2
 fi
+
+printf "waiting for steam to finish installing... "
+while ! command -v steam &>/dev/null; do
+    spin
+    sleep 1
+done
+echo ""
+
 if $default_dir; then
     for _steamapps in "steamapps" "SteamApps"; do
         [ -d "$HOME/.steam/steam/$_steamapps" ] && \

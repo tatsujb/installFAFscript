@@ -323,16 +323,6 @@ function extract_fa_path {
     fi
 }
 
-wait_for_steam_install() {
-    printf "waiting for steam to finish installing... "
-    while ! command -v steam &>/dev/null; do
-        spin
-        sleep 1
-    done
-    echo ""
-    return 0
-}
-
 function checkforfascript {
     if [ ! -f $work_dir/install_FA_script.sh ]; then
         wget https://raw.githubusercontent.com/tatsujb/installFAFscript/master/install_FA_script.sh \
@@ -343,10 +333,6 @@ function checkforfascript {
 
 function run_fa_script {
     # $@ - extra arguments to pass to the script
-    wait_for_steam_install
-    # TODO Couldn't the closing line be given as an extra command when passing args to the terminal?
-    # Example $gxtpath [ run fa_script ] ; $gxtpath $gxtoptions $gxttitle '(FAF)' $gxtexec $HOME/faf/downlords-faf-client
-    # isn't downlords-faf-client supposed to be launched as just a normal binary though?
     $gxtpath $gxtoptions $gxttitle "install & run steam, steamcmd and FA" \
              $gxtexec $work_dir/install_FA_script.sh \
              -l "$faf_log" \
