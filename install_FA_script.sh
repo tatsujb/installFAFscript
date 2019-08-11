@@ -137,7 +137,7 @@ if [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom
     i=1
     sp='/-\|'
     no_config=true
-    while { [ $(pidof SupremeCommande) ] || \
+    while { pidof SupremeCommande 1>/dev/null || \
             [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; } && \
           [ "$typed_continue" != "c" ]
     do

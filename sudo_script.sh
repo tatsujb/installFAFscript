@@ -124,7 +124,7 @@ case "$operating_system" in
     *[Uu]buntu*)
         for _s in "steam" "steamcmd"
         do
-            if [ ! $(command -v $_s) ]
+            if ! command -v $_s
             then
                 sudolog "echo $_s steam/question select \"I AGREE\" | sudo debconf-set-selections"
                 sudolog "echo $_s steam/license note '' | sudo debconf-set-selections"
