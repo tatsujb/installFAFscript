@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-[ $1 = "DEBUG" ] && DEBUG=true || DEBUG=false
+[ "$1" = "DEBUG" ] && DEBUG=true || DEBUG=false
 
 real_user=$(logname)
 cur_dir="$(pwd)"
@@ -378,13 +378,18 @@ case $what_to_do in
         ;;
     install_fa)
         to_log "install FA"
-        _fa_path="$(set_fa_path)"
-        to_log "FA install path set to : $_fa_path"
-        if [ "$_fa_path" = "" ]; then
-             get_user_input "$fa_path"; return 0
-        fi
         checkforfascript
-        run_fa_script --install-fa "$_fa_path" $($DEBUG && echo "-D") &
+	if whiptail --yesno "Do you wish to install Supreme Commander Forged Alliance into the default steam directory?" 6 30
+	then 
+            run_fa_script --install-fa "default" $($DEBUG && echo "-D") &
+        else
+            _fa_path="$(set_fa_path)"
+            to_log "FA install path set to : $_fa_path"
+            if [ "$_fa_path" = "" ]; then
+                get_user_input "$fa_path"; return 0
+            fi
+            run_fa_script --install-fa "$_fa_path" $($DEBUG && echo "-D") &
+	fi
         sleep 1
         ;;
     choose_fa_dir)
