@@ -57,8 +57,10 @@ else
 fi
 
 printf "waiting for steam to finish installing... "
+i=1
+sp='/-\|'
 while ! command -v steam &>/dev/null; do
-    spin
+    printf "\b${sp:i++%${#sp}:1}"
     sleep 1
 done
 echo ""
