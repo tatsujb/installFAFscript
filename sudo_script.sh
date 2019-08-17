@@ -179,4 +179,4 @@ entering your password
 
 sudo bash ./$tmp_sudo && \
     rm ./$tmp_sudo && \
-    to_log "finished succesfully"
+    to_log "Finished succesfully"

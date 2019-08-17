@@ -379,10 +379,11 @@ case $what_to_do in
     install_fa)
         to_log "install FA"
         checkforfascript
-	if whiptail --yesno "Do you wish to install Supreme Commander Forged Alliance into the default steam directory?" 6 30
+	if whiptail --yesno "Do you wish to install Supreme Commander Forged Alliance into the default steam directory?" 14 30
 	then 
             run_fa_script --install-fa "default" $($DEBUG && echo "-D") &
         else
+            echo "Choose the directory you want to install your game in the opened file explorer ;)"
             _fa_path="$(set_fa_path)"
             to_log "FA install path set to : $_fa_path"
             if [ "$_fa_path" = "" ]; then
@@ -393,14 +394,15 @@ case $what_to_do in
         sleep 1
         ;;
     choose_fa_dir)
+        echo "Choose the directory where you installed your game (in the opened file explorer) ;)"
         _fa_path="$(set_fa_path)"
         to_log "FA install path set to : $_fa_path"
         get_user_input "$_fa_path"
         return;;# stops recursion loop from running the rest of this function
     reinstall_fa)
         to_log "reinstall FA chosen"
-        if (whiptail --title "Are you sure you want to delete $fa_path ?"\
-                     --yesno "" 12 85 --fb); then
+        if whiptail "Are you sure you want to delete $fa_path ?" 12 85 --fb
+        then
             echo "Removing $fa_path"
             rm -rf "$fa_path"
             _fa_path="$(set_fa_path)"
