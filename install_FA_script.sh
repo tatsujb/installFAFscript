@@ -4,162 +4,170 @@ VERBOSE=false
 DEBUG=false
 already_fa=false
 faf_log_file=""
-operating_system=""
+tmpfile="./tmpInstallFA"
 real_user=""
 default_dir=""
-fa_base_dir=""
+fa_path=""
+supcom="Supreme Commander Forged Alliance"
 
-TEMP=`getopt -o vDfm:l:u:d:o: --long verbose,debug,logfile: \
-             -n "$0" -- "$@"`
-
-if [ $? != 0 ] ; then echo " Terminating..." >&2 ; exit 1 ; fi
-eval set -- "$TEMP"
+parse=$(getopt -o vDf:i:m:l:u:d: \
+               --long verbose,debug,already-fa:,install-fa:,logfile:,fa_path:,faf_path:,real_user:\
+               -n "$0" -- "$@")
 while true; do
   case "$1" in
     -v | --verbose ) VERBOSE=true; shift ;;
-    -D | --debug ) DEBUG=true; shift ;;
-    --default_dir ) default_dir=true; shift ;;
-    -f | --already_fa ) already_fa=true; shift ;;
-    -l | --logfile ) faf_log_file=$2; shift 2 ;;
-    -o | --operating_system ) operating_system=$2; shift 2 ;;
-    -u | --real_user ) real_user=$2; shift 2 ;;
-    --fa_base_dir ) fa_base_dir=$2; shift 2 ;;
+    -D | --debug )   DEBUG=true; shift ;;
+    --default_dir )  default_dir=true; 
+                     fa_path="default"; shift ;;
+    -f | --already-fa | --fa_path ) already_fa=true;
+                                    fa_path="$2"; shift 2 ;;
+    -i | --install-fa ) already_fa=false; 
+                        install_fa_path="$2"; shift 2 ;;
+    -l | --logfile ) faf_log_file="$2"; shift 2 ;;
+    -u | --real_user ) real_user="$2"; shift 2 ;;
+    --faf_path ) faf_path="$2"; shift 2 ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
 done
 
-to_log()
-{
-     echo -e "[$(date --rfc-3339=seconds)] $@" >> $faf_log_file
-}
+$DEBUG && echo -e "Parsed arguments from the command line :\n$parse"
 
-to_log "####################T3 install FA script####################"
-to_log "T3  --verbose $VERBOSE"
-to_log "T3  --debug $DEBUG"
-to_log "T3  --default_dir $default_dir"
-to_log "T3  --already_fa $already_fa"
-to_log "T3  --logfile $faf_log_file"
-to_log "T3  --operating_system $operating_system"
-to_log "T3  --real_user $real_user"
-to_log "T3  --fa_base_dir $fa_base_dir"
+to_log() { echo -e "[$(date --rfc-3339=seconds)] T3 $*" >> "$faf_log_file"; }
+to_log "#################### install FA script ####################"
+to_log " --verbose $VERBOSE"
+to_log " --debug $DEBUG"
+to_log " --default_dir $default_dir"
+to_log " --already_fa $fa_path"
+to_log " --install_fa $install_fa_path"
+to_log " --logfile $faf_log_file"
+to_log " --real_user $real_user"
+to_log " --fa_path $fa_path"
 
-if $default_dir
-then
+if $default_dir || [ "$install_fa_path" = "default" ]; then
+    default_dir=true
     origin="$HOME/.steam/steam"
+elif [ ! -z "$install_fa_path" ]; then
+    origin="$install_fa_path"
+elif [ ! -z "$fa_path" ]; then
+    origin=$(dirname $(dirname $(dirname $fa_path)))
 else
-    origin=$fa_base_dir
+    to_log "Err -- Invalid input"
+    exit 2
 fi
 
-bind 'TAB: accept-line' &>/dev/null
-while [ -z "$steam_user_name" ]
-do
-    echo "steam user name :"
-    IFS= read -e -r steam_user_name
+printf "waiting for steam to finish installing... "
+i=1
+sp='/-\|'
+while ! command -v steam &>/dev/null; do
+    printf "\b${sp:i++%${#sp}:1}"
+    sleep 1
 done
-while [ -z "$steam_password" ]
-do
+echo ""
+
+if $default_dir; then
+    for _steamapps in "steamapps" "SteamApps"; do
+        [ -d "$HOME/.steam/steam/$_steamapps" ] && \
+        steamapps=$_steamapps && \
+        break
+    done
+    [ "$steamapps" = "" ] && \
+        to_log "Err -- neither steamapps nor SteamApps was found in home dir. exiting" && \
+        exit 1
+else
+    steamapps="steamapps"
+fi
+[ -z "$fa_path" ] && fa_path="$origin/$steamapps/common/$supcom"
+compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser"
+
+to_log "Putting compatdata and fa_install_dir in tmpfile."
+echo -e "compatdata\n$compatdata\nfa_path\n$fa_path" >> $tmpfile
+
+bind 'TAB: accept-line' &>/dev/null
+while [ -z "$steam_username" ]; do
+    echo "steam user name :"
+    IFS= read -e -r steam_username
+done
+while [ -z "$steam_password" ]; do
     echo "steam password :"
     IFS= read -e -r -s steam_password
 done
+to_log "Steam credentials entrusted to script"
 
 # NOTE THAT THIS IS NOT MY IDEAL SOLUTION BUT I HAVENT YET FOUND BETTER
-to_log "T1 Steam credentials entrusted to script"
-if [ ! -f $HOME/the\ contents\ of\ this* ]
-then
-echo 'PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%' > $HOME/"the contents of this file are to be pasted in the forged alliance properties launch options"
-fi
+launch_options_file="$HOME/Paste this into the Forged Alliance steam launch options"
+launch_options='PROTON_NO_ESYNC=1, PROTON_DUMP_DEBUG_COMMANDS=1 %command%'
+echo "$launch_options" > "$launch_options_file"
 
-echo "expecting you to type in Forged Alliances Launch options"
-echo "reminder : look in your home folder, theres a file there with the contents to be pasted"
-echo "once thats done edit steam settings in order to enable Proton for all games"
-if $already_fa
-then
-    echo ""
-else
+echo "### Two necessary manual steps needed to continue ###"
+echo "1. Enable Proton for all games in the steam settings."
+echo -e "2. Type/copy pasta this line into the Forged Alliances Launch options\n"
+echo -e " $launch_options\n"
+echo "You can also find a file in you HOME folder with the content to be pasted."
+
+if ! $already_fa; then
     echo -e "\n\n\n"
-    to_log "T3 running steam"
-    steam -login $steam_user_name $steam_password
-    rm $HOME/the\ contents\ of\ this*
+    to_log "running steam"
+    steam -login "$steam_username" "$steam_password"
+    to_log "Installing FA to $fa_path"
     if $default_dir
     then
-        to_log "T3 installing FA to default dir"
-        while [ \( ! -d $HOME/.steam/steam/steamapps/common/Supreme* \) -a \( ! -d $HOME/.steam/steam/SteamApps/common/Supreme* \) ]
-        do
-            steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +app_update 9420 +quit
+        while [ ! -d "$fa_path" ]; do
+            steamcmd +login "$steam_username" "$steam_password" \
+                     +@sSteamCmdForcePlatformType windows \
+		     $( $default_dir || echo "+force_install_dir \"$origin\"") \
+                     +app_update 9420 +quit
         done
     else
-        to_log "T3 installing FA to custom dir"
-        while [ ! -d $fa_base_dir/bin ]
-        do
-            steamcmd +login $steam_user_name $steam_password +@sSteamCmdForcePlatformType windows +force_install_dir $fa_base_dir +app_update 9420 +quit
+        while [ ! -d "$fa_path/bin" ]; do
+            steamcmd +login "$steam_username" "$steam_password" \
+                     +@sSteamCmdForcePlatformType windows \
+                     +force_install_dir "$origin" \
+                     +app_update 9420 +quit
         done
-        cd $fa_base_dir
-        mkdir -p steamapps/common/Supreme\ Commander\ Forged\ Alliance
-        mv * steamapps/common/Supreme\ Commander\ Forged\ Alliance/ 2>/dev/null
-        cd
+        mkdir -p "$fa_path/steamapps/common/$supcom"
+        mv "$fa_path"/* "$fa_path/steamapps/common/$supcom" 2>/dev/null
     fi
-    to_log "T3 FA installed condition met"
+    to_log "FA installed condition met"
 fi
-to_log "T3 launching FA"
-steam -login $steam_user_name $steam_password -applaunch 9420 &>/dev/null &
-echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
-echo "and for Forged Alliance to be shut down."
-echo "You may also type \"c\" (and enter/return) to exit this loop"
-echo "if you feel the conditions for continuing sucessfully"
-echo -n "have already been adequately met... "
-i=1
-sp='/-\|'
-no_config=true
-while $no_config
-do
-    printf "\b${sp:i++%${#sp}:1}";
-    if [ \( ! "$(pidof SupremeCommande)" \) -a \
-	 \( -f $origin/steamapps/compatdata/9420/pfx/drive_c/users/steamuser/Local\ Settings/Application\ Data/Gas\ Powered\ Games/Supreme\ Commander\ Forged\ Alliance/Game.prefs \) ] || \
-       [ "$typed_continue" = "c" ]
-    then
-        no_config=false
-    fi
-    sleep 1
-    read -s -r -t 1 typed_continue
-done
-echo ""
-if ! $already_fa
-then
-    to_log "T3 copying over run file"
-    cp -f /tmp/proton_"$real_user"/run $HOME/faf/
-fi
-to_log "T3 making symbolic links"
 
-steamapps_list=("steamapps" "SteamApps")
-
-for steamapps in $steamapps_list
-do
-    # It should always be possible to find this folder
-    [ -d "$origin/$steamapps/common/$supcom"  ] && \
-    fa_install_dir="$origin/$steamapps/common/$supcom"
-    [ -d "$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" ] && \
-    compatdata="$origin/$steamapps/compatdata/9420/pfx/drive_c/users/steamuser" && \
-    break
-done
-[ "$compatdata" = "" ] && \
-    to_log "T3 neither steamapps nor SteamApps compatdata was found. exiting" && \
+[ ! -d "$compatdata" ] && \
+    to_log "neither steamapps nor SteamApps compatdata was found. exiting" && \
     exit 1
 
-cd "$fa_install_dir" 
-rm -rf Maps
-rm -rf Mods
-ln -s $HOME/My\ Games/Gas\ Powered\ Games/$supcom/Maps/ Maps
-ln -s $HOME/My\ Games/Gas\ Powered\ Games/$supcom/Mods/ Mods
+if [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; then
+    to_log "Game.prefs not detected - launching FA"
+    steam -login "$steam_username" "$steam_password" -applaunch 9420 &>/dev/null &
+    echo -e "\n\n\n\n\nWaiting for Forged Alliance to be run, Game.prefs to exist"
+    echo "and for Forged Alliance to be shut down."
+    echo "You may also type \"c\" (and enter/return) to exit this loop"
+    echo "if you feel the conditions for continuing sucessfully"
+    echo -n "have already been adequately met... "
+    i=1
+    sp='/-\|'
+    no_config=true
+    while { pidof SupremeCommande 1>/dev/null || \
+            [ ! -f "$compatdata/Local Settings/Application Data/Gas Powered Games/$supcom/Game.prefs" ]; } && \
+          [ "$typed_continue" != "c" ]
+    do
+        printf "\b${sp:i++%${#sp}:1}"
+        read -s -r -t 1 typed_continue
+    done
+fi
 
-cd "$compatdata"
-rm -rf My\ Documents
-mkdir My\ Documents
-cd My\ Documents
-ln -s $HOME/My\ Games/ My\ Games
+if ! $already_fa
+then
+    to_log "copying over run file"
+    cp -f "/tmp/proton_$real_user/run" "$faf_path"
+fi
 
-cd
-source .bashrc
-eval "$(cat .bashrc | tail -n +10)"
+
 echo "FA installation finished succesfully"
-to_log "T3 starting T4 and exiting T3"
+[ -f "$faf_path/downlords-faf-client" ] || printf "Waiting for the FAF client to finish installing ... "
+while [ ! -f "$faf_path/downlords-faf-client" ]; do
+    spin
+    sleep 1
+done
+to_log "starting T4 and exiting T3"
+"$faf_path"/downlords-faf-client
+
