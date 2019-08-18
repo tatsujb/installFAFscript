@@ -401,7 +401,7 @@ case $what_to_do in
         return;;# stops recursion loop from running the rest of this function
     reinstall_fa)
         to_log "reinstall FA chosen"
-        if whiptail "Are you sure you want to delete $fa_path ?" 12 85 --fb
+        if whiptail --yesno "Are you sure you want to delete $fa_path ?" 12 85 --fb
         then
             echo "Removing $fa_path"
             rm -rf "$fa_path"
