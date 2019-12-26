@@ -269,11 +269,11 @@ then
 else
     faf_version_number=$(curl -v --silent https://api.github.com/repos/FAForever/downlords-faf-client/releases 2>&1 | grep '"tag_name": ' | head -n 1 | cut -f4,4 -d'"')
     faf_version=$( echo ${faf_version_number:1} | tr '.' '_' )
-    wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/_dfc_unix_$faf_version.tar.gz
-    pv _dfc_unix_$faf_version.tar.gz | tar xzp -C $work_dir/faf
+    wget https://github.com/FAForever/downlords-faf-client/releases/download/$faf_version_number/dfc_unix_$faf_version.tar.gz
+    pv dfc_unix_$faf_version.tar.gz | tar xzp -C $work_dir/faf
     mv downlords-faf-client-${faf_version_number:1}/{.,}* . 2>/dev/null
     rm -rf downlords-faf-client-${faf_version_number:1}
-    rm _dfc_unix_$faf_version.tar.gz
+    rm dfc_unix_$faf_version.tar.gz
 
     # /end Download & install FAF client
     # Java install block
